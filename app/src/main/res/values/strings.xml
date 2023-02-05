@@ -5,4 +5,7 @@
 
     <string name="bottom_menu_explore">Explore</string>
     <string name="bottom_menu_mylist">My List</string>
+    <string name="now_playing">Now Playing</string>
+    <string name="see_all">See all</string>
+
 </resources>
