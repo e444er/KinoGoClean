@@ -10,12 +10,13 @@ import com.e444er.cleanmovie.databinding.MovieRowBinding
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.presentation.util.BaseMovieAndTvRecyclerAdapter
-import com.e444er.cleanmovie.presentation.util.Util
+import com.e444er.cleanmovie.presentation.util.HandleUtils
 import javax.inject.Inject
 
 class PopularMoviesAdapter @Inject constructor(
     private val imageLoader: ImageLoader
 ) : BaseMovieAndTvRecyclerAdapter<Movie>() {
+
 
     override fun onBindViewHold(
         binding: MovieRowBinding,
@@ -32,22 +33,6 @@ class PopularMoviesAdapter @Inject constructor(
                     imageUrl = movie.posterPath
                 ),
                 imageLoader = imageLoader
-            )
-
-            binding.tvMovieTvName.text = movie.title
-
-            val genre = Util.handleGenreOneText(genreList, movie.genreIds)
-            val releaseDate = Util.handleReleaseDate(movie.releaseDate)
-
-            val voteCount = Util.handleVoteCount(movie.voteCount)
-
-            binding.tvReleaseDateGenre.text =
-                context.getString(R.string.release_date_genre, releaseDate, genre)
-
-            binding.voteAverage.text = context.getString(
-                R.string.voteAverage,
-                movie.voteAverage.toString(),
-                voteCount
             )
 
             binding.root.setOnClickListener {

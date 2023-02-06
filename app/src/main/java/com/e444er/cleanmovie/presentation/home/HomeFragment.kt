@@ -12,10 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
-import com.e444er.cleanmovie.presentation.home.adapter.NowPlayingRecyclerAdapter
-import com.e444er.cleanmovie.presentation.home.adapter.PopularMoviesAdapter
-import com.e444er.cleanmovie.presentation.home.adapter.PopularTvSeriesAdapter
-import com.e444er.cleanmovie.presentation.home.adapter.TopRatedMoviesAdapter
+import com.e444er.cleanmovie.presentation.home.adapter.*
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
@@ -27,7 +24,8 @@ class HomeFragment @Inject constructor(
     private val nowPlayingAdapter: NowPlayingRecyclerAdapter,
     private val popularMoviesAdapter: PopularMoviesAdapter,
     private val topRatedMoviesAdapter: TopRatedMoviesAdapter,
-    private val popularTvSeriesAdapter: PopularTvSeriesAdapter
+    private val popularTvSeriesAdapter: PopularTvSeriesAdapter,
+    private val topRatedTvSeriesAdapter: TopRatedTvSeriesAdapter
 ) : Fragment(R.layout.fragment_home) {
 
     private var _binding: FragmentHomeBinding? = null
@@ -44,52 +42,59 @@ class HomeFragment @Inject constructor(
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         if (connMgr.activeNetwork != null) {
+            observeData()
+        }
+        setupRecyclerAdapters()
+        setAdaptersClickListener()
+    }
 
-            viewLifecycleOwner.lifecycleScope.launch {
+    private fun observeData() {
 
-                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
 
-                    launch(Dispatchers.IO) {
-                        viewModel.getLanguage().collect {
-                            viewModel.setLanguage(it)
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                launch(Dispatchers.IO) {
+                    viewModel.getLanguage().collect {
+                        viewModel.setLanguage(it)
+                    }
+                }
+
+                launch {
+                    viewModel.getNowPlayingMovies().collectLatest { pagingData ->
+                        nowPlayingAdapter.submitData(pagingData)
+                    }
+                }
+
+                launch {
+                    viewModel.getPopularMovies()
+                        .collectLatest { pagingData ->
+                            popularMoviesAdapter.submitData(pagingData)
                         }
-                    }
+                }
 
-                    launch {
-                        viewModel.getNowPlayingMovies().collectLatest { pagingData ->
-                            nowPlayingAdapter.submitData(pagingData)
+                launch {
+                    viewModel.getTopRatedMovies()
+                        .collectLatest { pagingData ->
+                            topRatedMoviesAdapter.submitData(pagingData)
                         }
-                    }
+                }
 
-                    launch {
-                        viewModel.getPopularMovies()
-                            .collectLatest { pagingData ->
-                                popularMoviesAdapter.submitData(pagingData)
-                            }
-                    }
-
-                    launch {
-                        viewModel.getTopRatedMovies()
-                            .collectLatest { pagingData ->
-                                topRatedMoviesAdapter.submitData(pagingData)
-                            }
-                    }
-
-                    launch {
-                        viewModel.getPopularTvSeries()
-                            .collectLatest { pagingData ->
-                                popularTvSeriesAdapter.submitData(pagingData)
-                            }
-                    }
-
-                    launch {
-                        val genreList = viewModel.getMovieGenreList().genres
-                        if (genreList.isNotEmpty()) {
-                            nowPlayingAdapter.passMovieGenreList(genreList)
-                            popularMoviesAdapter.passMovieGenreList(genreList)
-                            topRatedMoviesAdapter.passMovieGenreList(genreList)
+                launch {
+                    viewModel.getPopularTvSeries()
+                        .collectLatest { pagingData ->
+                            popularTvSeriesAdapter.submitData(pagingData)
                         }
+                }
+
+                launch {
+                    val genreList = viewModel.getMovieGenreList().genres
+                    if (genreList.isNotEmpty()) {
+                        nowPlayingAdapter.passMovieGenreList(genreList)
+                        popularMoviesAdapter.passMovieGenreList(genreList)
+                        topRatedMoviesAdapter.passMovieGenreList(genreList)
                     }
+                }
 
 //                    launch {
 //                        val tvGenreList = viewModel.getTvGenreList().genres
@@ -97,11 +102,14 @@ class HomeFragment @Inject constructor(
 //                            popularTvSeriesAdapter.passMovieGenreList(tvGenreList)
 //                        }
 //                    }
+
+                launch {
+                    viewModel.getTopRatedTvSeries().collectLatest { pagingData ->
+                        topRatedTvSeriesAdapter.submitData(pagingData)
+                    }
                 }
             }
         }
-        setupRecyclerAdapters()
-        setAdaptersClickListener()
     }
 
 
@@ -112,6 +120,7 @@ class HomeFragment @Inject constructor(
             popularMoviesRecyclerView.adapter = popularMoviesAdapter
             topRatedMoviesRecyclerView.adapter = topRatedMoviesAdapter
             popularTvSeriesRecyclerView.adapter = popularTvSeriesAdapter
+            topRatedTvSeriesRecyclerView.adapter = topRatedTvSeriesAdapter
         }
     }
 
@@ -121,14 +130,28 @@ class HomeFragment @Inject constructor(
             action.movie = movie
             findNavController().navigate(action)
         }
+
+        topRatedMoviesAdapter.setOnItemClickListener { movie ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailBottomSheetFragment()
+            action.movie = movie
+            findNavController().navigate(action)
+        }
+
+        nowPlayingAdapter.setOnClickListener { movie ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailBottomSheetFragment()
+            action.movie = movie
+            findNavController().navigate(action)
+        }
+
         popularTvSeriesAdapter.setOnItemClickListener { tvSeries ->
             val action = HomeFragmentDirections.actionHomeFragmentToDetailBottomSheetFragment()
             action.tvSeries = tvSeries
             findNavController().navigate(action)
         }
-        topRatedMoviesAdapter.setOnItemClickListener { movie ->
+
+        topRatedTvSeriesAdapter.setOnItemClickListener { tvSeries ->
             val action = HomeFragmentDirections.actionHomeFragmentToDetailBottomSheetFragment()
-            action.movie = movie
+            action.tvSeries = tvSeries
             findNavController().navigate(action)
         }
     }

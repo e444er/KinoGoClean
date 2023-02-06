@@ -13,7 +13,7 @@ import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.data.remote.ImageApi
 import com.e444er.cleanmovie.data.remote.ImageSize
 import com.e444er.cleanmovie.databinding.FragmentDetailBottomSheetBinding
-import com.e444er.cleanmovie.presentation.util.Util
+import com.e444er.cleanmovie.presentation.util.HandleUtils
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -52,7 +52,7 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
 
             if (movie != null){
                 tvName.text = movie.title
-                tvReleaseDate.text = Util.handleReleaseDate(movie.releaseDate)
+                tvReleaseDate.text = HandleUtils.handleReleaseDate(movie.releaseDate)
                 tvOverview.text = movie.overview
                 if (movie.posterPath != null) {
                     loadImage(posterPath = movie.posterPath)
@@ -65,7 +65,7 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
 
                 tvName.text = tvSeries.name
                 tvOverview.text = tvSeries.overview
-                tvReleaseDate.text = Util.handleReleaseDate(tvSeries.firstAirDate)
+                tvReleaseDate.text = HandleUtils.handleReleaseDate(tvSeries.firstAirDate)
                 if (tvSeries.posterPath != null) {
                     loadImage(posterPath = tvSeries.posterPath)
                 }

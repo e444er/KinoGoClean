@@ -61,4 +61,10 @@ class HomeViewModel @Inject constructor(
             language = _language.value.lowercase()
         )
     }
+
+    fun getTopRatedTvSeries(): Flow<PagingData<TvSeries>> {
+        return homeUseCases.getTopRatedTvSeriesUseCase(
+            language = _language.value.lowercase()
+        )
+    }
 }

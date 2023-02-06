@@ -2,6 +2,7 @@ package com.e444er.cleanmovie.data.paging_source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.e444er.cleanmovie.data.models.enums.MoviesApiFunction
 import com.e444er.cleanmovie.data.models.toMovieList
 import com.e444er.cleanmovie.data.remote.TMDBApi
 import com.e444er.cleanmovie.domain.models.Movie
@@ -13,7 +14,7 @@ class MoviesPagingSource @Inject constructor(
     private val tmdbApi: TMDBApi,
     private val language: String,
     private val region: String = DEFAULT_REGION,
-    private val apiFunc: APIFUNCTIONS,
+    private val apiFunc: MoviesApiFunction,
 ) : PagingSource<Int, Movie>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
@@ -22,20 +23,20 @@ class MoviesPagingSource @Inject constructor(
         return try {
 
             val response = when (apiFunc) {
-                APIFUNCTIONS.NOWPLAYINGMOVIES -> {
+                MoviesApiFunction.NOW_PLAYING_MOVIES -> {
                     tmdbApi.getNowPlayingMovies(
                         page = nextPage,
                         language = language,
                         region = region
                     )
                 }
-                APIFUNCTIONS.POPULARMOVIES -> {
+                MoviesApiFunction.POPULAR_MOVIES -> {
                     tmdbApi.getPopularMovies(
                         page = nextPage,
                         language = language
                     )
                 }
-                APIFUNCTIONS.TOP_RATED_MOVIES -> {
+                MoviesApiFunction.TOP_RATED_MOVIES -> {
                     tmdbApi.getTopRatedMovies(
                         page = nextPage,
                         language = language
@@ -59,10 +60,4 @@ class MoviesPagingSource @Inject constructor(
     override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
         return state.anchorPosition
     }
-}
-
-enum class APIFUNCTIONS {
-    NOWPLAYINGMOVIES(),
-    POPULARMOVIES(),
-    TOP_RATED_MOVIES()
 }

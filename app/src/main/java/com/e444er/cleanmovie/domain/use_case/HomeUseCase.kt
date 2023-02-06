@@ -7,6 +7,7 @@ import com.e444er.cleanmovie.domain.use_case.get_now_playing_movies.GetNowPlayin
 import com.e444er.cleanmovie.domain.use_case.get_popular_movies.GetPopularMoviesUseCase
 import com.e444er.cleanmovie.domain.use_case.get_popular_tv_series.GetPopularTvSeries
 import com.e444er.cleanmovie.domain.use_case.get_top_rated_movies.GetTopRatedMoviesUseCase
+import com.e444er.cleanmovie.domain.use_case.get_top_rated_tv_series.GetTopRatedTvSeriesUseCase
 
 data class HomeUseCases(
     val getMovieGenreList: GetMovieGenreList,
@@ -15,5 +16,6 @@ data class HomeUseCases(
     val getLocaleUseCase: GetLocaleUseCase,
     val getPopularMoviesUseCase: GetPopularMoviesUseCase,
     val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
-    val getPopularTvSeries: GetPopularTvSeries
+    val getPopularTvSeries: GetPopularTvSeries,
+    val getTopRatedTvSeriesUseCase: GetTopRatedTvSeriesUseCase
 )

@@ -3,7 +3,8 @@ package com.e444er.cleanmovie.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.e444er.cleanmovie.data.paging_source.APIFUNCTIONS
+import com.e444er.cleanmovie.data.models.enums.MoviesApiFunction
+import com.e444er.cleanmovie.data.models.enums.TvSeriesApiFunction
 import com.e444er.cleanmovie.data.paging_source.MoviesPagingSource
 import com.e444er.cleanmovie.data.paging_source.TvPagingSource
 import com.e444er.cleanmovie.data.remote.TMDBApi
@@ -39,7 +40,7 @@ class RemoteRepositoryImpl @Inject constructor(
                     tmdbApi = tmdbApi,
                     language = language,
                     region = region,
-                    apiFunc = APIFUNCTIONS.NOWPLAYINGMOVIES
+                    apiFunc = MoviesApiFunction.NOW_PLAYING_MOVIES
                 )
             }
         ).flow
@@ -54,7 +55,7 @@ class RemoteRepositoryImpl @Inject constructor(
                 MoviesPagingSource(
                     tmdbApi = tmdbApi,
                     language = language,
-                    apiFunc = APIFUNCTIONS.POPULARMOVIES
+                    apiFunc = MoviesApiFunction.POPULAR_MOVIES
                 )
             }
         ).flow
@@ -69,7 +70,7 @@ class RemoteRepositoryImpl @Inject constructor(
                 MoviesPagingSource(
                     tmdbApi = tmdbApi,
                     language = language,
-                    apiFunc = APIFUNCTIONS.TOP_RATED_MOVIES
+                    apiFunc = MoviesApiFunction.TOP_RATED_MOVIES
                 )
             }
         ).flow
@@ -83,7 +84,23 @@ class RemoteRepositoryImpl @Inject constructor(
             pagingSourceFactory = {
                 TvPagingSource(
                     tmdb = tmdbApi,
-                    language = language
+                    language = language,
+                    apiFunction = TvSeriesApiFunction.POPULAR_TV
+                )
+            }
+        ).flow
+    }
+
+    override fun getTopRatedTvs(language: String): Flow<PagingData<TvSeries>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = ITEMS_PER_PAGE
+            ),
+            pagingSourceFactory = {
+                TvPagingSource(
+                    tmdb = tmdbApi,
+                    language = language,
+                    apiFunction = TvSeriesApiFunction.TOP_RATED_TV
                 )
             }
         ).flow

@@ -15,7 +15,7 @@ import com.e444er.cleanmovie.databinding.NowPlayingRowBinding
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
-import com.e444er.cleanmovie.presentation.util.Util
+import com.e444er.cleanmovie.presentation.util.HandleUtils
 import javax.inject.Inject
 class NowPlayingRecyclerAdapter @Inject constructor(
     private val imageLoader: ImageLoader
@@ -24,13 +24,15 @@ class NowPlayingRecyclerAdapter @Inject constructor(
 
     private var movieGenreList: List<Genre> = emptyList()
 
+    private var onItemClickListener: (Movie) -> Unit = {}
+
     class MovieViewHolder(
         private val binding: NowPlayingRowBinding,
         val movieGenreList: List<Genre>,
         val imageLoader: ImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movie: Movie, context: Context) {
+        fun bind(movie: Movie, context: Context,onItemClickListener: (Movie) -> Unit = {}) {
             binding.movieTitle.text = movie.title
 
             binding.voteAverage.text = context.getString(
@@ -47,7 +49,11 @@ class NowPlayingRecyclerAdapter @Inject constructor(
             )
             if (movie.genreIds.isNotEmpty()) {
                 binding.genresText.text =
-                    Util.handleGenreText(movieGenreList = movieGenreList, movie = movie)
+                    HandleUtils.handleGenreText(movieGenreList = movieGenreList, movie = movie)
+            }
+
+            binding.root.setOnClickListener {
+                onItemClickListener.invoke(movie)
             }
         }
     }
@@ -56,7 +62,7 @@ class NowPlayingRecyclerAdapter @Inject constructor(
         val movie = getItem(position)
         if (movie != null) {
             val context = holder.itemView.context
-            holder.bind(movie = movie, context = context)
+            holder.bind(movie = movie, context = context, onItemClickListener = onItemClickListener)
         }
     }
 
@@ -72,6 +78,10 @@ class NowPlayingRecyclerAdapter @Inject constructor(
 
     fun passMovieGenreList(movieGenreList: List<Genre>) {
         this.movieGenreList = movieGenreList
+    }
+
+    fun setOnClickListener(listener: (Movie) -> Unit) {
+        onItemClickListener = listener
     }
 }
 

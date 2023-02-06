@@ -3,7 +3,7 @@ package com.e444er.cleanmovie.presentation.util
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
 
-object Util {
+object HandleUtils {
     fun handleReleaseDate(releaseDate: String): String {
         return releaseDate.split("-")[0]
     }

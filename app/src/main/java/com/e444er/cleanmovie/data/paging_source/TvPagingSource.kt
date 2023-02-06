@@ -2,6 +2,7 @@ package com.e444er.cleanmovie.data.paging_source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.e444er.cleanmovie.data.models.enums.TvSeriesApiFunction
 import com.e444er.cleanmovie.data.models.toTvSeries
 import com.e444er.cleanmovie.data.remote.TMDBApi
 import com.e444er.cleanmovie.domain.models.TvSeries
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 class TvPagingSource @Inject constructor(
     private val tmdb: TMDBApi,
-    private val language: String
+    private val language: String,
+    private val apiFunction: TvSeriesApiFunction
 ) : PagingSource<Int, TvSeries>() {
 
 
@@ -24,10 +26,20 @@ class TvPagingSource @Inject constructor(
         val nextPage = params.key ?: STARTING_PAGE
 
         return try {
-            val response = tmdb.getPopularTvs(
-                page = nextPage,
-                language = language
-            )
+            val response = when (apiFunction) {
+                TvSeriesApiFunction.POPULAR_TV -> {
+                    tmdb.getPopularTvs(
+                        page = nextPage,
+                        language = language
+                    )
+                }
+                TvSeriesApiFunction.TOP_RATED_TV -> {
+                    tmdb.getTopRatedTvs(
+                        page = nextPage,
+                        language = language
+                    )
+                }
+            }
 
             LoadResult.Page(
                 data = response.results.toTvSeries(),
