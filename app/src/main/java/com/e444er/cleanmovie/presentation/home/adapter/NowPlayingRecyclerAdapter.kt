@@ -15,6 +15,7 @@ import com.e444er.cleanmovie.databinding.NowPlayingRowBinding
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
+import com.e444er.cleanmovie.presentation.util.Util
 import javax.inject.Inject
 
 class NowPlayingRecyclerAdapter @Inject constructor(
@@ -44,25 +45,10 @@ class NowPlayingRecyclerAdapter @Inject constructor(
             )
             if (movie.genreIds.isNotEmpty()) {
 
-                binding.genresText.text = handleGenreText(movie = movie)
+                binding.genresText.text =
+                    Util.handleGenreText(movieGenreList = movieGenreList, movie = movie)
             }
         }
-
-
-        //genre
-        private fun handleGenreText(movie: Movie): String {
-            var genreNames = ""
-            movieGenreList.forEach { genre ->
-                movie.genreIds.forEach {
-                    if (it == genre.id) {
-                        genreNames += "${genre.name}, "
-                    }
-                }
-            }
-
-            return genreNames.substring(startIndex = 0, endIndex = genreNames.length - 2)
-        }
-
     }
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {

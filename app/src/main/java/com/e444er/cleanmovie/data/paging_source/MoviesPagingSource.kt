@@ -5,13 +5,15 @@ import androidx.paging.PagingState
 import com.e444er.cleanmovie.data.models.toMovieList
 import com.e444er.cleanmovie.data.remote.TMDBApi
 import com.e444er.cleanmovie.domain.models.Movie
+import com.e444er.cleanmovie.util.Constants.DEFAULT_REGION
 import com.e444er.cleanmovie.util.Constants.STARTING_PAGE
 import javax.inject.Inject
 
-class NowPlayingPagingSource @Inject constructor(
+class MoviesPagingSource @Inject constructor(
     private val tmdbApi: TMDBApi,
     private val language: String,
-    private val region: String
+    private val region: String = DEFAULT_REGION,
+    private val apiFunc: APIFUNC,
 ) : PagingSource<Int, Movie>() {
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
@@ -19,11 +21,21 @@ class NowPlayingPagingSource @Inject constructor(
         val nextPage = params.key ?: STARTING_PAGE
         return try {
 
-            val response = tmdbApi.getNowPlayingMovies(
-                page = nextPage,
-                language = language,
-                region = region
-            )
+            val response = when (apiFunc) {
+                APIFUNC.NOWPLAYINGMOVIES -> {
+                    tmdbApi.getNowPlayingMovies(
+                        page = nextPage,
+                        language = language,
+                        region = region
+                    )
+                }
+                APIFUNC.POPULARMOVIES -> {
+                    tmdbApi.getPopularMovies(
+                        page = nextPage,
+                        language = language
+                    )
+                }
+            }
 
             LoadResult.Page(
                 data = response.results.toMovieList(),
@@ -41,4 +53,9 @@ class NowPlayingPagingSource @Inject constructor(
     override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
         return state.anchorPosition
     }
+}
+
+enum class APIFUNC {
+    NOWPLAYINGMOVIES(),
+    POPULARMOVIES()
 }

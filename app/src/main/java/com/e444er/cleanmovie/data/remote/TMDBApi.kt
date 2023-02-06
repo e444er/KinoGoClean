@@ -37,7 +37,6 @@ interface TMDBApi {
         @Query("api_key") apiKey: String = API_KEY,
         @Query("page") page: Int = STARTING_PAGE,
         @Query("language") language: String,
-        @Query("region") region: String
     ): ApiResponse<MovieDto>
 
     @GET("movie/top_rated")
@@ -45,7 +44,6 @@ interface TMDBApi {
         @Query("api_key") apiKey: String = API_KEY,
         @Query("page") page: Int = STARTING_PAGE,
         @Query("language") language: String,
-        @Query("region") region: String
     ): ApiResponse<MovieDto>
 
 

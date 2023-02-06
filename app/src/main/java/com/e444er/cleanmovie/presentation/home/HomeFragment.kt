@@ -10,13 +10,15 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.presentation.home.adapter.NowPlayingRecyclerAdapter
+import com.e444er.cleanmovie.presentation.home.adapter.PopularMoviesRecyclerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment(
-    private val nowPlayingAdapter: NowPlayingRecyclerAdapter
+    private val nowPlayingAdapter: NowPlayingRecyclerAdapter,
+    private val popularMoviesRecyclerView: PopularMoviesRecyclerView
 ) : Fragment(R.layout.fragment_home) {
 
     private var binding: FragmentHomeBinding? = null
@@ -32,7 +34,6 @@ class HomeFragment(
                 viewModel.getNowPlayingMovies(language = language)
                     .collectLatest {
                         nowPlayingAdapter.submitData(it)
-
                     }
             }
         }
@@ -40,15 +41,23 @@ class HomeFragment(
         lifecycleScope.launchWhenCreated {
             viewModel.getLanguage().collectLatest {
                 val genreList = viewModel.getMovieGenreList(it).genres
-
+                popularMoviesRecyclerView.passMovieGenreList(genreList)
                 nowPlayingAdapter.passMovieGenreList(genreList)
             }
+        }
 
+        lifecycleScope.launchWhenCreated {
+            viewModel.getLanguage().collectLatest {
+                viewModel.getPopularMovies(language = it).collectLatest { pagingData ->
+                    popularMoviesRecyclerView.submitData(pagingData)
+                }
+            }
         }
 
         binding.nowPlayingRecyclerView.adapter = nowPlayingAdapter
         binding.nowPlayingRecyclerView.setAlpha(true)
 
+        binding.popularMoviesRecyclerView.adapter = popularMoviesRecyclerView
     }
 
 
