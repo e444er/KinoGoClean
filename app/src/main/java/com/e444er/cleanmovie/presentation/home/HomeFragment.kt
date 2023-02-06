@@ -1,5 +1,7 @@
 package com.e444er.cleanmovie.presentation.home
 
+import android.content.Context
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -29,30 +31,38 @@ class HomeFragment(
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentHomeBinding.bind(view)
 
-        lifecycleScope.launchWhenCreated {
-            viewModel.getLanguage().collectLatest { language ->
-                viewModel.getNowPlayingMovies(language = language)
-                    .collectLatest {
-                        nowPlayingAdapter.submitData(it)
+        val connMgr =
+            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+
+        if (connMgr.activeNetwork != null) {
+            viewLifecycleOwner.lifecycleScope.launch {
+                viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                    launch {
+                        viewModel.getLanguage().collect {
+                            viewModel.setLanguage(it)
+                        }
                     }
-            }
-        }
-
-        lifecycleScope.launchWhenCreated {
-            viewModel.getLanguage().collectLatest {
-                val genreList = viewModel.getMovieGenreList(it).genres
-                popularMoviesRecyclerView.passMovieGenreList(genreList)
-                nowPlayingAdapter.passMovieGenreList(genreList)
-            }
-        }
-
-        lifecycleScope.launchWhenCreated {
-            viewModel.getLanguage().collectLatest {
-                viewModel.getPopularMovies(language = it).collectLatest { pagingData ->
-                    popularMoviesRecyclerView.submitData(pagingData)
+                    launch {
+                        viewModel.getNowPlayingMovies().collectLatest { pagingData ->
+                            nowPlayingAdapter.submitData(pagingData)
+                        }
+                    }
+                    launch {
+                        viewModel.getNowPlayingMovies().collectLatest { pagingData ->
+                            popularMoviesRecyclerView.submitData(pagingData)
+                        }
+                    }
+                    launch {
+                        val genreList = viewModel.getMovieGenreList().genres
+                        if (genreList.isNotEmpty()) {
+                            popularMoviesRecyclerView.passMovieGenreList(genreList)
+                            nowPlayingAdapter.passMovieGenreList(genreList)
+                        }
+                    }
                 }
             }
         }
+
 
         binding.nowPlayingRecyclerView.adapter = nowPlayingAdapter
         binding.nowPlayingRecyclerView.setAlpha(true)
