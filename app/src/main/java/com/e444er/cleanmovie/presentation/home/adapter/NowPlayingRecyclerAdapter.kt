@@ -33,10 +33,10 @@ class NowPlayingRecyclerAdapter @Inject constructor(
 
             binding.movieTitle.text = movie.title
 
-//            binding.voteAverage.text = context.getString(
-//                R.string.voteAverage,
-//                movie.voteAverage.toString(), movie.voteCount.toString()
-//            )
+            binding.voteAverage.text = context.getString(
+                R.string.voteAverage,
+                movie.voteAverage.toString(), movie.voteCount.toString()
+            )
 
             binding.backdropImage.load(
                 ImageApi.getImage(

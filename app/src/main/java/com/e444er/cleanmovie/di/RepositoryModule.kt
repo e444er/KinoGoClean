@@ -12,6 +12,8 @@ import com.e444er.cleanmovie.domain.use_case.get_tv_genre_list.GetTvGenreList
 import com.e444er.cleanmovie.domain.use_case.get_locale.GetLocaleUseCase
 import com.e444er.cleanmovie.domain.use_case.get_now_playing_movies.GetNowPlayingMoviesUseCase
 import com.e444er.cleanmovie.domain.use_case.get_popular_movies.GetPopularMoviesUseCase
+import com.e444er.cleanmovie.domain.use_case.get_popular_tv_series.GetPopularTvSeries
+import com.e444er.cleanmovie.domain.use_case.get_top_rated_movies.GetTopRatedMoviesUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -40,7 +42,9 @@ object RepositoryModule {
             getTvGenreList = GetTvGenreList(remoteRepository),
             getNowPlayingMoviesUseCase = GetNowPlayingMoviesUseCase(remoteRepository),
             getLocaleUseCase = GetLocaleUseCase(dataStoreOperations),
-            getPopularMoviesUseCase = GetPopularMoviesUseCase(remoteRepository)
+            getPopularMoviesUseCase = GetPopularMoviesUseCase(remoteRepository),
+            getTopRatedMoviesUseCase = GetTopRatedMoviesUseCase(remoteRepository),
+            getPopularTvSeries = GetPopularTvSeries(remoteRepository)
         )
     }
 

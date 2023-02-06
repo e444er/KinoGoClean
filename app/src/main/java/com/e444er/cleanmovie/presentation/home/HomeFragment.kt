@@ -12,7 +12,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.presentation.home.adapter.NowPlayingRecyclerAdapter
-import com.e444er.cleanmovie.presentation.home.adapter.PopularMoviesRecyclerView
+import com.e444er.cleanmovie.presentation.home.adapter.PopularMoviesAdapter
+import com.e444er.cleanmovie.presentation.home.adapter.PopularTvSeriesAdapter
+import com.e444er.cleanmovie.presentation.home.adapter.TopRatedMoviesAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -20,26 +22,42 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class HomeFragment(
     private val nowPlayingAdapter: NowPlayingRecyclerAdapter,
-    private val popularMoviesRecyclerView: PopularMoviesRecyclerView
+    private val popularMoviesAdapter: PopularMoviesAdapter,
+    private val topRatedMoviesAdapter: TopRatedMoviesAdapter,
+    private val popularTvSeriesAdapter: PopularTvSeriesAdapter
 ) : Fragment(R.layout.fragment_home) {
 
-    private var binding: FragmentHomeBinding? = null
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding
 
     private val viewModel: HomeViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentHomeBinding.bind(view)
+        _binding = binding
+
+        setupRecyclerAdapters()
 
         val connMgr =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         if (connMgr.activeNetwork != null) {
+
             viewLifecycleOwner.lifecycleScope.launch {
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                     launch {
                         viewModel.getLanguage().collect {
                             viewModel.setLanguage(it)
+                        }
+                    }
+                    launch {
+                        val genreList = viewModel.getMovieGenreList().genres
+                        if (genreList.isNotEmpty()) {
+                            nowPlayingAdapter.passMovieGenreList(genreList)
+                            popularMoviesAdapter.passMovieGenreList(genreList)
+                            topRatedMoviesAdapter.passMovieGenreList(genreList)
+                            popularTvSeriesAdapter.passMovieGenreList(genreList)
                         }
                     }
                     launch {
@@ -49,31 +67,40 @@ class HomeFragment(
                     }
                     launch {
                         viewModel.getNowPlayingMovies().collectLatest { pagingData ->
-                            popularMoviesRecyclerView.submitData(pagingData)
+                            popularMoviesAdapter.submitData(pagingData)
                         }
                     }
                     launch {
-                        val genreList = viewModel.getMovieGenreList().genres
-                        if (genreList.isNotEmpty()) {
-                            popularMoviesRecyclerView.passMovieGenreList(genreList)
-                            nowPlayingAdapter.passMovieGenreList(genreList)
+                        viewModel.getTopRatedMovies().collectLatest { pagingData ->
+                            topRatedMoviesAdapter.submitData(pagingData)
+                        }
+                    }
+                    launch {
+                        viewModel.getPopularTvSeries().collectLatest { pagingData ->
+                            popularTvSeriesAdapter.submitData(pagingData)
                         }
                     }
                 }
             }
         }
-
-
-        binding.nowPlayingRecyclerView.adapter = nowPlayingAdapter
-        binding.nowPlayingRecyclerView.setAlpha(true)
-
-        binding.popularMoviesRecyclerView.adapter = popularMoviesRecyclerView
     }
 
 
+    private fun setupRecyclerAdapters() {
+        if (binding != null) {
+            binding?.apply {
+                nowPlayingRecyclerView.adapter = nowPlayingAdapter
+                nowPlayingRecyclerView.setAlpha(true)
+                popularMoviesRecyclerView.adapter = popularMoviesAdapter
+                topRatedMoviesRecyclerView.adapter = topRatedMoviesAdapter
+                popularTvSeriesRecyclerView.adapter = popularTvSeriesAdapter
+            }
+        }
+    }
+
     override fun onDestroyView() {
         super.onDestroyView()
-        binding = null
+        _binding = null
     }
 
 }

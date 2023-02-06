@@ -6,6 +6,7 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.e444er.cleanmovie.databinding.MovieRowBinding
+import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.presentation.home.adapter.DiffUtilCallBack
 
 abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(
@@ -21,9 +22,7 @@ abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(
         onBindViewHold(binding = holder.binding, position = position, context = context)
     }
 
-
     abstract fun onBindViewHold(binding: MovieRowBinding, position: Int, context: Context)
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
@@ -33,5 +32,9 @@ abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(
         )
     }
 
+
+    var genreList: List<Genre> = emptyList()
+
+    abstract fun passMovieGenreList(genreList: List<Genre>)
 }
 

@@ -13,11 +13,9 @@ import com.e444er.cleanmovie.presentation.util.BaseMovieAndTvRecyclerAdapter
 import com.e444er.cleanmovie.presentation.util.Util
 import javax.inject.Inject
 
-class PopularMoviesRecyclerView @Inject constructor(
+class PopularMoviesAdapter @Inject constructor(
     private val imageLoader: ImageLoader
 ) : BaseMovieAndTvRecyclerAdapter<Movie>() {
-
-    private var movieGenreList: List<Genre> = emptyList()
 
     override fun onBindViewHold(
         binding: MovieRowBinding,
@@ -38,21 +36,24 @@ class PopularMoviesRecyclerView @Inject constructor(
 
             binding.tvMovieTvName.text = movie.title
 
-            val genre = Util.handleGenreOneText(movieGenreList, movie)
+            val genre = Util.handleGenreOneText(genreList, movie.genreIds)
             val releaseDate = Util.handleReleaseDate(movie.releaseDate)
+
+            val voteCount = Util.handleVoteCount(movie.voteCount)
 
             binding.tvReleaseDateGenre.text =
                 context.getString(R.string.release_date_genre, releaseDate, genre)
 
             binding.voteAverage.text = context.getString(
                 R.string.voteAverage,
-                movie.voteAverage.toString(), movie.voteCount.toString()
+                movie.voteAverage.toString(),
+                voteCount
             )
         }
 
     }
 
-    fun passMovieGenreList(movieGenreList: List<Genre>) {
-        this.movieGenreList = movieGenreList
+   override fun passMovieGenreList(movieGenreList: List<Genre>) {
+        this.genreList = movieGenreList
     }
 }

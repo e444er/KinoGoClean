@@ -4,7 +4,9 @@ import androidx.paging.PagingData
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.GenreList
 import com.e444er.cleanmovie.domain.models.Movie
+import com.e444er.cleanmovie.domain.models.TvSeries
 import com.e444er.cleanmovie.util.Constants
+import com.e444er.cleanmovie.util.Constants.DEFAULT_LANGUAGE
 import kotlinx.coroutines.flow.Flow
 
 interface RemoteRepository {
@@ -25,4 +27,12 @@ interface RemoteRepository {
     fun getPopularMovies(
         language: String = Constants.DEFAULT_LANGUAGE
     ): Flow<PagingData<Movie>>
+
+    fun getTopRatedMovies(
+        language: String = DEFAULT_LANGUAGE
+    ): Flow<PagingData<Movie>>
+
+    fun getPopularTvs(
+        language: String = DEFAULT_LANGUAGE
+    ): Flow<PagingData<TvSeries>>
 }
