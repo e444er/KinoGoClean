@@ -15,24 +15,34 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment(
+    private val nowPlayingAdapter: NowPlayingRecyclerAdapter
+) : Fragment(R.layout.fragment_home) {
 
     private var binding: FragmentHomeBinding? = null
 
     private val viewModel: HomeViewModel by viewModels()
 
-    private val nowPlayingAdapter by lazy { NowPlayingRecyclerAdapter() }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentHomeBinding.bind(view)
 
-        lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.nowPlayingMovies.collectLatest {
-                    nowPlayingAdapter.submitData(it)
-                }
+        lifecycleScope.launchWhenCreated {
+            viewModel.getLanguage().collectLatest { language ->
+                viewModel.getNowPlayingMovies(language = language)
+                    .collectLatest {
+                        nowPlayingAdapter.submitData(it)
+                    }
             }
+        }
+
+        lifecycleScope.launchWhenCreated {
+            viewModel.getLanguage().collectLatest {
+                val genreList = viewModel.getMovieGenreList(it).genres
+
+                nowPlayingAdapter.passMovieGenreList(genreList)
+            }
+
         }
 
         binding.nowPlayingRecyclerView.adapter = nowPlayingAdapter
