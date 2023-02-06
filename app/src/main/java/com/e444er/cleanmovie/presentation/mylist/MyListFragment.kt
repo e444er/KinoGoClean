@@ -5,8 +5,9 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentMyListBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class MyListFragment : Fragment(R.layout.fragment_my_list) {
 
 

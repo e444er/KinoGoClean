@@ -7,6 +7,7 @@ import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
 @AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {

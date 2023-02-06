@@ -25,10 +25,19 @@
         android:id="@+id/exploreFragment"
         android:name="com.e444er.cleanmovie.presentation.explore.ExploreFragment"
         android:label="fragment_explore"
-        tools:layout="@layout/fragment_explore" />
+        tools:layout="@layout/fragment_explore" >
+        <action
+            android:id="@+id/action_exploreFragment_to_filterBottomSheetFragment"
+            app:destination="@id/filterBottomSheetFragment" />
+    </fragment>
     <fragment
         android:id="@+id/myListFragment"
         android:name="com.e444er.cleanmovie.presentation.mylist.MyListFragment"
         android:label="fragment_my_list"
         tools:layout="@layout/fragment_my_list" />
+    <dialog
+        android:id="@+id/filterBottomSheetFragment"
+        android:name="com.e444er.cleanmovie.presentation.filter_bottom_sheet.FilterBottomSheetFragment"
+        android:label="fragment_filter_bottom_sheet"
+        tools:layout="@layout/fragment_filter_bottom_sheet" />
 </navigation>
