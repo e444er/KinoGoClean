@@ -14,27 +14,31 @@ class NowPlayingPagingSource @Inject constructor(
     private val region: String
 ) : PagingSource<Int, Movie>() {
 
-    override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
-        return null
-    }
-
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
+
+        val nextPage = params.key ?: STARTING_PAGE
         return try {
 
             val response = tmdbApi.getNowPlayingMovies(
+                page = nextPage,
                 language = language,
                 region = region
             )
 
-            val page = response.page
-
             LoadResult.Page(
                 data = response.results.toMovieList(),
-                prevKey = if (page != STARTING_PAGE) page - 1 else STARTING_PAGE,
-                nextKey = page + 1
+                prevKey = if (nextPage == 1) null else nextPage - 1,
+                nextKey = if (nextPage < response.totalPages)
+                    response.page.plus(1) else null
             )
+
         } catch (e: Exception) {
             LoadResult.Error(throwable = e)
         }
+    }
+
+
+    override fun getRefreshKey(state: PagingState<Int, Movie>): Int? {
+        return state.anchorPosition
     }
 }

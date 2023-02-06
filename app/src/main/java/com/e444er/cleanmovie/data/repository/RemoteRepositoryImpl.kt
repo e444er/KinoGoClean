@@ -6,6 +6,7 @@ import androidx.paging.PagingData
 import com.e444er.cleanmovie.data.paging_source.NowPlayingPagingSource
 import com.e444er.cleanmovie.data.remote.TMDBApi
 import com.e444er.cleanmovie.domain.models.Genre
+import com.e444er.cleanmovie.domain.models.GenreList
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
 import com.e444er.cleanmovie.util.Constants.ITEMS_PER_PAGE
@@ -15,15 +16,15 @@ import javax.inject.Inject
 class RemoteRepositoryImpl @Inject constructor(
     private val tmdbApi: TMDBApi
 ) : RemoteRepository {
-    override suspend fun getMovieGenreList(language: String): List<Genre> {
+    override suspend fun getMovieGenreList(language: String): GenreList {
         return tmdbApi.getMovieGenreList(language = language)
     }
 
-    override suspend fun getTvGenreList(language: String): List<Genre> {
+    override suspend fun getTvGenreList(language: String): GenreList {
         return tmdbApi.getTvGenreList(language = language)
     }
 
-    override suspend fun getNowPlayingMovies(
+    override fun getNowPlayingMovies(
         language: String,
         region: String
     ): Flow<PagingData<Movie>> {

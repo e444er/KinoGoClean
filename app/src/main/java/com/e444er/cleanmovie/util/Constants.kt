@@ -3,7 +3,8 @@ package com.e444er.cleanmovie.util
 import com.e444er.cleanmovie.BuildConfig
 
 object Constants {
-    const val BASE_URL ="https://api.themoviedb.org/3"
+    const val BASE_URL ="https://api.themoviedb.org/3/"
+    const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/"
 
     const val DEFAULT_LANGUAGE = "en"
     const val DEFAULT_REGION = "US"
