@@ -49,11 +49,16 @@ class PopularMoviesAdapter @Inject constructor(
                 movie.voteAverage.toString(),
                 voteCount
             )
-        }
 
+            binding.root.setOnClickListener {
+                this.itemClickListener(movie)
+            }
+        }
     }
 
-   override fun passMovieGenreList(movieGenreList: List<Genre>) {
-        this.genreList = movieGenreList
+
+    override
+    fun passMovieGenreList(genreList: List<Genre>) {
+        this.genreList = genreList
     }
 }

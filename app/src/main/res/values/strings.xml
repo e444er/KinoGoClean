@@ -22,6 +22,7 @@
     <string name="genre">Genre</string>
 
     <string name="voteAverage">%1$s (%2$s)</string>
-    <string name="release_date_genre">%1$s %2$s</string>
+    <string name="release_date_genre">%1$s  %2$s</string>
+
 
 </resources>

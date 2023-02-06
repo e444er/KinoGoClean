@@ -36,7 +36,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/now_playing_text"
-            app:layout_constraintTop_toTopOf="parent"  />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <com.jackandphantom.carouselrecyclerview.CarouselRecyclerview
             android:id="@+id/nowPlayingRecyclerView"
@@ -48,7 +48,9 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/now_playing_text"
             tools:itemCount="2"
-            tools:listitem="@layout/now_playing_row"/>
+            tools:listitem="@layout/now_playing_row">
+
+        </com.jackandphantom.carouselrecyclerview.CarouselRecyclerview>
 
         <TextView
             android:id="@+id/popular_movies_text"
@@ -198,5 +200,4 @@
             tools:listitem="@layout/movie_row" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>

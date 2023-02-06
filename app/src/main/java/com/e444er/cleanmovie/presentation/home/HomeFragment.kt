@@ -16,11 +16,14 @@ import com.e444er.cleanmovie.presentation.home.adapter.PopularMoviesAdapter
 import com.e444er.cleanmovie.presentation.home.adapter.PopularTvSeriesAdapter
 import com.e444er.cleanmovie.presentation.home.adapter.TopRatedMoviesAdapter
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class HomeFragment(
+class HomeFragment @Inject constructor(
     private val nowPlayingAdapter: NowPlayingRecyclerAdapter,
     private val popularMoviesAdapter: PopularMoviesAdapter,
     private val topRatedMoviesAdapter: TopRatedMoviesAdapter,
@@ -37,64 +40,90 @@ class HomeFragment(
         val binding = FragmentHomeBinding.bind(view)
         _binding = binding
 
-        setupRecyclerAdapters()
-
         val connMgr =
             requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         if (connMgr.activeNetwork != null) {
 
             viewLifecycleOwner.lifecycleScope.launch {
+
                 viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                    launch {
+
+                    launch(Dispatchers.IO) {
                         viewModel.getLanguage().collect {
                             viewModel.setLanguage(it)
                         }
                     }
-                    launch {
-                        val genreList = viewModel.getMovieGenreList().genres
-                        if (genreList.isNotEmpty()) {
-                            nowPlayingAdapter.passMovieGenreList(genreList)
-                            popularMoviesAdapter.passMovieGenreList(genreList)
-                            topRatedMoviesAdapter.passMovieGenreList(genreList)
-                            popularTvSeriesAdapter.passMovieGenreList(genreList)
-                        }
-                    }
+
                     launch {
                         viewModel.getNowPlayingMovies().collectLatest { pagingData ->
                             nowPlayingAdapter.submitData(pagingData)
                         }
                     }
+
                     launch {
-                        viewModel.getNowPlayingMovies().collectLatest { pagingData ->
-                            popularMoviesAdapter.submitData(pagingData)
+                        viewModel.getPopularMovies()
+                            .collectLatest { pagingData ->
+                                popularMoviesAdapter.submitData(pagingData)
+                            }
+                    }
+
+                    launch{
+                        viewModel.getTopRatedMovies()
+                            .collectLatest { pagingData ->
+                                topRatedMoviesAdapter.submitData(pagingData)
+                            }
+                    }
+
+                    launch {
+                        viewModel.getPopularTvSeries()
+                            .collectLatest { pagingData ->
+                                popularTvSeriesAdapter.submitData(pagingData)
+                            }
+                    }
+
+                    launch{
+                        val genreList = viewModel.getMovieGenreList().genres
+                        if (genreList.isNotEmpty()) {
+                            nowPlayingAdapter.passMovieGenreList(genreList)
+                            popularMoviesAdapter.passMovieGenreList(genreList)
+                            topRatedMoviesAdapter.passMovieGenreList(genreList)
                         }
                     }
+
                     launch {
-                        viewModel.getTopRatedMovies().collectLatest { pagingData ->
-                            topRatedMoviesAdapter.submitData(pagingData)
-                        }
-                    }
-                    launch {
-                        viewModel.getPopularTvSeries().collectLatest { pagingData ->
-                            popularTvSeriesAdapter.submitData(pagingData)
+                        val tvGenreList = viewModel.getTvGenreList().genres
+                        if (tvGenreList.isNotEmpty()) {
+                            popularTvSeriesAdapter.passMovieGenreList(tvGenreList)
                         }
                     }
                 }
             }
         }
+        setupRecyclerAdapters()
+        setAdaptersClickListener()
     }
 
 
     private fun setupRecyclerAdapters() {
-        if (binding != null) {
-            binding?.apply {
-                nowPlayingRecyclerView.adapter = nowPlayingAdapter
-                nowPlayingRecyclerView.setAlpha(true)
-                popularMoviesRecyclerView.adapter = popularMoviesAdapter
-                topRatedMoviesRecyclerView.adapter = topRatedMoviesAdapter
-                popularTvSeriesRecyclerView.adapter = popularTvSeriesAdapter
-            }
+        binding?.apply {
+            nowPlayingRecyclerView.adapter = nowPlayingAdapter
+            nowPlayingRecyclerView.setAlpha(true)
+            popularMoviesRecyclerView.adapter = popularMoviesAdapter
+            topRatedMoviesRecyclerView.adapter = topRatedMoviesAdapter
+            popularTvSeriesRecyclerView.adapter = popularTvSeriesAdapter
+        }
+    }
+
+    private fun setAdaptersClickListener() {
+        popularMoviesAdapter.setOnItemClickListener {
+            Timber.d("Popular Movies ${it.title} ")
+        }
+        popularTvSeriesAdapter.setOnItemClickListener {
+            Timber.d("Popular TvSeries ${it.name} ")
+        }
+        topRatedMoviesAdapter.setOnItemClickListener {
+            Timber.d("TopRated Movies ${it.title} ")
         }
     }
 
@@ -102,5 +131,4 @@ class HomeFragment(
         super.onDestroyView()
         _binding = null
     }
-
 }

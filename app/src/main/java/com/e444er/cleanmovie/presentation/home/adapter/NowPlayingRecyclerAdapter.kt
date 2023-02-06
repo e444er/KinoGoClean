@@ -17,12 +17,13 @@ import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
 import com.e444er.cleanmovie.presentation.util.Util
 import javax.inject.Inject
-
 class NowPlayingRecyclerAdapter @Inject constructor(
     private val imageLoader: ImageLoader
-) : PagingDataAdapter<Movie, NowPlayingRecyclerAdapter.MovieViewHolder>(DiffUtilCallBack()) {
+) :
+    PagingDataAdapter<Movie, NowPlayingRecyclerAdapter.MovieViewHolder>(DiffUtilCallBack<Movie>()) {
 
     private var movieGenreList: List<Genre> = emptyList()
+
     class MovieViewHolder(
         private val binding: NowPlayingRowBinding,
         val movieGenreList: List<Genre>,
@@ -30,7 +31,6 @@ class NowPlayingRecyclerAdapter @Inject constructor(
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie: Movie, context: Context) {
-
             binding.movieTitle.text = movie.title
 
             binding.voteAverage.text = context.getString(
@@ -46,7 +46,6 @@ class NowPlayingRecyclerAdapter @Inject constructor(
                 imageLoader = imageLoader
             )
             if (movie.genreIds.isNotEmpty()) {
-
                 binding.genresText.text =
                     Util.handleGenreText(movieGenreList = movieGenreList, movie = movie)
             }
@@ -77,7 +76,6 @@ class NowPlayingRecyclerAdapter @Inject constructor(
 }
 
 class DiffUtilCallBack<T : Any> : DiffUtil.ItemCallback<T>() {
-
     override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
         return if (oldItem is Movie && newItem is Movie) {
             val old = oldItem as Movie
@@ -97,6 +95,4 @@ class DiffUtilCallBack<T : Any> : DiffUtil.ItemCallback<T>() {
             oldItem as TvSeries == newItem as TvSeries
         }
     }
-
-
 }
