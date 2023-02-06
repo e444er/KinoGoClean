@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.presentation.home.adapter.NowPlayingRecyclerAdapter
@@ -19,7 +20,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -68,7 +68,7 @@ class HomeFragment @Inject constructor(
                             }
                     }
 
-                    launch{
+                    launch {
                         viewModel.getTopRatedMovies()
                             .collectLatest { pagingData ->
                                 topRatedMoviesAdapter.submitData(pagingData)
@@ -82,7 +82,7 @@ class HomeFragment @Inject constructor(
                             }
                     }
 
-                    launch{
+                    launch {
                         val genreList = viewModel.getMovieGenreList().genres
                         if (genreList.isNotEmpty()) {
                             nowPlayingAdapter.passMovieGenreList(genreList)
@@ -91,12 +91,12 @@ class HomeFragment @Inject constructor(
                         }
                     }
 
-                    launch {
-                        val tvGenreList = viewModel.getTvGenreList().genres
-                        if (tvGenreList.isNotEmpty()) {
-                            popularTvSeriesAdapter.passMovieGenreList(tvGenreList)
-                        }
-                    }
+//                    launch {
+//                        val tvGenreList = viewModel.getTvGenreList().genres
+//                        if (tvGenreList.isNotEmpty()) {
+//                            popularTvSeriesAdapter.passMovieGenreList(tvGenreList)
+//                        }
+//                    }
                 }
             }
         }
@@ -116,14 +116,20 @@ class HomeFragment @Inject constructor(
     }
 
     private fun setAdaptersClickListener() {
-        popularMoviesAdapter.setOnItemClickListener {
-            Timber.d("Popular Movies ${it.title} ")
+        popularMoviesAdapter.setOnItemClickListener { movie ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailBottomSheetFragment()
+            action.movie = movie
+            findNavController().navigate(action)
         }
-        popularTvSeriesAdapter.setOnItemClickListener {
-            Timber.d("Popular TvSeries ${it.name} ")
+        popularTvSeriesAdapter.setOnItemClickListener { tvSeries ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailBottomSheetFragment()
+            action.tvSeries = tvSeries
+            findNavController().navigate(action)
         }
-        topRatedMoviesAdapter.setOnItemClickListener {
-            Timber.d("TopRated Movies ${it.title} ")
+        topRatedMoviesAdapter.setOnItemClickListener { movie ->
+            val action = HomeFragmentDirections.actionHomeFragmentToDetailBottomSheetFragment()
+            action.movie = movie
+            findNavController().navigate(action)
         }
     }
 
