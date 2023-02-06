@@ -32,6 +32,7 @@ class HomeFragment(
                 viewModel.getNowPlayingMovies(language = language)
                     .collectLatest {
                         nowPlayingAdapter.submitData(it)
+
                     }
             }
         }

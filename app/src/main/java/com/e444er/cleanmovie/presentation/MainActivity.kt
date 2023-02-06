@@ -1,14 +1,14 @@
 package com.e444er.cleanmovie.presentation
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.ActivityMainBinding
+import com.e444er.cleanmovie.presentation.util.FragmentFactory
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

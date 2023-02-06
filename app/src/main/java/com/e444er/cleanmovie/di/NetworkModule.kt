@@ -2,6 +2,7 @@ package com.e444er.cleanmovie.di
 
 import android.content.Context
 import coil.ImageLoader
+import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.data.remote.TMDBApi
 import com.e444er.cleanmovie.util.Constants
 import com.squareup.moshi.Moshi
@@ -42,6 +43,7 @@ object NetworkModule {
     fun provideImageLoader(@ApplicationContext context: Context): ImageLoader {
         return  ImageLoader.Builder(context)
             .crossfade(true)
+            .placeholder(R.drawable.loading_animate)
             .build()
     }
 }

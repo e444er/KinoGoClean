@@ -14,6 +14,7 @@ import com.e444er.cleanmovie.data.remote.ImageSize
 import com.e444er.cleanmovie.databinding.NowPlayingRowBinding
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
+import com.e444er.cleanmovie.domain.models.TvSeries
 import javax.inject.Inject
 
 class NowPlayingRecyclerAdapter @Inject constructor(
@@ -22,7 +23,7 @@ class NowPlayingRecyclerAdapter @Inject constructor(
 
     private var movieGenreList: List<Genre> = emptyList()
     class MovieViewHolder(
-        val binding: NowPlayingRowBinding,
+        private val binding: NowPlayingRowBinding,
         val movieGenreList: List<Genre>,
         val imageLoader: ImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
@@ -87,12 +88,27 @@ class NowPlayingRecyclerAdapter @Inject constructor(
     }
 }
 
-class DiffUtilCallBack : DiffUtil.ItemCallback<Movie>() {
-    override fun areItemsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-        return oldItem.id == newItem.id
+class DiffUtilCallBack<T : Any> : DiffUtil.ItemCallback<T>() {
+
+    override fun areItemsTheSame(oldItem: T, newItem: T): Boolean {
+        return if (oldItem is Movie && newItem is Movie) {
+            val old = oldItem as Movie
+            val new = newItem as Movie
+            new.id == old.id
+        } else {
+            val old = oldItem as TvSeries
+            val new = newItem as TvSeries
+            old.id == new.id
+        }
     }
 
-    override fun areContentsTheSame(oldItem: Movie, newItem: Movie): Boolean {
-        return oldItem == newItem
+    override fun areContentsTheSame(oldItem: T, newItem: T): Boolean {
+        return if (oldItem is Movie) {
+            oldItem as Movie == newItem as Movie
+        } else {
+            oldItem as TvSeries == newItem as TvSeries
+        }
     }
+
+
 }
