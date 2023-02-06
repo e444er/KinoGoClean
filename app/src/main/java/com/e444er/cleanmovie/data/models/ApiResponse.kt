@@ -2,7 +2,7 @@ package com.e444er.cleanmovie.data.models
 
 import com.squareup.moshi.Json
 
-data class Response<T>(
+data class ApiResponse<T>(
     val page: Int,
     val results: List<T>,
     @Json(name = "total_results") val totalResults: Int,
