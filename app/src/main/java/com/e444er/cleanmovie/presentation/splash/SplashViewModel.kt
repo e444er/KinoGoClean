@@ -3,6 +3,8 @@ package com.e444er.cleanmovie.presentation.splash
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.e444er.cleanmovie.domain.use_case.update_current_locale.UpdateLocalCurrentUseCase
+import com.e444er.cleanmovie.util.Constants.DEFAULT_LANGUAGE
+import com.e444er.cleanmovie.util.Constants.supportedLanguages
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,9 +16,12 @@ class SplashViewModel @Inject constructor(
 ) : ViewModel() {
 
     fun updateLocale(locale: String) {
-        viewModelScope.launch(Dispatchers.IO)
-        {
-            updateLocalCurrentUseCase(locale = locale)
+        viewModelScope.launch(Dispatchers.IO) {
+            if (locale !in supportedLanguages) {
+                updateLocalCurrentUseCase(locale = DEFAULT_LANGUAGE)
+            } else {
+                updateLocalCurrentUseCase(locale = locale)
+            }
         }
     }
 }

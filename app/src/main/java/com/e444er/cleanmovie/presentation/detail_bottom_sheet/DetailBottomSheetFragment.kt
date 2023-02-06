@@ -48,8 +48,6 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
         setupButtonClickListeners()
 
         binding?.apply {
-            tvOverview.movementMethod = ScrollingMovementMethod()
-
             if (movie != null){
                 tvName.text = movie.title
                 tvReleaseDate.text = HandleUtils.handleReleaseDate(movie.releaseDate)
@@ -71,8 +69,8 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
                 }
                 tvBottomInfoText.text =
                     requireContext().getString(R.string.detail_bottom_sheet_tv_info)
-
             }
+            tvOverview.movementMethod = ScrollingMovementMethod()
         }
     }
 

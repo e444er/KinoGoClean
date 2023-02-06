@@ -12,9 +12,12 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
+import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.presentation.home.adapter.*
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -38,17 +41,39 @@ class HomeFragment @Inject constructor(
         val binding = FragmentHomeBinding.bind(view)
         _binding = binding
 
-        val connMgr =
-            requireContext().getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
-        if (connMgr.activeNetwork != null) {
-            observeData()
-        }
         setupRecyclerAdapters()
         setAdaptersClickListener()
+        observeNetworkConnectivity()
     }
 
-    private fun observeData() {
+    private fun observeNetworkConnectivity() {
+        var job: Job? = null
+        viewLifecycleOwner.lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.observeNetworkConnectivity().collectLatest {
+                        if (it == ConnectivityObserver.Status.Unavaliable || it == ConnectivityObserver.Status.Lost) {
+                            viewModel.showSnackBar()
+                            job?.cancel()
+                        } else if (it == ConnectivityObserver.Status.Avaliable) {
+                            job?.cancel()
+                            job = observeData()
+                        }
+                    }
+                }
+                launch {
+                    viewModel.showSnackBarNoInternetConnectivity.collectLatest {
+                        if (it.isNotEmpty()) {
+                            Snackbar.make(requireView(), it, Snackbar.LENGTH_SHORT).show()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun observeData() =
 
         viewLifecycleOwner.lifecycleScope.launch {
 
@@ -110,7 +135,6 @@ class HomeFragment @Inject constructor(
                 }
             }
         }
-    }
 
 
     private fun setupRecyclerAdapters() {

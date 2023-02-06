@@ -3,7 +3,9 @@ package com.e444er.cleanmovie.di
 import android.content.Context
 import com.e444er.cleanmovie.data.remote.TMDBApi
 import com.e444er.cleanmovie.data.repository.DataOperationsImpl
+import com.e444er.cleanmovie.data.repository.NetworkConnectivityObserver
 import com.e444er.cleanmovie.data.repository.RemoteRepositoryImpl
+import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.domain.repository.DataStoreOperations
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
 import com.e444er.cleanmovie.domain.use_case.HomeUseCases
@@ -56,6 +58,14 @@ object RepositoryModule {
         @ApplicationContext context: Context
     ): DataStoreOperations {
         return DataOperationsImpl(context = context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideConnectivityManager(
+        @ApplicationContext context: Context
+    ): ConnectivityObserver {
+        return  NetworkConnectivityObserver(context)
     }
 
 }
