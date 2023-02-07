@@ -108,7 +108,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding?.let {
             it.recyclerViewSeeAllSection.visibility = View.GONE
             it.scrollView.visibility = View.VISIBLE
-            it.scrollView.animation = slideInLeftAnim()
             it.recyclerViewSeeAll.removeAllViews()
         }
     }

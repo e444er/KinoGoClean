@@ -2,12 +2,12 @@ package com.e444er.cleanmovie.presentation.util
 
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
+import com.e444er.cleanmovie.presentation.util.HandleUtils.handleVoteCount
 
 object HandleUtils {
     fun handleReleaseDate(releaseDate: String): String {
         return releaseDate.split("-")[0]
     }
-
 
     fun handleGenreText(movieGenreList: List<Genre>, movie: Movie): String {
         var genreNames = ""

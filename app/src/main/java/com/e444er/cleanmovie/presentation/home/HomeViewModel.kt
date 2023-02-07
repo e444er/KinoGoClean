@@ -14,7 +14,6 @@ import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.domain.use_case.HomeUseCases
 import com.e444er.cleanmovie.util.Constants.IS_SHOWS_SEE_ALL_PAGE
 import com.e444er.cleanmovie.util.Constants.LATEST_SHOWS_SEE_ALL_PAGE_TOOLBAR_TEXT_ID
-import com.e444er.cleanmovie.util.Constants.NOW_PLAYING_TEXT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch

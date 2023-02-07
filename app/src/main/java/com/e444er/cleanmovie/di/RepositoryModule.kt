@@ -12,6 +12,7 @@ import com.e444er.cleanmovie.domain.repository.DataStoreOperations
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
 import com.e444er.cleanmovie.domain.use_case.ExploreUseCases
 import com.e444er.cleanmovie.domain.use_case.HomeUseCases
+import com.e444er.cleanmovie.domain.use_case.SettingUseCase
 import com.e444er.cleanmovie.domain.use_case.discover_movie.DiscoverMovieUseCase
 import com.e444er.cleanmovie.domain.use_case.discover_tv.DiscoverTvUseCase
 import com.e444er.cleanmovie.domain.use_case.get_movie_genre_list.GetMovieGenreList
@@ -22,6 +23,8 @@ import com.e444er.cleanmovie.domain.use_case.get_popular_movies.GetPopularMovies
 import com.e444er.cleanmovie.domain.use_case.get_popular_tv_series.GetPopularTvSeries
 import com.e444er.cleanmovie.domain.use_case.get_top_rated_movies.GetTopRatedMoviesUseCase
 import com.e444er.cleanmovie.domain.use_case.get_top_rated_tv_series.GetTopRatedTvSeriesUseCase
+import com.e444er.cleanmovie.domain.use_case.get_ui_mode.GetUIModeUseCase
+import com.e444er.cleanmovie.domain.use_case.update_ui_mode.UpdateUIModeUseCase
 import com.e444er.cleanmovie.util.DefaultDispatchers
 import com.e444er.cleanmovie.util.DispatchersProvider
 import dagger.Module
@@ -56,6 +59,7 @@ object RepositoryModule {
             discoverTvUseCase = DiscoverTvUseCase(remoteRepository)
         )
     }
+
     @Provides
     @Singleton
     fun provideHomeUseCases(
@@ -71,6 +75,17 @@ object RepositoryModule {
             getTopRatedMoviesUseCase = GetTopRatedMoviesUseCase(remoteRepository),
             getPopularTvSeries = GetPopularTvSeries(remoteRepository),
             getTopRatedTvSeriesUseCase = GetTopRatedTvSeriesUseCase(remoteRepository)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideSettingsUseCases(
+        dataStoreOperations: DataStoreOperations
+    ): SettingUseCase {
+        return SettingUseCase(
+            getUIModeUseCase = GetUIModeUseCase(dataStoreOperations),
+            updateUIModeUseCase = UpdateUIModeUseCase(dataStoreOperations),
         )
     }
 
