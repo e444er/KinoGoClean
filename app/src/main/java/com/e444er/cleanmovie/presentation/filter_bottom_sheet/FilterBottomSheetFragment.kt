@@ -49,7 +49,7 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
             viewModel.setCategoryState(categories)
 
             // GetGenreList by categories state and language
-            viewModel.getGenreListByCategoriesState()
+            viewModel.getGenreListByCategoriesState(viewModel.language.value)
         }
 
         // Listener Selected GenreList and update checkedGenreIdsState in ViewModel
@@ -136,6 +136,11 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
                     viewModel.genreList.collectLatest { genre ->
                         binding.genreListGroup.removeAllViews()
                         inflateGenreChips(chips = genre, binding.genreListGroup)
+                    }
+                }
+                launch {
+                    viewModel.language.collectLatest {
+                        viewModel.setLocale(it)
                     }
                 }
             }
