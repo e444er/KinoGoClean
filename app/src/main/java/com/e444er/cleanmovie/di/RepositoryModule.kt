@@ -10,7 +10,10 @@ import com.e444er.cleanmovie.data.repository.RemoteRepositoryImpl
 import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.domain.repository.DataStoreOperations
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
+import com.e444er.cleanmovie.domain.use_case.ExploreUseCases
 import com.e444er.cleanmovie.domain.use_case.HomeUseCases
+import com.e444er.cleanmovie.domain.use_case.discover_movie.DiscoverMovieUseCase
+import com.e444er.cleanmovie.domain.use_case.discover_tv.DiscoverTvUseCase
 import com.e444er.cleanmovie.domain.use_case.get_movie_genre_list.GetMovieGenreList
 import com.e444er.cleanmovie.domain.use_case.get_tv_genre_list.GetTvGenreList
 import com.e444er.cleanmovie.domain.use_case.get_locale.GetLocaleUseCase
@@ -38,6 +41,21 @@ object RepositoryModule {
         return RemoteRepositoryImpl(tmdbApi = tmdbApi)
     }
 
+
+    @Provides
+    @Singleton
+    fun provideExploreUseCases(
+        remoteRepository: RemoteRepository,
+        dataStoreOperations: DataStoreOperations
+    ): ExploreUseCases {
+        return ExploreUseCases(
+            tvGenreListUseCase = GetTvGenreList(remoteRepository),
+            movieGenreListUseCase = GetMovieGenreList(remoteRepository),
+            getLocaleUseCase = GetLocaleUseCase(dataStoreOperations),
+            discoverMovieUseCase = DiscoverMovieUseCase(remoteRepository),
+            discoverTvUseCase = DiscoverTvUseCase(remoteRepository)
+        )
+    }
     @Provides
     @Singleton
     fun provideHomeUseCases(

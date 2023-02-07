@@ -12,6 +12,7 @@ import com.e444er.cleanmovie.domain.models.GenreList
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
+import com.e444er.cleanmovie.presentation.filter_bottom_sheet.state.FilterBottomState
 import com.e444er.cleanmovie.util.Constants.ITEMS_PER_PAGE
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -112,5 +113,19 @@ class RemoteRepositoryImpl @Inject constructor(
                 )
             }
         ).flow
+    }
+
+    override fun discoverMovie(
+        language: String,
+        filterBottomState: FilterBottomState
+    ): Flow<PagingData<Movie>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun discoverTv(
+        language: String,
+        filterBottomState: FilterBottomState
+    ): Flow<PagingData<TvSeries>> {
+        TODO("Not yet implemented")
     }
 }

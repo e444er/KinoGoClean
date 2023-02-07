@@ -28,7 +28,6 @@ class ExploreFragment : Fragment(R.layout.fragment_explore) {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

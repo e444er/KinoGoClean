@@ -6,13 +6,13 @@ import com.e444er.cleanmovie.data.models.enums.Categories
 import com.e444er.cleanmovie.data.models.enums.Sort
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Period
+import com.e444er.cleanmovie.domain.use_case.ExploreUseCases
 import com.e444er.cleanmovie.domain.use_case.get_locale.GetLocaleUseCase
 import com.e444er.cleanmovie.domain.use_case.get_movie_genre_list.GetMovieGenreList
 import com.e444er.cleanmovie.domain.use_case.get_tv_genre_list.GetTvGenreList
 import com.e444er.cleanmovie.presentation.filter_bottom_sheet.state.FilterBottomState
 import com.e444er.cleanmovie.util.Constants.DEFAULT_LANGUAGE
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import timber.log.Timber
@@ -22,29 +22,27 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private val tvGenreListUseCase: GetTvGenreList,
-    private val movieGenreListUseCase: GetMovieGenreList,
-    private val getLocaleUseCase: GetLocaleUseCase
+    private val exploreUseCases: ExploreUseCases
 ) : ViewModel() {
 
     private val _language = MutableStateFlow<String>(DEFAULT_LANGUAGE)
-    val language: StateFlow<String> get() = _language
+    val language  = _language.asStateFlow()
 
     private val _genreList = MutableStateFlow<List<Genre>>(emptyList())
-    val genreList: StateFlow<List<Genre>> get() = _genreList
+    val genreList  = _genreList.asStateFlow()
 
     private val _filterBottomSheetState = MutableStateFlow(FilterBottomState())
-    val filterBottomSheetState: StateFlow<FilterBottomState> get() = _filterBottomSheetState
+    val filterBottomSheetState  = _filterBottomSheetState.asStateFlow()
 
     private val _periodState = MutableStateFlow<List<Period>>(emptyList())
-    val periodState: StateFlow<List<Period>> get() = _periodState
+    val periodState = _periodState.asStateFlow()
 
     private val _isDownloadGenreOptions = MutableSharedFlow<Boolean>()
-    val isError: SharedFlow<Boolean> = _isDownloadGenreOptions
+    val isError = _isDownloadGenreOptions.asSharedFlow()
 
     init {
         setupTimePeriods()
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch() {
             getLocale().collectLatest {
                 _language.value = it
             }
@@ -81,6 +79,7 @@ class ExploreViewModel @Inject constructor(
             )
         }
     }
+
     fun setCheckedSortState(checkedSort: Sort) {
         _filterBottomSheetState.update {
             it.copy(
@@ -105,7 +104,7 @@ class ExploreViewModel @Inject constructor(
     }
 
     private fun getLocale(): Flow<String> {
-        return getLocaleUseCase.invoke()
+        return exploreUseCases.getLocaleUseCase.invoke()
     }
 
     fun setLocale(locale: String) {
@@ -118,9 +117,9 @@ class ExploreViewModel @Inject constructor(
             try {
                 _genreList.value =
                     if (_filterBottomSheetState.value.categoryState == Categories.TV) {
-                        tvGenreListUseCase.invoke(language).genres
+                        exploreUseCases.tvGenreListUseCase.invoke(language).genres
                     } else {
-                        movieGenreListUseCase.invoke(language).genres
+                        exploreUseCases.movieGenreListUseCase.invoke(language).genres
                     }
             } catch (e: Exception) {
                 _isDownloadGenreOptions.emit(true)
