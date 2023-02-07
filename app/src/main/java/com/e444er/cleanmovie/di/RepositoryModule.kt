@@ -19,6 +19,8 @@ import com.e444er.cleanmovie.domain.use_case.get_popular_movies.GetPopularMovies
 import com.e444er.cleanmovie.domain.use_case.get_popular_tv_series.GetPopularTvSeries
 import com.e444er.cleanmovie.domain.use_case.get_top_rated_movies.GetTopRatedMoviesUseCase
 import com.e444er.cleanmovie.domain.use_case.get_top_rated_tv_series.GetTopRatedTvSeriesUseCase
+import com.e444er.cleanmovie.util.DefaultDispatchers
+import com.e444er.cleanmovie.util.DispatchersProvider
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -70,4 +72,8 @@ object RepositoryModule {
         return NetworkConnectivityObserver(context)
     }
 
+    @Provides
+    @Singleton
+    fun provideDispatchers(): DispatchersProvider =
+        DefaultDispatchers()
 }
