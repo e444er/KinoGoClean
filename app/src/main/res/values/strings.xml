@@ -48,4 +48,13 @@
     <string name="go">Go</string>
     <string name="kino">Kino</string>
     <string name="language_russian">Russian</string>
+
+    <string name="overview">Overview</string>
+
+
+    <string name="actor">Actor</string>
+    <string name="director">Director</string>
+
+    <string name="add_favorite_list">Add My Favorite List</string>
+    <string name="add_watch_list">Add My Watch List</string>
 </resources>
