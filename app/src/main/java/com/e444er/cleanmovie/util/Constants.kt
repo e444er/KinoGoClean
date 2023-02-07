@@ -25,12 +25,4 @@ object Constants {
     const val IS_SHOWS_SEE_ALL_PAGE = "isShowsRecyclerViewSeeAllSection"
 
     const val LATEST_SHOWS_SEE_ALL_PAGE_TOOLBAR_TEXT_ID = "latestRecyclerViewSeeAllSectionText"
-
-    val supportedLanguages = listOf(
-        "EN",
-        "DE",
-        "FR",
-        "TR",
-        "RU"
-    )
 }

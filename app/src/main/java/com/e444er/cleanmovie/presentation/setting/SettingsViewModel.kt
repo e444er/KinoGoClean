@@ -22,4 +22,14 @@ class SettingsViewModel @Inject constructor(
             settingUseCase.updateUIModeUseCase(uiMode)
         }
     }
+
+    fun updateLanguageIsoCode(languageTag: String) {
+        viewModelScope.launch {
+            settingUseCase.updateLanguageIsoCodeUseCase(languageTag)
+        }
+    }
+
+    fun getLanguageIsoCode(): Flow<String> {
+        return settingUseCase.getLanguageIsoCodeUseCase()
+    }
 }

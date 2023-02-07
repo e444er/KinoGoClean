@@ -22,13 +22,14 @@ class DataOperationsImpl @Inject constructor(
         val uiModeKey = intPreferencesKey(UI_MODE_KEY)
     }
 
-    override suspend fun updateCurrentLocale(locale: String) {
+
+    override suspend fun updateCurrentLanguageIsoCode(languageTag: String) {
         dataStore.edit {
-            it[PreferencesKey.localeKey] = locale
+            it[PreferencesKey.localeKey] = languageTag
         }
     }
 
-    override fun getLocale(): Flow<String> {
+    override fun getLanguageIsoCode(): Flow<String> {
         return dataStore.data
             .catch { exception ->
                 if (exception is IOException) {

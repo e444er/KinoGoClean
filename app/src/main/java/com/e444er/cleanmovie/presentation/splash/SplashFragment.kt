@@ -2,7 +2,9 @@ package com.e444er.cleanmovie.presentation.splash
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.ConfigurationCompat
+import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -12,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -23,19 +26,25 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val locale =
-            ConfigurationCompat.getLocales(requireContext().resources.configuration)[0]?.country.toString()
-        Timber.d(locale)
-
-        viewModel.updateLocale(locale = locale)
-
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                viewModel.navigateToHomeFragment()
-                viewModel.isNavigateToHomeFragment.collectLatest {
-                    if (it) {
-                        findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
+
+                launch {
+                    viewModel.navigateToHomeFragment()
+                    viewModel.isNavigateToHomeFragment.collectLatest {
+                        if (it) {
+                            findNavController().navigate(SplashFragmentDirections.actionSplashFragmentToHomeFragment())
+                        }
                     }
+                }
+                launch {
+                    val language = viewModel.getLanguageIsoCode().first()
+
+                    AppCompatDelegate.setApplicationLocales(
+                        LocaleListCompat.forLanguageTags(
+                            language
+                        )
+                    )
                 }
             }
         }

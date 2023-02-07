@@ -7,9 +7,6 @@ import com.e444er.cleanmovie.data.models.enums.Sort
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Period
 import com.e444er.cleanmovie.domain.use_case.ExploreUseCases
-import com.e444er.cleanmovie.domain.use_case.get_locale.GetLocaleUseCase
-import com.e444er.cleanmovie.domain.use_case.get_movie_genre_list.GetMovieGenreList
-import com.e444er.cleanmovie.domain.use_case.get_tv_genre_list.GetTvGenreList
 import com.e444er.cleanmovie.presentation.filter_bottom_sheet.state.FilterBottomState
 import com.e444er.cleanmovie.util.Constants.DEFAULT_LANGUAGE
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -104,7 +101,7 @@ class ExploreViewModel @Inject constructor(
     }
 
     private fun getLocale(): Flow<String> {
-        return exploreUseCases.getLocaleUseCase.invoke()
+        return exploreUseCases.getLanguageIsoCodeUseCase.invoke()
     }
 
     fun setLocale(locale: String) {

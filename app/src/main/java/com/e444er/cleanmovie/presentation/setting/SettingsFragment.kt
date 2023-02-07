@@ -2,7 +2,11 @@ package com.e444er.cleanmovie.presentation.setting
 
 import android.os.Bundle
 import android.view.View
+import android.widget.AdapterView
+import android.widget.AdapterView.OnItemSelectedListener
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -11,6 +15,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.databinding.FragmentSettingsBinding
+import com.e444er.cleanmovie.domain.models.supportedLanguages
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -32,8 +37,31 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         collectDataLifecycleAware()
         setListenerSwitch()
 
-        Locale.getISOLanguages().forEach {
-            Timber.d(it)
+        val adapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_dropdown_item,
+            supportedLanguages.map { requireContext().getString(it.textId) }
+        )
+
+        binding.spinner.adapter = adapter
+
+        binding.spinner.onItemSelectedListener = object : OnItemSelectedListener {
+
+            override fun onItemSelected(
+                adapterView: AdapterView<*>?,
+                p1: View?,
+                position: Int,
+                p3: Long
+            ) {
+                val isoCode = supportedLanguages[position].iso
+                viewModel.updateLanguageIsoCode(isoCode)
+                AppCompatDelegate.setApplicationLocales(LocaleListCompat.forLanguageTags(isoCode))
+            }
+
+            override fun onNothingSelected(p0: AdapterView<*>?) {
+
+            }
+
         }
     }
 
@@ -58,9 +86,21 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED)
             {
-                viewModel.getUIMode().collectLatest { uiMode ->
-                    binding.switchDarkTheme.isChecked = uiMode == AppCompatDelegate.MODE_NIGHT_YES
+                launch {
+                    viewModel.getUIMode().collectLatest { uiMode ->
+                        binding.switchDarkTheme.isChecked =
+                            uiMode == AppCompatDelegate.MODE_NIGHT_YES
+                    }
                 }
+                launch {
+                    viewModel.getLanguageIsoCode().collectLatest {langIsoCode ->
+                    val selectedLangIsoIndex = supportedLanguages.indexOfFirst {
+                        it.iso == langIsoCode
+                    }
+                        binding.spinner.setSelection(selectedLangIsoIndex)
+                    }
+                }
+
             }
         }
     }
