@@ -1,6 +1,8 @@
 package com.e444er.cleanmovie.di
 
 import android.content.Context
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
 import com.e444er.cleanmovie.data.remote.TMDBApi
 import com.e444er.cleanmovie.data.repository.DataOperationsImpl
 import com.e444er.cleanmovie.data.repository.NetworkConnectivityObserver
@@ -55,9 +57,9 @@ object RepositoryModule {
     @Provides
     @Singleton
     fun provideDataStoreOperations(
-        @ApplicationContext context: Context
+        dataStore: DataStore<Preferences>
     ): DataStoreOperations {
-        return DataOperationsImpl(context = context)
+        return DataOperationsImpl(dataStore = dataStore)
     }
 
     @Provides
@@ -65,7 +67,7 @@ object RepositoryModule {
     fun provideConnectivityManager(
         @ApplicationContext context: Context
     ): ConnectivityObserver {
-        return  NetworkConnectivityObserver(context)
+        return NetworkConnectivityObserver(context)
     }
 
 }

@@ -17,13 +17,9 @@ import kotlinx.coroutines.flow.map
 import java.io.IOException
 import javax.inject.Inject
 
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PREFERENCES_NAME)
-
 class DataOperationsImpl @Inject constructor(
-    context: Context
+    private val dataStore: DataStore<Preferences>
 ) : DataStoreOperations {
-
-    private val dataStore = context.dataStore
 
     private object PreferencesKey {
         val localeKey = stringPreferencesKey(LOCALE_KEY)
