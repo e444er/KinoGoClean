@@ -20,7 +20,6 @@ import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.presentation.home.adapter.*
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -68,70 +67,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val binding = FragmentHomeBinding.bind(view)
         _binding = binding
 
-
         addCallback()
         setupListenerSeeAllClickEvents()
         setupRecyclerAdapters()
-        setAdaptersClickListener()
         observeNetworkConnectivity()
-
+        setAdaptersClickListener()
         binding.btnNavigateUp.setOnClickListener {
             hideRecyclerViewSeeAll()
-        }
-    }
-
-    private fun hideRecyclerViewSeeAll() {
-        binding?.let {
-            it.recyclerViewSeeAllSection.visibility = View.GONE
-            it.scrollView.visibility = View.VISIBLE
-            it.scrollView.animation = slideInRightAnim()
-            it.recyclerViewSeeAll.removeAllViews()
-        }
-    }
-
-    private fun setupListenerSeeAllClickEvents() {
-        binding?.let {
-            it.apply {
-                nowPlayingSeeAll.setOnClickListener {
-                    showRecyclerViewSeeAll(R.string.now_playing)
-                    recyclerViewSeeAll.adapter = nowPlayingAdapter
-                }
-                popularMoviesSeeAll.setOnClickListener {
-                    showRecyclerViewSeeAll(R.string.popular_movies)
-                    recyclerViewSeeAll.adapter = popularMoviesAdapter
-                }
-                popularTvSeeAll.setOnClickListener {
-                    showRecyclerViewSeeAll(R.string.popular_tv_series)
-                    recyclerViewSeeAll.adapter = popularTvSeriesAdapter
-                }
-                topRatedMoviesSeeAll.setOnClickListener {
-                    showRecyclerViewSeeAll(R.string.top_rated_movies)
-                    recyclerViewSeeAll.adapter = topRatedMoviesAdapter
-                }
-                topRatedTvSeriesSeeAll.setOnClickListener {
-                    showRecyclerViewSeeAll(R.string.top_rated_tv_series)
-                    recyclerViewSeeAll.adapter = topRatedTvSeriesAdapter
-                }
-            }
-        }
-    }
-    private fun slideInLeftAnim(): Animation =
-        AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_left)
-
-    private fun slideInRightAnim(): Animation =
-        AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_right)
-
-    private fun showRecyclerViewSeeAll(@StringRes toolBarTextId: Int) {
-        val context = requireContext()
-
-        binding?.let {
-            it.apply {
-                scrollView.visibility = View.GONE
-                recyclerViewSeeAllSection.visibility = View.VISIBLE
-                toolbarText.text = context.getString(toolBarTextId)
-                recyclerViewSeeAllSection.animation = slideInLeftAnim()
-                recyclerViewSeeAll.layoutManager = GridLayoutManager(requireContext(), 2)
-            }
         }
     }
 
@@ -144,14 +86,73 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         requireActivity().onBackPressedDispatcher.addCallback(callback)
     }
 
+    private fun slideInLeftAnim(): Animation =
+        AnimationUtils.loadAnimation(requireContext(), R.anim.slide_in_left)
+
+    private fun showRecyclerViewSeeAll(@StringRes toolBarTextId: Int) {
+        val context = requireContext()
+        viewModel.setShowsRecyclerViewSeeAllSection(true)
+        binding?.let {
+            it.apply {
+                scrollView.visibility = View.GONE
+                recyclerViewSeeAllSection.visibility = View.VISIBLE
+                toolbarText.text = context.getString(toolBarTextId)
+                recyclerViewSeeAllSection.animation = slideInLeftAnim()
+                recyclerViewSeeAll.layoutManager = GridLayoutManager(requireContext(), 2)
+            }
+        }
+    }
+
+    private fun hideRecyclerViewSeeAll() {
+        viewModel.setShowsRecyclerViewSeeAllSection(false)
+        binding?.let {
+            it.recyclerViewSeeAllSection.visibility = View.GONE
+            it.scrollView.visibility = View.VISIBLE
+            it.scrollView.animation = slideInLeftAnim()
+            it.recyclerViewSeeAll.removeAllViews()
+        }
+    }
+
+    private fun setupListenerSeeAllClickEvents() {
+        binding?.let {
+            it.apply {
+                nowPlayingSeeAll.setOnClickListener {
+                    setSeeAllPage(R.string.now_playing)
+                    recyclerViewSeeAll.adapter = nowPlayingAdapter
+                }
+                popularMoviesSeeAll.setOnClickListener {
+                    setSeeAllPage(R.string.popular_movies)
+                    recyclerViewSeeAll.adapter = popularMoviesAdapter
+                }
+                popularTvSeeAll.setOnClickListener {
+                    setSeeAllPage(R.string.popular_tv_series)
+                    recyclerViewSeeAll.adapter = popularTvSeriesAdapter
+                }
+                topRatedMoviesSeeAll.setOnClickListener {
+                    setSeeAllPage(R.string.top_rated_movies)
+                    recyclerViewSeeAll.adapter = topRatedMoviesAdapter
+                }
+                topRatedTvSeriesSeeAll.setOnClickListener {
+                    setSeeAllPage(R.string.top_rated_tv_series)
+                    recyclerViewSeeAll.adapter = topRatedTvSeriesAdapter
+                }
+            }
+        }
+    }
+
+    private fun setSeeAllPage(@StringRes toolbarTextId: Int) {
+        showRecyclerViewSeeAll(toolbarTextId)
+        viewModel.setLatestShowsRecyclerViewSeeAllSection(toolbarTextId)
+    }
+
     private fun observeNetworkConnectivity() {
         var job: Job? = null
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.observeNetworkConnectivity().collectLatest {
+                    viewModel.observeNetworkConnectivity().collectLatest { it ->
                         if (it == ConnectivityObserver.Status.Unavaliable || it == ConnectivityObserver.Status.Lost) {
-                            viewModel.showSnackBar()
+                            viewModel.showSnackbar()
                             job?.cancel()
                         } else if (it == ConnectivityObserver.Status.Avaliable) {
                             job?.cancel()
@@ -159,6 +160,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         }
                     }
                 }
+
                 launch {
                     viewModel.showSnackBarNoInternetConnectivity.collectLatest {
                         if (it.isNotEmpty()) {
@@ -166,17 +168,55 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         }
                     }
                 }
+
+                launch {
+                    viewModel.isShowsRecyclerViewSeeAllSection.collectLatest { isShowsSeeAllPage ->
+                        if (isShowsSeeAllPage) {
+                            viewModel.latestShowsRecyclerViewSeeAllSectionToolBarText.collectLatest { textId ->
+                                showRecyclerViewSeeAll(textId)
+                                val adapter = when (textId) {
+                                    R.string.now_playing -> nowPlayingAdapter
+                                    R.string.popular_movies -> popularMoviesAdapter
+                                    R.string.popular_tv_series -> popularTvSeriesAdapter
+                                    R.string.top_rated_movies -> topRatedMoviesAdapter
+                                    R.string.top_rated_tv_series -> topRatedTvSeriesAdapter
+                                    else -> nowPlayingAdapter
+                                }
+                                showRecyclerViewSeeAll(textId)
+                                binding?.let {
+                                    it.recyclerViewSeeAll.adapter = adapter
+                                }
+                            }
+                        } else {
+                            viewModel.setShowsRecyclerViewSeeAllSection(false)
+                            hideRecyclerViewSeeAll()
+                        }
+                    }
+                }
+            }
+
+        }
+    }
+
+    private fun setupRecyclerAdapters() {
+        if (binding != null) {
+            binding?.apply {
+                nowPlayingRecyclerView.adapter = nowPlayingAdapter
+                nowPlayingRecyclerView.setAlpha(true)
+                popularMoviesRecyclerView.adapter = popularMoviesAdapter
+                topRatedMoviesRecyclerView.adapter = topRatedMoviesAdapter
+                popularTvSeriesRecyclerView.adapter = popularTvSeriesAdapter
+                topRatedTvSeriesRecyclerView.adapter = topRatedTvSeriesAdapter
             }
         }
     }
 
     private fun collectDataLifecycleAware() =
-
         viewLifecycleOwner.lifecycleScope.launch {
 
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
 
-                launch(Dispatchers.IO) {
+                launch {
                     viewModel.getLanguage().collect {
                         viewModel.setLanguage(it)
                     }
@@ -215,15 +255,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         nowPlayingAdapter.passMovieGenreList(genreList)
                         popularMoviesAdapter.passMovieGenreList(genreList)
                         topRatedMoviesAdapter.passMovieGenreList(genreList)
+                        topRatedTvSeriesAdapter.passMovieGenreList(genreList)
                     }
                 }
 
-//                    launch {
-//                        val tvGenreList = viewModel.getTvGenreList().genres
-//                        if (tvGenreList.isNotEmpty()) {
-//                            popularTvSeriesAdapter.passMovieGenreList(tvGenreList)
-//                        }
+//                launch {
+//                    val tvGenreList = viewModel.getTvGenreList().genres
+//                    if (tvGenreList.isNotEmpty()) {
+//                        popularTvSeriesAdapter.passMovieGenreList(tvGenreList)
 //                    }
+//                }
 
                 launch {
                     viewModel.getTopRatedTvSeries().collectLatest { pagingData ->
@@ -233,19 +274,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-
-    private fun setupRecyclerAdapters() {
-        binding?.apply {
-            nowPlayingRecyclerView.adapter = nowPlayingAdapter
-            nowPlayingRecyclerView.setAlpha(true)
-            popularMoviesRecyclerView.adapter = popularMoviesAdapter
-            topRatedMoviesRecyclerView.adapter = topRatedMoviesAdapter
-            popularTvSeriesRecyclerView.adapter = popularTvSeriesAdapter
-            topRatedTvSeriesRecyclerView.adapter = topRatedTvSeriesAdapter
-        }
-    }
-
     private fun setAdaptersClickListener() {
+
         popularMoviesAdapter.setOnItemClickListener { movie ->
             val action = HomeFragmentDirections.actionHomeFragmentToDetailBottomSheetFragment()
             action.movie = movie

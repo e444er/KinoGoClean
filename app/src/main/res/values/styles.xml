@@ -70,4 +70,11 @@
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
     </style>
+
+    <style name="CircleImageButton" parent="Widget.AppCompat.ImageButton">
+        <item name="android:layout_width">@dimen/iconSizeLarge</item>
+        <item name="android:layout_height">@dimen/iconSizeLarge</item>
+        <item name="android:background">@drawable/text_ripple</item>
+        <item name="tint">?attr/colorPrimary</item>
+    </style>
 </resources>
