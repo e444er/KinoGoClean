@@ -2,6 +2,7 @@ package com.e444er.cleanmovie.presentation.detail_fragment
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -75,7 +76,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         tvDetail?.let {
             posterPath = tvDetail.posterPath
-            filmName = tvDetail.originalName
+            filmName = tvDetail.name
             ratingBarText = ((tvDetail.voteAverage * 5) / 10).toFloat()
             voteAverage = tvDetail.voteAverage
             voteCount = HandleUtils.handleVoteCount(tvDetail.voteCount)
@@ -101,7 +102,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         movieDetail?.let {
             posterPath = movieDetail.posterPath
-            filmName = movieDetail.originalTitle
+            filmName = movieDetail.title
             ratingBarText = ((movieDetail.voteAverage * 5) / 10).toFloat()
             voteAverage = movieDetail.voteAverage
             voteCount = HandleUtils.handleVoteCount(movieDetail.voteCount)
@@ -128,7 +129,17 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 ImageApi.getImage(
                     imageUrl = posterPath
                 ), imageLoader = imageLoader
-            )
+            ) {
+                listener(
+                    onStart = {
+                        imvPoster.scaleType = ImageView.ScaleType.CENTER
+                    },
+                    onSuccess = { request, metadata ->
+                        imvPoster.scaleType = ImageView.ScaleType.CENTER_CROP
+                    }
+                )
+                placeholder(R.drawable.loading_animate)
+            }
 
             txtMovieName.text = filmName
             ratingBar.rating = ratingBarText

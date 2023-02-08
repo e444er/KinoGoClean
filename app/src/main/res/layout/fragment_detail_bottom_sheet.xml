@@ -36,7 +36,7 @@
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/materialCardView"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/ibClose"
         tools:text="Avatar" />
 
     <TextView
@@ -66,7 +66,6 @@
         android:id="@+id/tvOverview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginBottom="@dimen/small_margin"
         android:paddingTop="@dimen/small_padding"
         android:scrollbars="vertical"
         android:textColor="?attr/colorOnBackground"
