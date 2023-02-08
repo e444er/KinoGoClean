@@ -17,6 +17,7 @@ import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
 import com.e444er.cleanmovie.presentation.util.HandleUtils
 import javax.inject.Inject
+
 class NowPlayingRecyclerAdapter @Inject constructor(
     private val imageLoader: ImageLoader
 ) :
@@ -32,14 +33,14 @@ class NowPlayingRecyclerAdapter @Inject constructor(
         val imageLoader: ImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
 
-        fun bind(movie: Movie, context: Context,onItemClickListener: (Movie) -> Unit = {}) {
+        fun bind(movie: Movie, context: Context, onItemClickListener: (Movie) -> Unit = {}) {
             binding.movieTitle.text = movie.title
 
             val voteCount = HandleUtils.handleVoteCount(movie.voteCount)
 
             binding.voteAverage.text = context.getString(
                 R.string.voteAverage,
-                movie.voteAverage.toString(),voteCount
+                movie.voteAverage.toString(), voteCount
             )
 
             binding.backdropImage.load(

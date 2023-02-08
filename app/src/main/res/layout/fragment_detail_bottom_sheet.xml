@@ -74,7 +74,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/tvReleaseDate"
-        app:layout_constraintTop_toBottomOf="@+id/tvRuntime"
+        app:layout_constraintTop_toBottomOf="@+id/tvReleaseDate"
         app:layout_constraintVertical_bias="0.187"
         tools:text="Bir hırsızlık olayında ağabeyi ölen yarı felçli Jake Sully, Pandora adındaki uzak bir gezegende görevinin başına geçmeye karar verir. Bu yerde Na’vi adında giderek tükenmekte olan bir halk yaşamaktadır. Askeri bir şirket, söz konusu yeri ve oradaki kaynakları mercek altına almak üzere Avatar adında bir program oluşturmuştur. Bu program insanları kısmen insan kısmen de Na’vi haline büründürerek misyon amaçlı Pandora’ya göndermektedir. Bu sisteme gönüllü dahil olan Botanist Dr. Grace Augustine ve Jake Sully için başka bir yaşam var olacaktır. Sully, Pandora’ya geçtiği anda felçli bedeni değişime uğrayarak işlevsel hale gelir. Bu sırada Na’vi halkından Prenses Neytiri ile karşı karşıya gelen Jake, ansızın bir farkındalık yaşar ve bir araştırma misyonu ile gönderildiği bu gezegeni, kendi dünyalısından korumaya karar verir." />
 
@@ -123,7 +123,8 @@
         app:layout_constraintEnd_toStartOf="@+id/ibWatchingList"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/btnFavoriteList"
-        app:layout_constraintTop_toTopOf="@+id/btnFavoriteList" />
+        app:layout_constraintTop_toTopOf="@+id/btnFavoriteList"
+        tools:ignore="DuplicateSpeakableTextCheck" />
 
     <TextView
         android:id="@+id/textView7"
@@ -169,9 +170,9 @@
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
     <LinearLayout
-        android:id="@+id/llDetail"
+        android:id="@+id/detailSection"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/iconSizeLarge"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"

@@ -3,6 +3,8 @@ package com.e444er.cleanmovie.data.remote
 import com.e444er.cleanmovie.data.models.ApiResponse
 import com.e444er.cleanmovie.data.models.MovieDto
 import com.e444er.cleanmovie.data.models.TvSeriesDto
+import com.e444er.cleanmovie.data.models.detail.movie.MovieDetailDto
+import com.e444er.cleanmovie.data.models.detail.tv.TvDetailDto
 import com.e444er.cleanmovie.data.models.enums.Categories
 import com.e444er.cleanmovie.data.models.enums.Sort
 import com.e444er.cleanmovie.domain.models.Genre
@@ -11,6 +13,7 @@ import com.e444er.cleanmovie.presentation.util.toDiscoveryQueryString
 import com.e444er.cleanmovie.util.Constants.API_KEY
 import com.e444er.cleanmovie.util.Constants.STARTING_PAGE
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface TMDBApi {
@@ -86,4 +89,18 @@ interface TMDBApi {
         @Query("sort_by") sort: String= Sort.Popularity
             .toDiscoveryQueryString(Categories.MOVIE)
     ): ApiResponse<TvSeriesDto>
+
+    @GET("movie/{movie_id}")
+    suspend fun getMovieDetail(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("language") language: String
+    ): MovieDetailDto
+
+    @GET("tv/{tv_id}")
+    suspend fun getTvDetail(
+        @Path("tv_id") tvId: Int,
+        @Query("api_key") apiKey: String = API_KEY,
+        @Query("language") language: String
+    ): TvDetailDto
 }

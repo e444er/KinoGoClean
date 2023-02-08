@@ -1,6 +1,5 @@
 package com.e444er.cleanmovie.domain.use_case.get_movie_genre_list
 
-import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.GenreList
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
 import javax.inject.Inject

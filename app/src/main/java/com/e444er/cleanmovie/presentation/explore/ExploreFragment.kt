@@ -7,7 +7,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentExploreBinding
-import com.e444er.cleanmovie.presentation.splash.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint

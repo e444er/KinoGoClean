@@ -27,6 +27,22 @@ object HandleUtils {
         if (genreNames.isNotEmpty()) {
             return genreNames.subSequence(0, genreNames.length - 2).toString()
         }
+        return genreNames
+    }
+
+    fun handleGenreText(genreList: List<Genre>): String {
+        var genreNames = ""
+        if (genreList.isEmpty()) {
+            return ""
+        }
+
+        genreList.forEach { genre ->
+            genreNames += "${genre.name}, "
+        }
+
+        if (genreNames.isNotEmpty()) {
+            return genreNames.subSequence(0, genreNames.length - 2).toString()
+        }
 
         return genreNames
     }

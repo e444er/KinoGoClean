@@ -10,6 +10,7 @@ import com.e444er.cleanmovie.data.repository.RemoteRepositoryImpl
 import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.domain.repository.DataStoreOperations
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
+import com.e444er.cleanmovie.domain.use_case.DetailUseCases
 import com.e444er.cleanmovie.domain.use_case.ExploreUseCases
 import com.e444er.cleanmovie.domain.use_case.HomeUseCases
 import com.e444er.cleanmovie.domain.use_case.SettingUseCase
@@ -18,11 +19,13 @@ import com.e444er.cleanmovie.domain.use_case.discover_tv.DiscoverTvUseCase
 import com.e444er.cleanmovie.domain.use_case.get_movie_genre_list.GetMovieGenreList
 import com.e444er.cleanmovie.domain.use_case.get_tv_genre_list.GetTvGenreList
 import com.e444er.cleanmovie.domain.use_case.get_language_iso_code.GetLanguageIsoCodeUseCase
+import com.e444er.cleanmovie.domain.use_case.get_movie_detail.GetMovieDetailUseCase
 import com.e444er.cleanmovie.domain.use_case.get_now_playing_movies.GetNowPlayingMoviesUseCase
 import com.e444er.cleanmovie.domain.use_case.get_popular_movies.GetPopularMoviesUseCase
 import com.e444er.cleanmovie.domain.use_case.get_popular_tv_series.GetPopularTvSeries
 import com.e444er.cleanmovie.domain.use_case.get_top_rated_movies.GetTopRatedMoviesUseCase
 import com.e444er.cleanmovie.domain.use_case.get_top_rated_tv_series.GetTopRatedTvSeriesUseCase
+import com.e444er.cleanmovie.domain.use_case.get_tv_detail.GetTvDetailUseCase
 import com.e444er.cleanmovie.domain.use_case.get_ui_mode.GetUIModeUseCase
 import com.e444er.cleanmovie.domain.use_case.update_current_language_iso_code.UpdateLanguageIsoCodeUseCase
 import com.e444er.cleanmovie.domain.use_case.update_ui_mode.UpdateUIModeUseCase
@@ -90,6 +93,17 @@ object RepositoryModule {
             updateUIModeUseCase = UpdateUIModeUseCase(dataStoreOperations),
             updateLanguageIsoCodeUseCase = UpdateLanguageIsoCodeUseCase(dataStoreOperations),
             getLanguageIsoCodeUseCase = GetLanguageIsoCodeUseCase(dataStoreOperations)
+        )
+    }
+
+    @Provides
+    @Singleton
+    fun provideDetailUseCases(
+        remoteRepository: RemoteRepository,
+    ): DetailUseCases {
+        return DetailUseCases(
+            movieDetailUseCase = GetMovieDetailUseCase(remoteRepository),
+            tvDetailUseCase = GetTvDetailUseCase(remoteRepository)
         )
     }
 

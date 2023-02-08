@@ -23,13 +23,13 @@ class ExploreViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _language = MutableStateFlow<String>(DEFAULT_LANGUAGE)
-    val language  = _language.asStateFlow()
+    val language = _language.asStateFlow()
 
     private val _genreList = MutableStateFlow<List<Genre>>(emptyList())
-    val genreList  = _genreList.asStateFlow()
+    val genreList = _genreList.asStateFlow()
 
     private val _filterBottomSheetState = MutableStateFlow(FilterBottomState())
-    val filterBottomSheetState  = _filterBottomSheetState.asStateFlow()
+    val filterBottomSheetState = _filterBottomSheetState.asStateFlow()
 
     private val _periodState = MutableStateFlow<List<Period>>(emptyList())
     val periodState = _periodState.asStateFlow()

@@ -48,7 +48,7 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
         setupButtonClickListeners()
 
         binding?.apply {
-            if (movie != null){
+            if (movie != null) {
                 tvName.text = movie.title
                 tvReleaseDate.text = HandleUtils.handleReleaseDate(movie.releaseDate)
                 tvOverview.text = movie.overview
@@ -57,6 +57,10 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
                 }
                 tvBottomInfoText.text =
                     requireContext().getString(R.string.detail_bottom_sheet_movie_info)
+
+                detailSection.setOnClickListener {
+                    navigateToDetailFragment(movie.id)
+                }
             }
 
             if (tvSeries != null) {
@@ -69,9 +73,25 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
                 }
                 tvBottomInfoText.text =
                     requireContext().getString(R.string.detail_bottom_sheet_tv_info)
+
+                detailSection.setOnClickListener {
+                    navigateToDetailFragment(tvId = tvSeries.id)
+                }
             }
             tvOverview.movementMethod = ScrollingMovementMethod()
         }
+    }
+
+    private fun navigateToDetailFragment(movieId: Int? = null, tvId: Int? = null) {
+        val action =
+            DetailBottomSheetFragmentDirections.actionDetailBottomSheetFragmentToDetailFragment()
+        movieId?.let {
+            action.movieId = movieId
+        }
+        tvId?.let {
+            action.tvId = tvId
+        }
+        findNavController().navigate(action)
     }
 
     private fun loadImage(posterPath: String) {

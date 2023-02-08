@@ -18,6 +18,7 @@ abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(
 
 
     var itemClickListener: (T) -> Unit = {}
+
     class MovieViewHolder(
         val binding: MovieRowBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
