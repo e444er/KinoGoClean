@@ -1,20 +1,24 @@
 package com.e444er.cleanmovie.domain.models
 
 import com.e444er.cleanmovie.data.models.detail.tv.Season
+import com.e444er.cleanmovie.domain.models.credit.Credit
+import com.prmto.mova_movieapp.data.models.watch_provider.WatchProviders
 import com.squareup.moshi.Json
 
 data class TvDetail(
     val id: Int,
     val genres: List<Genre>,
-    @Json(name = "first_air_date") val firstAirDate: String,
-    @Json(name = "last_air_date") val lastAirDate: String,
-    @Json(name = "number_of_seasons") val numberOfSeasons: Int,
-    @Json(name = "original_name") val originalName: String,
+    val firstAirDate: String,
+    val createdBy: List<CreatedBy>,
+    val lastAirDate: String,
+    val numberOfSeasons: Int,
+    val originalName: String,
     val name: String,
     val overview: String,
-    @Json(name = "poster_path") val posterPath: String?,
+    val posterPath: String?,
     val seasons: List<Season>,
     val status: String,
-    @Json(name = "vote_average") val voteAverage: Double,
-    @Json(name = "vote_count") val voteCount: Int
+    val voteAverage: Double,
+    val voteCount: Int,
+    val credit: Credit,
 )

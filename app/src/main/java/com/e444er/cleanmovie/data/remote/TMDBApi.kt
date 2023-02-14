@@ -11,6 +11,7 @@ import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.GenreList
 import com.e444er.cleanmovie.presentation.util.toDiscoveryQueryString
 import com.e444er.cleanmovie.util.Constants.API_KEY
+import com.e444er.cleanmovie.util.Constants.QUERY_APPEND_TO_RESPONSE
 import com.e444er.cleanmovie.util.Constants.STARTING_PAGE
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -24,7 +25,7 @@ interface TMDBApi {
         @Query("language") language: String
     ): GenreList
 
-    @GET("genre/tv/loist")
+    @GET("genre/tv/list")
     suspend fun getTvGenreList(
         @Query("api_key") apiKey: String = API_KEY,
         @Query("language") language: String
@@ -94,13 +95,15 @@ interface TMDBApi {
     suspend fun getMovieDetail(
         @Path("movie_id") movieId: Int,
         @Query("api_key") apiKey: String = API_KEY,
-        @Query("language") language: String
+        @Query("language") language: String,
+        @Query("append_to_response") appendToResponse: String = QUERY_APPEND_TO_RESPONSE
     ): MovieDetailDto
 
     @GET("tv/{tv_id}")
     suspend fun getTvDetail(
         @Path("tv_id") tvId: Int,
         @Query("api_key") apiKey: String = API_KEY,
-        @Query("language") language: String
+        @Query("language") language: String,
+        @Query("append_to_response") appendToResponse: String = QUERY_APPEND_TO_RESPONSE
     ): TvDetailDto
 }

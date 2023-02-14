@@ -32,6 +32,8 @@
     <dimen name="action_row_image_size">50dp</dimen>
     <dimen name="detail_fragment_divider_height">2dp</dimen>
 
+    <dimen name="iconSizeExtraLarge">70dp</dimen>
+
     <dimen name="edit_text_height">60dp</dimen>
     <dimen name="filter_button_size">60dp</dimen>
 

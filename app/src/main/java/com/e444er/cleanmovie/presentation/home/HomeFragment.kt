@@ -66,7 +66,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentHomeBinding.bind(view)
         _binding = binding
-
         addCallback()
         setupListenerSeeAllClickEvents()
         setupRecyclerAdapters()
@@ -114,6 +113,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding?.let {
             it.recyclerViewSeeAllSection.visibility = View.GONE
             it.scrollView.visibility = View.VISIBLE
+            it.scrollView.animation = slideInLeftAnim()
             it.recyclerViewSeeAll.removeAllViews()
         }
     }
@@ -178,7 +178,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     viewModel.isShowsRecyclerViewSeeAllSection.collectLatest { isShowsSeeAllPage ->
                         if (isShowsSeeAllPage) {
                             viewModel.latestShowsRecyclerViewSeeAllSectionToolBarText.collectLatest { textId ->
-                                showRecyclerViewSeeAll(textId)
                                 val adapter = when (textId) {
                                     R.string.now_playing -> nowPlayingAdapter
                                     R.string.popular_movies -> popularMoviesAdapter
@@ -264,12 +263,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
 
-//                launch {
-//                    val tvGenreList = viewModel.getTvGenreList().genres
-//                    if (tvGenreList.isNotEmpty()) {
-//                        popularTvSeriesAdapter.passMovieGenreList(tvGenreList)
-//                    }
-//                }
+                launch {
+                    val tvGenreList = viewModel.getTvGenreList().genres
+                    if (tvGenreList.isNotEmpty()) {
+                        popularTvSeriesAdapter.passMovieGenreList(tvGenreList)
+                    }
+                }
 
                 launch {
                     viewModel.getTopRatedTvSeries().collectLatest { pagingData ->

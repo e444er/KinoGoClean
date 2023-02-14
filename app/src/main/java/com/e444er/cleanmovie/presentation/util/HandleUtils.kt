@@ -2,14 +2,13 @@ package com.e444er.cleanmovie.presentation.util
 
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
-import com.e444er.cleanmovie.presentation.util.HandleUtils.handleVoteCount
 
 object HandleUtils {
-    fun handleReleaseDate(releaseDate: String): String {
+    fun convertToYearFromDate(releaseDate: String): String {
         return releaseDate.split("-")[0]
     }
 
-    fun handleGenreText(movieGenreList: List<Genre>, movie: Movie): String {
+    fun convertGenreListToStringSeparatedByCommas(movieGenreList: List<Genre>, movie: Movie): String {
         var genreNames = ""
 
         if (movie.genreIds.isEmpty()) {
@@ -30,7 +29,7 @@ object HandleUtils {
         return genreNames
     }
 
-    fun handleGenreText(genreList: List<Genre>): String {
+    fun convertGenreListToStringSeparatedByCommas(genreList: List<Genre>): String {
         var genreNames = ""
         if (genreList.isEmpty()) {
             return ""
@@ -47,7 +46,7 @@ object HandleUtils {
         return genreNames
     }
 
-    fun handleGenreOneText(movieGenreList: List<Genre>, genreIds: List<Int>): String {
+    fun handleConvertingGenreListToOneGenreString(movieGenreList: List<Genre>, genreIds: List<Int>): String {
 
         for (genre: Genre in movieGenreList) {
             for (genreId: Int in genreIds) {
@@ -55,13 +54,12 @@ object HandleUtils {
                     return genre.name
                 }
                 break
-
             }
         }
         return ""
     }
 
-    fun handleVoteCount(voteCount: Int): String {
+    fun convertingVoteCountToString(voteCount: Int): String {
         if (voteCount < 1000)
             return voteCount.toString()
 

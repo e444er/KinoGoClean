@@ -3,13 +3,16 @@ package com.e444er.cleanmovie.data.models.detail.tv
 import com.e444er.cleanmovie.data.models.detail.ProductionCompany
 import com.e444er.cleanmovie.data.models.detail.ProductionCountry
 import com.e444er.cleanmovie.data.models.detail.SpokenLanguage
+import com.e444er.cleanmovie.data.models.detail.credit.CreditDto
+import com.e444er.cleanmovie.data.models.detail.credit.toCredit
 import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.TvDetail
+import com.prmto.mova_movieapp.data.models.watch_provider.WatchProviders
 import com.squareup.moshi.Json
 
 data class TvDetailDto(
     @Json(name = "backdrop_path") val backdropPath: String?,
-    @Json(name = "created_by") val createdBy: List<CreatedBy>,
+    @Json(name = "created_by") val createdBy: List<CreatedByDto>,
     @Json(name = "episode_run_time") val episodeRunTime: List<Int>,
     @Json(name = "first_air_date") val firstAirDate: String,
     val genres: List<Genre>,
@@ -38,7 +41,8 @@ data class TvDetailDto(
     val tagline: String,
     val type: String,
     @Json(name = "vote_average") val voteAverage: Double,
-    @Json(name = "vote_count") val voteCount: Int
+    @Json(name = "vote_count") val voteCount: Int,
+    val credits: CreditDto
 )
 
 fun TvDetailDto.toTvDetail(): TvDetail {
@@ -47,6 +51,7 @@ fun TvDetailDto.toTvDetail(): TvDetail {
         genres = genres,
         firstAirDate = firstAirDate,
         lastAirDate = lastAirDate,
+        createdBy = createdBy.toListOfCreatedBy(),
         numberOfSeasons = numberOfSeasons,
         originalName = originalName,
         name = name,
@@ -55,6 +60,7 @@ fun TvDetailDto.toTvDetail(): TvDetail {
         seasons = seasons,
         status = status,
         voteAverage = voteAverage,
-        voteCount = voteCount
+        voteCount = voteCount,
+        credit = credits.toCredit()
     )
 }

@@ -14,6 +14,9 @@ object Constants {
 
     const val ITEMS_PER_PAGE = 20
 
+    const val TMDB_MOVIE_URL = "https://www.themoviedb.org/movie/"
+    const val TMDB_TV_URL = "https://www.themoviedb.org/tv/"
+
     const val PREFERENCES_NAME = "mova_preferences_name"
 
     const val LOCALE_KEY = "locale_key"
@@ -26,8 +29,12 @@ object Constants {
     const val MOVIE_DETAIL_ID = "movieDetailId"
     const val TV_DETAIL_ID = "TvDetailId"
 
+
+    const val QUERY_APPEND_TO_RESPONSE = "credits,watch/providers"
+
     const val DETAIL_DEFAULT_ID = 0
     const val TV_SERIES_STATUS_ENDED = "Ended"
+    const val IMDB_MOVIE_URL = "https://www.imdb.com/title/"
 
     const val LATEST_SHOWS_SEE_ALL_PAGE_TOOLBAR_TEXT_ID = "latestRecyclerViewSeeAllSectionText"
 }
