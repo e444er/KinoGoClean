@@ -69,8 +69,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         collectDataLifecycleAware()
 
-        binding.swipeRefreshLayout.isRefreshing
-
         binding.swipeRefreshLayout.setOnRefreshListener {
             job?.cancel()
             collectDataLifecycleAware()
