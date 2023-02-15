@@ -92,6 +92,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         popularTvSeriesAdapter.retry()
         topRatedMoviesAdapter.retry()
         topRatedTvSeriesAdapter.retry()
+
     }
 
     private fun collectDataLifecycleAware() =
