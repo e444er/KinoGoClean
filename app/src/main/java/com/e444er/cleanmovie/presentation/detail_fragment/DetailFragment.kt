@@ -25,6 +25,7 @@ import com.e444er.cleanmovie.presentation.util.HandleUtils
 import com.e444er.cleanmovie.util.Constants.DETAIL_DEFAULT_ID
 import com.e444er.cleanmovie.util.Constants.TV_SERIES_STATUS_ENDED
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +40,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
+    private var job: Job? = null
 
     private val detailArgs by navArgs<DetailFragmentArgs>()
     private val viewModel: DetailViewModel by viewModels()
@@ -66,6 +68,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         setDetailIdToStateSavedHandle()
 
         collectDataLifecycleAware()
+
+        binding.swipeRefreshLayout.isRefreshing
+
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            job?.cancel()
+            collectDataLifecycleAware()
+        }
     }
 
     private fun setupDetailActorAdapter() {
@@ -101,7 +110,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun collectDataLifecycleAware() {
-        viewLifecycleOwner.lifecycleScope.launch {
+        job = viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch { collectTvId() }
 
@@ -152,11 +161,14 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 }
 
                 if (detailState.errorId != null) {
+                    binding.swipeRefreshLayout.isEnabled = true
                     Toast.makeText(
                         requireContext(),
                         requireContext().getString(detailState.errorId),
                         Toast.LENGTH_LONG
                     ).show()
+                }else {
+                    binding.swipeRefreshLayout.isEnabled = false
                 }
             }
         }

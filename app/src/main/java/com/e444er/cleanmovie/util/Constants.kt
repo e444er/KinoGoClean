@@ -32,6 +32,9 @@ object Constants {
 
     const val QUERY_APPEND_TO_RESPONSE = "credits,watch/providers"
 
+    const val HOUR_KEY = "hour"
+    const val MINUTES_KEY = "minutes"
+
     const val DETAIL_DEFAULT_ID = 0
     const val TV_SERIES_STATUS_ENDED = "Ended"
     const val IMDB_MOVIE_URL = "https://www.imdb.com/title/"
