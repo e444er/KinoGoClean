@@ -29,7 +29,9 @@ class GetMovieDetailUseCase @Inject constructor(
                 emit(Resource.Error(UiText.StringResource(R.string.internet_error)))
             } catch (e: HttpException) {
                 emit(Resource.Error(UiText.StringResource(R.string.error)))
-                Timber.e("Error", e)
+            }catch (e: Exception) {
+                Timber.e(e)
+                emit(Resource.Error(UiText.StringResource(R.string.error)))
             }
         }
     }

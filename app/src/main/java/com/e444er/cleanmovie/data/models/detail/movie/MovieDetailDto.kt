@@ -27,7 +27,7 @@ data class MovieDetailDto(
     @Json(name = "production_companies") val productionCompanies: List<ProductionCompany>,
     @Json(name = "production_countries") val productionCountries: List<ProductionCountry>,
     @Json(name = "release_date") val releaseDate: String,
-    val revenue: Int,
+    val revenue: Any,
     val runtime: Int?,
     @Json(name = "spoken_languages") val spokenLanguages: List<SpokenLanguage>,
     val status: String,
