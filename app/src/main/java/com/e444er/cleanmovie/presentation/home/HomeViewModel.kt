@@ -1,19 +1,14 @@
 package com.e444er.cleanmovie.presentation.home
 
-import androidx.annotation.StringRes
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import com.e444er.cleanmovie.R
-import com.e444er.cleanmovie.data.models.GenreList
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
 import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.domain.use_case.HomeUseCases
-import com.e444er.cleanmovie.util.Constants.IS_SHOWS_SEE_ALL_PAGE
-import com.e444er.cleanmovie.util.Constants.LATEST_SHOWS_SEE_ALL_PAGE_TOOLBAR_TEXT_ID
+import com.e444er.cleanmovie.presentation.util.UiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -22,91 +17,102 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeUseCases: HomeUseCases,
-    private val networkConnectivityObserver: ConnectivityObserver,
-    private val savedStateHandle: SavedStateHandle
+    private val networkConnectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
-    private val _languageIsoCode = MutableStateFlow("")
-    val languageIsoCode: StateFlow<String> get() = _languageIsoCode
+    private val _homeState = MutableStateFlow(HomeState())
+    val homeState: StateFlow<HomeState> get() = _homeState
 
-    val isShowsRecyclerViewSeeAllSection =
-        savedStateHandle.getStateFlow(IS_SHOWS_SEE_ALL_PAGE, false)
+    private val _eventFlow = MutableSharedFlow<UiEvent>()
+    val eventFlow = _eventFlow.asSharedFlow()
 
-    private val _countryIsoCode = MutableStateFlow("")
-    val countryIsoCode: StateFlow<String> get() = _countryIsoCode
-
-    val latestShowsRecyclerViewSeeAllSectionToolBarText = savedStateHandle.getStateFlow(
-        LATEST_SHOWS_SEE_ALL_PAGE_TOOLBAR_TEXT_ID,
-        R.string.now_playing
-    )
-
-    fun observeNetworkConnectivity() = networkConnectivityObserver.observe()
-
-    fun setShowsRecyclerViewSeeAllSection(value: Boolean) {
-        savedStateHandle[IS_SHOWS_SEE_ALL_PAGE] = value
-    }
-
-    fun setLatestShowsRecyclerViewSeeAllSection(@StringRes toolbarTextId: Int) {
-        savedStateHandle[LATEST_SHOWS_SEE_ALL_PAGE_TOOLBAR_TEXT_ID] = toolbarTextId
-    }
-
-
-    fun getLanguageIsoCode(): Flow<String> {
-        return homeUseCases.getLanguageIsoCodeUseCase()
-    }
-
-    fun setLanguageIsoCode(languageIsoCode: String) {
-        _languageIsoCode.value = languageIsoCode
-        setLanguageIsoCodeInDataStore(languageIsoCode)
-    }
-
-    private fun setLanguageIsoCodeInDataStore(languageIsoCode: String) {
+    init {
         viewModelScope.launch {
-            homeUseCases.updateLanguageIsoCodeUseCase(languageIsoCode)
+            launch {
+                homeUseCases.getLanguageIsoCodeUseCase().collect { languageIsoCode ->
+                    _homeState.value = _homeState.value.copy(
+                        languageIsoCode = languageIsoCode
+                    )
+                }
+            }
+            launch {
+                val movieGenreList =
+                    homeUseCases.getMovieGenreList(homeState.value.languageIsoCode).genres
+                _homeState.value = _homeState.value.copy(
+                    movieGenreList = movieGenreList
+                )
+            }
+            launch {
+                val tvGenreList =
+                    homeUseCases.getTvGenreList(homeState.value.languageIsoCode).genres
+                _homeState.value = _homeState.value.copy(
+                    tvGenreList = tvGenreList
+                )
+            }
         }
     }
 
-    suspend fun getMovieGenreList(): GenreList {
-        return homeUseCases.getMovieGenreList(_languageIsoCode.value.lowercase())
+    fun onEvent(event: HomeEvent) {
+        when (event) {
+            is HomeEvent.ClickSeeAllText -> {
+                _homeState.value = _homeState.value.copy(
+                    isShowsSeeAllPage = true,
+                    seeAllPageToolBarText = event.seeAllPageToolBarText
+                )
+            }
+            is HomeEvent.NavigateUpFromSeeAllSection -> hideSeeAllPage()
+            is HomeEvent.OnBackPressed -> hideSeeAllPage()
+            is HomeEvent.NavigateToDetailBottomSheet -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(UiEvent.NavigateTo(event.directions))
+                }
+            }
+            is HomeEvent.UpdateCountryIsoCode -> {
+                _homeState.value = homeState.value.copy(
+                    countryIsoCode = event.countryIsoCode
+                )
+            }
+        }
     }
 
-    suspend fun getTvGenreList(): GenreList {
-        return homeUseCases.getTvGenreList(_languageIsoCode.value.lowercase())
+    private fun hideSeeAllPage() {
+        _homeState.value = _homeState.value.copy(
+            isShowsSeeAllPage = false
+        )
     }
 
-    fun setCountryIsoCode(countryIsoCode: String) {
-        _countryIsoCode.value = countryIsoCode
-    }
+    fun observeNetworkConnectivity() = networkConnectivityObserver.observe()
 
     fun getNowPlayingMovies(): Flow<PagingData<Movie>> {
         return homeUseCases.getNowPlayingMoviesUseCase(
-            language = _languageIsoCode.value.lowercase()
+            language = homeState.value.languageIsoCode,
+            region = homeState.value.countryIsoCode
         ).cachedIn(viewModelScope)
     }
 
     fun getPopularMovies(): Flow<PagingData<Movie>> {
         return homeUseCases.getPopularMoviesUseCase(
-            language = _languageIsoCode.value.lowercase(),
-            region = _countryIsoCode.value
+            language = homeState.value.languageIsoCode,
+            region = homeState.value.countryIsoCode
         ).cachedIn(viewModelScope)
     }
 
     fun getTopRatedMovies(): Flow<PagingData<Movie>> {
         return homeUseCases.getTopRatedMoviesUseCase(
-            language = _languageIsoCode.value.lowercase(),
-            region = _countryIsoCode.value
+            language = homeState.value.languageIsoCode,
+            region = homeState.value.countryIsoCode
         ).cachedIn(viewModelScope)
     }
 
     fun getPopularTvSeries(): Flow<PagingData<TvSeries>> {
         return homeUseCases.getPopularTvSeries(
-            language = _languageIsoCode.value.lowercase()
-        )
+            language = homeState.value.languageIsoCode
+        ).cachedIn(viewModelScope)
     }
 
     fun getTopRatedTvSeries(): Flow<PagingData<TvSeries>> {
         return homeUseCases.getTopRatedTvSeriesUseCase(
-            language = _languageIsoCode.value.lowercase()
-        )
+            language = homeState.value.languageIsoCode
+        ).cachedIn(viewModelScope)
     }
 }

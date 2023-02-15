@@ -9,6 +9,6 @@ class GetTvGenreList @Inject constructor(
 ) {
 
     suspend operator fun invoke(language: String): GenreList {
-        return repository.getTvGenreList(language = language)
+        return repository.getTvGenreList(language = language.lowercase())
     }
 }

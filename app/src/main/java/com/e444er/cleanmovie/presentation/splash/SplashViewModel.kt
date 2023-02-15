@@ -25,24 +25,22 @@ class SplashViewModel @Inject constructor(
     val eventFlow = _eventFlow.asSharedFlow()
 
     init {
+        getLanguageIsoCode()
+        getUiMode()
+        navigateToHomeFragment()
+    }
+
+
+    fun getLanguageIsoCode() {
         viewModelScope.launch {
-            _eventFlow.emit(SplashEvent.UpdateAppLanguage(getLanguageIsoCode().first()))
-
-            _eventFlow.emit(SplashEvent.UpdateUiMode(getUiMode().first()))
-
-            navigateToHomeFragment()
-
+            _eventFlow.emit(SplashEvent.UpdateAppLanguage(getLanguageIsoCodeUseCase().first()))
         }
     }
 
-
-    fun getLanguageIsoCode(): Flow<String> {
-        return getLanguageIsoCodeUseCase()
-    }
-
-
-    fun getUiMode(): Flow<Int> {
-        return getUIModeUseCase()
+    fun getUiMode() {
+        viewModelScope.launch {
+            _eventFlow.emit(SplashEvent.UpdateUiMode(getUIModeUseCase().first()))
+        }
     }
 
     fun navigateToHomeFragment() {
@@ -53,7 +51,6 @@ class SplashViewModel @Inject constructor(
             )
         }
     }
-
 }
 
 sealed class SplashEvent {
