@@ -7,6 +7,7 @@ import com.e444er.cleanmovie.data.models.detail.SpokenLanguage
 import com.e444er.cleanmovie.data.models.detail.credit.CreditDto
 import com.e444er.cleanmovie.data.models.detail.credit.toCredit
 import com.e444er.cleanmovie.domain.models.TvDetail
+import com.prmto.mova_movieapp.data.models.watch_provider.WatchProviders
 import com.squareup.moshi.Json
 
 data class TvDetailDto(
@@ -41,7 +42,8 @@ data class TvDetailDto(
     val type: String,
     @Json(name = "vote_average") val voteAverage: Double,
     @Json(name = "vote_count") val voteCount: Int,
-    val credits: CreditDto
+    val credits: CreditDto,
+    @Json(name = "watch/providers") val watchProviders: WatchProviders
 )
 
 fun TvDetailDto.toTvDetail(): TvDetail {
@@ -60,6 +62,7 @@ fun TvDetailDto.toTvDetail(): TvDetail {
         status = status,
         voteAverage = voteAverage,
         voteCount = voteCount,
+        watchProviders = watchProviders,
         credit = credits.toCredit()
     )
 }

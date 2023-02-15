@@ -16,6 +16,7 @@ import androidx.navigation.fragment.navArgs
 import coil.ImageLoader
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentDetailBinding
+import com.e444er.cleanmovie.presentation.util.asString
 import com.e444er.cleanmovie.util.Constants.DETAIL_DEFAULT_ID
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -52,10 +53,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         bindAttributesDetailFrag = BindAttributesDetailFragment(
             binding = binding,
             imageLoader = imageLoader,
-            context = requireContext()
-        ) { tmdbUrl ->
-            intentToImdbWebSite(tmdbUrl)
-        }
+            context = requireContext(),
+            onClickTmdbImage = { tmdbUrl ->
+                intentToTmdbWebSite(tmdbUrl)
+            }
+        )
 
         addOnBackPressedCallback()
 
@@ -152,11 +154,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     detailActorAdapter.submitList(movieDetail.credit.cast)
                 }
 
-                if (detailState.errorId != null) {
+                if (detailState.error != null) {
                     binding.swipeRefreshLayout.isEnabled = true
                     Toast.makeText(
                         requireContext(),
-                        requireContext().getString(detailState.errorId),
+                        detailState.error.asString(requireContext()),
                         Toast.LENGTH_LONG
                     ).show()
                 } else {
@@ -166,7 +168,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
     }
 
-    private fun intentToImdbWebSite(tmdbUrl: String) {
+    private fun intentToTmdbWebSite(tmdbUrl: String) {
         val intent = Intent(Intent.ACTION_VIEW)
         val tmdbUrlWithLanguage = tmdbUrl.plus("?language=${viewModel.languageIsoCode.value}")
         intent.data = Uri.parse(tmdbUrlWithLanguage)

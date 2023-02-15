@@ -3,6 +3,7 @@ package com.e444er.cleanmovie.domain.models
 import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.data.models.detail.tv.Season
 import com.e444er.cleanmovie.domain.models.credit.Credit
+import com.prmto.mova_movieapp.data.models.watch_provider.WatchProviders
 
 data class TvDetail(
     val id: Int,
@@ -22,4 +23,5 @@ data class TvDetail(
     var ratingValue: Float = 0f,
     var releaseDate: String = "",
     val credit: Credit,
+    val watchProviders: WatchProviders
 )

@@ -26,8 +26,8 @@ class BindAttributesDetailFragment(
     val binding: FragmentDetailBinding,
     val imageLoader: ImageLoader,
     val context: Context,
-    val onClickTmdbImage: (tmdbUrl: String) -> Unit
-) {
+    val onClickTmdbImage: (tmdbUrl: String) -> Unit,
+    ) {
 
     private var isTvDetail = false
     private var currentTvId = 0
@@ -63,34 +63,74 @@ class BindAttributesDetailFragment(
         bindWatchProviders(movieDetail.watchProviders.results)
     }
 
-    private fun bindWatchProviders(providerRegion: WatchProviderRegion?) {
-        providerRegion?.let { it ->
-            val countryIsoCode = context.getCountryIsoCode()
+    fun bindTvDetail(tvDetail: TvDetail) {
+        isTvDetail = true
+        currentTvId = tvDetail.id
+        bindImage(posterPath = tvDetail.posterPath)
+        bindMovieName(movieName = tvDetail.name)
+        bindDetailInfoSection(
+            voteAverage = tvDetail.voteAverage,
+            voteCount = tvDetail.voteCount,
+            genreList = tvDetail.genres,
+            ratingBarValue = tvDetail.ratingValue
+        )
+        showSeasonText(season = tvDetail.numberOfSeasons)
+        hideRuntimeTextAndClockIcon()
+        bindOverview(overview = tvDetail.overview)
+        binding.creatorDirectorLinearLayout.removeViewsInLayout(
+            1,
+            binding.creatorDirectorLinearLayout.childCount - 1
+        )
+        bindCreatorNames(tvDetail.createdBy)
+        binding.txtReleaseDate.text = tvDetail.releaseDate
+        bindWatchProviders(tvDetail.watchProviders.results)
+    }
 
-            val streamLogoPath = it.tr?.flatRate?.first()?.logoPath
-            val buyLogoPath = it.tr?.buy?.first()?.logoPath
-            val rentLogoPath = it.tr?.rent?.first()?.logoPath
+
+    private fun bindWatchProviders(providerRegion: WatchProviderRegion?) {
+        providerRegion?.let { provider ->
+
+            var isHaveWatchProvider = false
+
+            val watchProvider = when (context.getCountryIsoCode()) {
+                "tr" -> provider.tr
+                "us" -> provider.us
+                "fr" -> provider.fr
+                "de" -> provider.de
+                "es" -> provider.es
+                else -> provider.en
+            }
+
+            val streamLogoPath = watchProvider?.flatRate?.first()?.logoPath
+            val buyLogoPath = watchProvider?.buy?.first()?.logoPath
+            val rentLogoPath = watchProvider?.rent?.first()?.logoPath
+
+
 
             streamLogoPath?.let {
+                isHaveWatchProvider = true
                 binding.imvStream.load(
                     ImageApi.getImage(imageUrl = it),
                     imageLoader = imageLoader
                 )
-            }
+            } ?: binding.imvStream.setBackgroundResource(R.drawable.no_watch_provider)
+
 
             buyLogoPath?.let {
+                isHaveWatchProvider = true
                 binding.imvBuy.load(
                     ImageApi.getImage(imageUrl = it),
                     imageLoader = imageLoader
                 )
-            }
+            } ?: binding.imvBuy.setBackgroundResource(R.drawable.no_watch_provider)
 
             rentLogoPath?.let {
+                isHaveWatchProvider = true
                 binding.imvRent.load(
                     ImageApi.getImage(imageUrl = it),
                     imageLoader = imageLoader
                 )
-            }
+            } ?: binding.imvRent.setBackgroundResource(R.drawable.no_watch_provider)
         }
     }
 
@@ -112,29 +152,6 @@ class BindAttributesDetailFragment(
             binding.creatorDirectorLinearLayout.addView(directorText)
         }
     }
-
-    fun bindTvDetail(tvDetail: TvDetail) {
-        isTvDetail = true
-        currentTvId = tvDetail.id
-        bindImage(posterPath = tvDetail.posterPath)
-        bindMovieName(movieName = tvDetail.name)
-        bindDetailInfoSection(
-            voteAverage = tvDetail.voteAverage,
-            voteCount = tvDetail.voteCount,
-            genreList = tvDetail.genres,
-            ratingBarValue = tvDetail.ratingValue
-        )
-        showSeasonText(season = tvDetail.numberOfSeasons)
-        hideRuntimeTextAndClockIcon()
-        bindOverview(overview = tvDetail.overview)
-        binding.creatorDirectorLinearLayout.removeViewsInLayout(
-            1,
-            binding.creatorDirectorLinearLayout.childCount - 1
-        )
-        bindCreatorNames(tvDetail.createdBy)
-        binding.txtReleaseDate.text = tvDetail.releaseDate
-    }
-
 
     private fun bindCreatorNames(createdBy: List<CreatedBy>) {
         if (createdBy.isEmpty()) {

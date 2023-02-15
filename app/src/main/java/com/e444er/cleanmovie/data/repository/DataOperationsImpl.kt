@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import java.util.*
 import javax.inject.Inject
 
 class DataOperationsImpl @Inject constructor(
@@ -21,7 +22,6 @@ class DataOperationsImpl @Inject constructor(
     private object PreferencesKey {
         val localeKey = stringPreferencesKey(LOCALE_KEY)
         val uiModeKey = intPreferencesKey(UI_MODE_KEY)
-        val countryCodeKey = stringPreferencesKey(COUNTRY_KEY)
     }
 
 
@@ -41,30 +41,11 @@ class DataOperationsImpl @Inject constructor(
                 }
 
             }.map {
-                val locale = it[PreferencesKey.localeKey] ?: Constants.DEFAULT_REGION
-                locale
+                val languageTag =
+                    it[PreferencesKey.localeKey] ?: Locale.getDefault().toLanguageTag()
+                languageTag
             }
     }
-
-//    override fun getUserCountryIsoCode(): Flow<String> {
-//        return dataStore.data
-//            .catch { exception ->
-//                if (exception is IOException) {
-//                    emit(emptyPreferences())
-//                } else {
-//                    throw exception
-//                }
-//            }.map {
-//                val userCountryCode = it[PreferencesKey.countryCodeKey] ?: ""
-//                userCountryCode
-//            }
-//    }
-//
-//    override suspend fun updateUserCountryIsoCode(countryIsoCode: String) {
-//        dataStore.edit {
-//            it[PreferencesKey.countryCodeKey] = countryIsoCode
-//        }
-//    }
 
     override suspend fun updateUIMode(uiMode: Int) {
         dataStore.edit {
@@ -85,5 +66,4 @@ class DataOperationsImpl @Inject constructor(
             uiMode
         }
     }
-
 }

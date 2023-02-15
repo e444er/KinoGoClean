@@ -23,8 +23,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
-    @Inject
-    lateinit var getUIModeUseCase: GetUIModeUseCase
+//    @Inject
+//    lateinit var getUIModeUseCase: GetUIModeUseCase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,17 +32,17 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(LayoutInflater.from(this))
         setContentView(binding.root)
 
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                getUIModeUseCase().collectLatest { uiMode ->
-                    if (uiMode == AppCompatDelegate.MODE_NIGHT_YES) {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    } else {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    }
-                }
-            }
-        }
+//        lifecycleScope.launch {
+//            repeatOnLifecycle(Lifecycle.State.STARTED) {
+//                getUIModeUseCase().collectLatest { uiMode ->
+//                    if (uiMode == AppCompatDelegate.MODE_NIGHT_YES) {
+//                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+//                    } else {
+//                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+//                    }
+//                }
+//            }
+//        }
 
         val navHost =
             supportFragmentManager.findFragmentById(R.id.fragmentContainerView) as NavHostFragment
