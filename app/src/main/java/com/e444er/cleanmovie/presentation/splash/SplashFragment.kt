@@ -3,7 +3,6 @@ package com.e444er.cleanmovie.presentation.splash
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.os.ConfigurationCompat
 import androidx.core.os.LocaleListCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -12,11 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.util.getCountryIsoCode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import timber.log.Timber
+import java.util.*
 
 @AndroidEntryPoint
 class SplashFragment : Fragment(R.layout.fragment_splash) {
@@ -45,6 +45,7 @@ class SplashFragment : Fragment(R.layout.fragment_splash) {
                             language
                         )
                     )
+
                 }
             }
         }

@@ -1,5 +1,7 @@
 package com.e444er.cleanmovie.util
 
+import android.content.Context
+import android.telephony.TelephonyManager
 import com.e444er.cleanmovie.BuildConfig
 
 object Constants {
@@ -21,6 +23,7 @@ object Constants {
 
     const val LOCALE_KEY = "locale_key"
     const val UI_MODE_KEY = "ui_mode_key"
+    const val COUNTRY_KEY = "country_key"
 
 
     const val DISCOVER_DATE_QUERY_FOR_TV = "first_air_date"
@@ -40,4 +43,9 @@ object Constants {
     const val IMDB_MOVIE_URL = "https://www.imdb.com/title/"
 
     const val LATEST_SHOWS_SEE_ALL_PAGE_TOOLBAR_TEXT_ID = "latestRecyclerViewSeeAllSectionText"
+}
+
+fun Context.getCountryIsoCode(): String {
+    val telephonyManager = getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+    return telephonyManager.simCountryIso
 }

@@ -19,6 +19,7 @@ import com.e444er.cleanmovie.presentation.util.HandleUtils
 import com.e444er.cleanmovie.util.Constants
 import com.e444er.cleanmovie.util.Constants.HOUR_KEY
 import com.e444er.cleanmovie.util.Constants.MINUTES_KEY
+import com.e444er.cleanmovie.util.getCountryIsoCode
 import com.google.android.material.textview.MaterialTextView
 
 class BindAttributesDetailFragment(
@@ -64,6 +65,8 @@ class BindAttributesDetailFragment(
 
     private fun bindWatchProviders(providerRegion: WatchProviderRegion?) {
         providerRegion?.let { it ->
+            val countryIsoCode = context.getCountryIsoCode()
+
             val streamLogoPath = it.tr?.flatRate?.first()?.logoPath
             val buyLogoPath = it.tr?.buy?.first()?.logoPath
             val rentLogoPath = it.tr?.rent?.first()?.logoPath

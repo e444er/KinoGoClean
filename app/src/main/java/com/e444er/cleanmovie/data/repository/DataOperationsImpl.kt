@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.*
 import com.e444er.cleanmovie.domain.repository.DataStoreOperations
 import com.e444er.cleanmovie.util.Constants
+import com.e444er.cleanmovie.util.Constants.COUNTRY_KEY
 import com.e444er.cleanmovie.util.Constants.LOCALE_KEY
 import com.e444er.cleanmovie.util.Constants.UI_MODE_KEY
 import kotlinx.coroutines.flow.Flow
@@ -20,6 +21,7 @@ class DataOperationsImpl @Inject constructor(
     private object PreferencesKey {
         val localeKey = stringPreferencesKey(LOCALE_KEY)
         val uiModeKey = intPreferencesKey(UI_MODE_KEY)
+        val countryCodeKey = stringPreferencesKey(COUNTRY_KEY)
     }
 
 
@@ -43,6 +45,26 @@ class DataOperationsImpl @Inject constructor(
                 locale
             }
     }
+
+//    override fun getUserCountryIsoCode(): Flow<String> {
+//        return dataStore.data
+//            .catch { exception ->
+//                if (exception is IOException) {
+//                    emit(emptyPreferences())
+//                } else {
+//                    throw exception
+//                }
+//            }.map {
+//                val userCountryCode = it[PreferencesKey.countryCodeKey] ?: ""
+//                userCountryCode
+//            }
+//    }
+//
+//    override suspend fun updateUserCountryIsoCode(countryIsoCode: String) {
+//        dataStore.edit {
+//            it[PreferencesKey.countryCodeKey] = countryIsoCode
+//        }
+//    }
 
     override suspend fun updateUIMode(uiMode: Int) {
         dataStore.edit {

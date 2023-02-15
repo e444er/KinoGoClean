@@ -23,11 +23,13 @@ interface RemoteRepository {
     ): Flow<PagingData<Movie>>
 
     fun getPopularMovies(
-        language: String
+        language: String,
+        region: String
     ): Flow<PagingData<Movie>>
 
     fun getTopRatedMovies(
-        language: String
+        language: String,
+        region: String
     ): Flow<PagingData<Movie>>
 
     fun getPopularTvs(

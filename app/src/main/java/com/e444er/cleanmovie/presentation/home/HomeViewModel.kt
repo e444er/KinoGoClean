@@ -32,6 +32,9 @@ class HomeViewModel @Inject constructor(
     val isShowsRecyclerViewSeeAllSection =
         savedStateHandle.getStateFlow(IS_SHOWS_SEE_ALL_PAGE, false)
 
+    private val _countryIsoCode = MutableStateFlow("")
+    val countryIsoCode: StateFlow<String> get() = _countryIsoCode
+
     val latestShowsRecyclerViewSeeAllSectionToolBarText = savedStateHandle.getStateFlow(
         LATEST_SHOWS_SEE_ALL_PAGE_TOOLBAR_TEXT_ID,
         R.string.now_playing
@@ -71,6 +74,10 @@ class HomeViewModel @Inject constructor(
         return homeUseCases.getTvGenreList(_languageIsoCode.value.lowercase())
     }
 
+    fun setCountryIsoCode(countryIsoCode: String) {
+        _countryIsoCode.value = countryIsoCode
+    }
+
     fun getNowPlayingMovies(): Flow<PagingData<Movie>> {
         return homeUseCases.getNowPlayingMoviesUseCase(
             language = _languageIsoCode.value.lowercase()
@@ -79,13 +86,15 @@ class HomeViewModel @Inject constructor(
 
     fun getPopularMovies(): Flow<PagingData<Movie>> {
         return homeUseCases.getPopularMoviesUseCase(
-            language = _languageIsoCode.value.lowercase()
+            language = _languageIsoCode.value.lowercase(),
+            region = _countryIsoCode.value
         ).cachedIn(viewModelScope)
     }
 
     fun getTopRatedMovies(): Flow<PagingData<Movie>> {
         return homeUseCases.getTopRatedMoviesUseCase(
-            language = _languageIsoCode.value.lowercase()
+            language = _languageIsoCode.value.lowercase(),
+            region = _countryIsoCode.value
         ).cachedIn(viewModelScope)
     }
 

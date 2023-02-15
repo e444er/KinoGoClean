@@ -20,6 +20,7 @@ import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.presentation.home.adapter.*
+import com.e444er.cleanmovie.util.getCountryIsoCode
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.collectLatest
@@ -92,7 +93,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         popularTvSeriesAdapter.retry()
         topRatedMoviesAdapter.retry()
         topRatedTvSeriesAdapter.retry()
-
     }
 
     private fun collectDataLifecycleAware() =
@@ -103,6 +103,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                         viewModel.getLanguageIsoCode().collect {
                             viewModel.setLanguageIsoCode(it)
                         }
+                    }
+
+                    launch {
+                        val countryIsoCode = requireContext().getCountryIsoCode().uppercase()
+                        viewModel.setCountryIsoCode(countryIsoCode)
                     }
 
                     launch {
@@ -321,7 +326,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             findNavController().navigate(action)
         }
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
