@@ -17,6 +17,8 @@
     <dimen name="shape_large">16dp</dimen>
 
     <dimen name="small_elevation">4dp</dimen>
+
+    <dimen name="watchProvidersImageSize">70dp</dimen>
     <dimen name="medium_elevation">8dp</dimen>
 
     <dimen name="now_playing_row_backdrop_size">320dp</dimen>

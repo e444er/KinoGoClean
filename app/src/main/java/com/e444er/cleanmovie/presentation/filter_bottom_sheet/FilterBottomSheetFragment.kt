@@ -11,10 +11,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.data.models.enums.Categories
 import com.e444er.cleanmovie.data.models.enums.Sort
 import com.e444er.cleanmovie.databinding.FragmentFilterBottomSheetBinding
-import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Period
 import com.e444er.cleanmovie.presentation.explore.ExploreViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment

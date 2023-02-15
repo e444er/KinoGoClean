@@ -1,12 +1,11 @@
 package com.e444er.cleanmovie.domain.repository
 
 import androidx.paging.PagingData
-import com.e444er.cleanmovie.data.models.detail.movie.MovieDetailDto
-import com.e444er.cleanmovie.data.models.detail.tv.TvDetailDto
 import com.e444er.cleanmovie.domain.models.*
 import com.e444er.cleanmovie.presentation.filter_bottom_sheet.state.FilterBottomState
 import com.e444er.cleanmovie.util.Constants.DEFAULT_REGION
 import kotlinx.coroutines.flow.Flow
+import com.e444er.cleanmovie.data.models.GenreList
 
 interface RemoteRepository {
 

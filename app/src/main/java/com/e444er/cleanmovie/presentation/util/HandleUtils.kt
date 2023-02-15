@@ -1,14 +1,19 @@
 package com.e444er.cleanmovie.presentation.util
 
-import com.e444er.cleanmovie.domain.models.Genre
+import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
 
 object HandleUtils {
+
     fun convertToYearFromDate(releaseDate: String): String {
         return releaseDate.split("-")[0]
     }
 
-    fun convertGenreListToStringSeparatedByCommas(movieGenreList: List<Genre>, movie: Movie): String {
+
+    fun convertGenreListToStringSeparatedByCommas(
+        movieGenreList: List<Genre>,
+        movie: Movie
+    ): String {
         var genreNames = ""
 
         if (movie.genreIds.isEmpty()) {
@@ -26,6 +31,7 @@ object HandleUtils {
         if (genreNames.isNotEmpty()) {
             return genreNames.subSequence(0, genreNames.length - 2).toString()
         }
+
         return genreNames
     }
 
@@ -46,7 +52,10 @@ object HandleUtils {
         return genreNames
     }
 
-    fun handleConvertingGenreListToOneGenreString(movieGenreList: List<Genre>, genreIds: List<Int>): String {
+    fun handleConvertingGenreListToOneGenreString(
+        movieGenreList: List<Genre>,
+        genreIds: List<Int>
+    ): String {
 
         for (genre: Genre in movieGenreList) {
             for (genreId: Int in genreIds) {
@@ -54,9 +63,12 @@ object HandleUtils {
                     return genre.name
                 }
                 break
+
             }
         }
+
         return ""
+
     }
 
     fun convertingVoteCountToString(voteCount: Int): String {
@@ -77,4 +89,5 @@ object HandleUtils {
 
         return "${divide.toInt()}.$voteCountText k"
     }
+
 }

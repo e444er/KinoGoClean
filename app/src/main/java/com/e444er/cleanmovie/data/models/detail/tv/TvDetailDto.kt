@@ -1,13 +1,12 @@
 package com.e444er.cleanmovie.data.models.detail.tv
 
+import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.data.models.detail.ProductionCompany
 import com.e444er.cleanmovie.data.models.detail.ProductionCountry
 import com.e444er.cleanmovie.data.models.detail.SpokenLanguage
 import com.e444er.cleanmovie.data.models.detail.credit.CreditDto
 import com.e444er.cleanmovie.data.models.detail.credit.toCredit
-import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.TvDetail
-import com.prmto.mova_movieapp.data.models.watch_provider.WatchProviders
 import com.squareup.moshi.Json
 
 data class TvDetailDto(

@@ -6,8 +6,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.databinding.MovieRowBinding
-import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
 import com.e444er.cleanmovie.presentation.home.adapter.DiffUtilCallBack
@@ -22,10 +22,16 @@ abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(
     class MovieViewHolder(
         val binding: MovieRowBinding,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bindMovie(movie: Movie, genreList: List<Genre>, context: Context) {
+
+        fun bindMovie(
+            movie: Movie,
+            genreList: List<Genre>,
+            context: Context
+        ) {
 
             binding.tvMovieTvName.text = movie.title
-            val genre = HandleUtils.handleConvertingGenreListToOneGenreString(genreList, movie.genreIds)
+            val genre =
+                HandleUtils.handleConvertingGenreListToOneGenreString(genreList, movie.genreIds)
             val voteCount = HandleUtils.convertingVoteCountToString(movie.voteCount)
             val releaseDate = HandleUtils.convertToYearFromDate(movie.releaseDate)
 
@@ -39,10 +45,15 @@ abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(
 
         }
 
-        fun bindTvSeries(tv: TvSeries, genreList: List<Genre>, context: Context) {
+        fun bindTvSeries(
+            tv: TvSeries,
+            genreList: List<Genre>,
+            context: Context
+        ) {
             binding.tvMovieTvName.text = tv.name
 
-            val genre = HandleUtils.handleConvertingGenreListToOneGenreString(genreList, tv.genreIds)
+            val genre =
+                HandleUtils.handleConvertingGenreListToOneGenreString(genreList, tv.genreIds)
             val releaseDate = HandleUtils.convertToYearFromDate(tv.firstAirDate)
             val voteCount = HandleUtils.convertingVoteCountToString(tv.voteCount)
 
@@ -59,7 +70,6 @@ abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         val context = holder.itemView.context
-
         val item = getItem(position)
 
         if (item is Movie) {
@@ -70,10 +80,12 @@ abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(
         if (item is TvSeries) {
             holder.bindTvSeries(tv = item, genreList = genreList, context = context)
         }
+
         onBindViewHold(binding = holder.binding, position = position, context = context)
     }
 
     abstract fun onBindViewHold(binding: MovieRowBinding, position: Int, context: Context)
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)

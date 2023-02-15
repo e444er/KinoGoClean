@@ -6,7 +6,8 @@ import coil.load
 import com.e444er.cleanmovie.data.remote.ImageApi
 import com.e444er.cleanmovie.data.remote.ImageSize
 import com.e444er.cleanmovie.databinding.MovieRowBinding
-import com.e444er.cleanmovie.domain.models.Genre
+
+import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.presentation.util.BaseMovieAndTvRecyclerAdapter
 import javax.inject.Inject

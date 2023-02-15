@@ -7,10 +7,11 @@ import android.widget.ImageView
 import coil.ImageLoader
 import coil.load
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.data.models.Genre
+import com.e444er.cleanmovie.data.models.detail.watch_provider.WatchProviderRegion
 import com.e444er.cleanmovie.data.remote.ImageApi
 import com.e444er.cleanmovie.databinding.FragmentDetailBinding
 import com.e444er.cleanmovie.domain.models.CreatedBy
-import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.MovieDetail
 import com.e444er.cleanmovie.domain.models.TvDetail
 import com.e444er.cleanmovie.domain.models.credit.Crew
@@ -26,7 +27,6 @@ class BindAttributesDetailFragment(
     val context: Context,
     val onClickTmdbImage: (tmdbUrl: String) -> Unit
 ) {
-
 
     private var isTvDetail = false
     private var currentTvId = 0
@@ -59,6 +59,36 @@ class BindAttributesDetailFragment(
             binding.creatorDirectorLinearLayout.childCount - 1
         )
         bindDirectorName(movieDetail.credit.crew)
+        bindWatchProviders(movieDetail.watchProviders.results)
+    }
+
+    private fun bindWatchProviders(providerRegion: WatchProviderRegion?) {
+        providerRegion?.let { it ->
+            val streamLogoPath = it.tr?.flatRate?.first()?.logoPath
+            val buyLogoPath = it.tr?.buy?.first()?.logoPath
+            val rentLogoPath = it.tr?.rent?.first()?.logoPath
+
+            streamLogoPath?.let {
+                binding.imvStream.load(
+                    ImageApi.getImage(imageUrl = it),
+                    imageLoader = imageLoader
+                )
+            }
+
+            buyLogoPath?.let {
+                binding.imvBuy.load(
+                    ImageApi.getImage(imageUrl = it),
+                    imageLoader = imageLoader
+                )
+            }
+
+            rentLogoPath?.let {
+                binding.imvRent.load(
+                    ImageApi.getImage(imageUrl = it),
+                    imageLoader = imageLoader
+                )
+            }
+        }
     }
 
     private fun bindDirectorName(crews: List<Crew>) {

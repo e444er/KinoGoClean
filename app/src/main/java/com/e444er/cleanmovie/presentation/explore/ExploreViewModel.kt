@@ -2,9 +2,9 @@ package com.e444er.cleanmovie.presentation.explore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.data.models.enums.Categories
 import com.e444er.cleanmovie.data.models.enums.Sort
-import com.e444er.cleanmovie.domain.models.Genre
 import com.e444er.cleanmovie.domain.models.Period
 import com.e444er.cleanmovie.domain.use_case.ExploreUseCases
 import com.e444er.cleanmovie.presentation.filter_bottom_sheet.state.FilterBottomState

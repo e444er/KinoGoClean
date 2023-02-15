@@ -1,14 +1,13 @@
 package com.e444er.cleanmovie.data.remote
 
 import com.e444er.cleanmovie.data.models.ApiResponse
+import com.e444er.cleanmovie.data.models.GenreList
 import com.e444er.cleanmovie.data.models.MovieDto
 import com.e444er.cleanmovie.data.models.TvSeriesDto
 import com.e444er.cleanmovie.data.models.detail.movie.MovieDetailDto
 import com.e444er.cleanmovie.data.models.detail.tv.TvDetailDto
 import com.e444er.cleanmovie.data.models.enums.Categories
 import com.e444er.cleanmovie.data.models.enums.Sort
-import com.e444er.cleanmovie.domain.models.Genre
-import com.e444er.cleanmovie.domain.models.GenreList
 import com.e444er.cleanmovie.presentation.util.toDiscoveryQueryString
 import com.e444er.cleanmovie.util.Constants.API_KEY
 import com.e444er.cleanmovie.util.Constants.QUERY_APPEND_TO_RESPONSE

@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
@@ -15,15 +14,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import coil.ImageLoader
-import coil.load
 import com.e444er.cleanmovie.R
-import com.e444er.cleanmovie.data.remote.ImageApi
 import com.e444er.cleanmovie.databinding.FragmentDetailBinding
-import com.e444er.cleanmovie.domain.models.MovieDetail
-import com.e444er.cleanmovie.domain.models.TvDetail
-import com.e444er.cleanmovie.presentation.util.HandleUtils
 import com.e444er.cleanmovie.util.Constants.DETAIL_DEFAULT_ID
-import com.e444er.cleanmovie.util.Constants.TV_SERIES_STATUS_ENDED
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -33,27 +26,30 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
+    private var job: Job? = null
 
-    @Inject
-    lateinit var imageLoader: ImageLoader
-    private lateinit var bindAttributesDetailFragment: BindAttributesDetailFragment
+    private lateinit var bindAttributesDetailFrag: BindAttributesDetailFragment
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
-    private var job: Job? = null
+
+    @Inject
+    lateinit var imageLoader: ImageLoader
+
+    @Inject
+    lateinit var detailActorAdapter: DetailActorAdapter
+
 
     private val detailArgs by navArgs<DetailFragmentArgs>()
     private val viewModel: DetailViewModel by viewModels()
 
-    private lateinit var detailActorAdapter: DetailActorAdapter
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        _binding = FragmentDetailBinding.bind(view)
 
+        _binding = FragmentDetailBinding.bind(view)
         setupDetailActorAdapter()
 
-        bindAttributesDetailFragment = BindAttributesDetailFragment(
+        bindAttributesDetailFrag = BindAttributesDetailFragment(
             binding = binding,
             imageLoader = imageLoader,
             context = requireContext()
@@ -76,7 +72,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private fun setupDetailActorAdapter() {
-        detailActorAdapter = DetailActorAdapter(imageLoader)
         binding.recyclerViewActor.adapter = detailActorAdapter
     }
 
@@ -136,7 +131,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private suspend fun collectDetailState() {
-
         viewModel.detailState.collectLatest { detailState ->
             if (detailState.loading) {
                 binding.progressBar.visibility = View.VISIBLE
@@ -144,7 +138,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 binding.progressBar.visibility = View.GONE
 
                 detailState.tvDetail?.let {
-                    bindAttributesDetailFragment.bindTvDetail(
+                    bindAttributesDetailFrag.bindTvDetail(
                         tvDetail = it
                     )
                     detailActorAdapter.submitList(it.credit.cast)
@@ -152,7 +146,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
 
                 detailState.movieDetail?.let { movieDetail ->
-                    bindAttributesDetailFragment.bindMovieDetail(
+                    bindAttributesDetailFrag.bindMovieDetail(
                         movieDetail = movieDetail
                     )
                     detailActorAdapter.submitList(movieDetail.credit.cast)
@@ -165,7 +159,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         requireContext().getString(detailState.errorId),
                         Toast.LENGTH_LONG
                     ).show()
-                }else {
+                } else {
                     binding.swipeRefreshLayout.isEnabled = false
                 }
             }
@@ -174,9 +168,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun intentToImdbWebSite(tmdbUrl: String) {
         val intent = Intent(Intent.ACTION_VIEW)
-        intent.data = Uri.parse(tmdbUrl)
+        val tmdbUrlWithLanguage = tmdbUrl.plus("?language=${viewModel.languageIsoCode.value}")
+        intent.data = Uri.parse(tmdbUrlWithLanguage)
         startActivity(intent)
     }
+
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null

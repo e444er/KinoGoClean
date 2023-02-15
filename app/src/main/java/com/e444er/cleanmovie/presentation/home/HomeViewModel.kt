@@ -7,7 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.e444er.cleanmovie.R
-import com.e444er.cleanmovie.domain.models.GenreList
+import com.e444er.cleanmovie.data.models.GenreList
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
 import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
@@ -29,9 +29,6 @@ class HomeViewModel @Inject constructor(
     private val _languageIsoCode = MutableStateFlow("")
     val languageIsoCode: StateFlow<String> get() = _languageIsoCode
 
-    private val _showSnackBarNoInternetConnectivity = MutableSharedFlow<String>()
-    val showSnackBarNoInternetConnectivity: SharedFlow<String> get() = _showSnackBarNoInternetConnectivity
-
     val isShowsRecyclerViewSeeAllSection =
         savedStateHandle.getStateFlow(IS_SHOWS_SEE_ALL_PAGE, false)
 
@@ -41,13 +38,6 @@ class HomeViewModel @Inject constructor(
     )
 
     fun observeNetworkConnectivity() = networkConnectivityObserver.observe()
-
-
-    fun showSnackbar() {
-        viewModelScope.launch {
-            _showSnackBarNoInternetConnectivity.emit("No Internet Connection")
-        }
-    }
 
     fun setShowsRecyclerViewSeeAllSection(value: Boolean) {
         savedStateHandle[IS_SHOWS_SEE_ALL_PAGE] = value

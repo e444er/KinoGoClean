@@ -20,6 +20,7 @@ import com.e444er.cleanmovie.presentation.filter_bottom_sheet.state.FilterBottom
 import com.e444er.cleanmovie.util.Constants.ITEMS_PER_PAGE
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import com.e444er.cleanmovie.data.models.GenreList
 
 class RemoteRepositoryImpl @Inject constructor(
     private val tmdbApi: TMDBApi
