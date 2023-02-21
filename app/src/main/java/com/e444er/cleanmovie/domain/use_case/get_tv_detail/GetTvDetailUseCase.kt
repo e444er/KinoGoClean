@@ -3,7 +3,7 @@ package com.e444er.cleanmovie.domain.use_case.get_tv_detail
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.domain.models.TvDetail
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
-import com.e444er.cleanmovie.presentation.util.HandleUtils
+import com.e444er.cleanmovie.domain.util.HandleUtils
 import com.e444er.cleanmovie.presentation.util.UiText
 import com.e444er.cleanmovie.util.Resource
 import kotlinx.coroutines.flow.Flow

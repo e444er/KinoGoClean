@@ -10,8 +10,8 @@ import com.e444er.cleanmovie.presentation.util.isLoading
 import okio.IOException
 
 class HandlePagingLoadStates<T : Any>(
-    private val nowPlayingRecyclerAdapter: NowPlayingRecyclerAdapter? = null,
-    private val pagingAdapter: BaseMovieAndTvRecyclerAdapter<T>? = null,
+    nowPlayingRecyclerAdapter: NowPlayingRecyclerAdapter? = null,
+    pagingAdapter: BaseMovieAndTvRecyclerAdapter<T>? = null,
     onLoading: () -> Unit,
     onNotLoading: () -> Unit,
     onError: (UiText) -> Unit

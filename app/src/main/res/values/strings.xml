@@ -11,6 +11,7 @@
     <string name="top_rated_movies">Top Rated Movies</string>
     <string name="search">Search</string>
     <string name="filter">filter</string>
+    <string name="oops_something_went_wrong">Oops! Something went wrong. Please try again.</string>
     <string name="top_rated_tv_series">Top Rated Tv Series</string>
     <string name="sort_amp_filter"><![CDATA[Sort & Filter]]></string>
     <string name="categories">Categories</string>
