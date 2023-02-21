@@ -10,6 +10,8 @@
 
     <dimen name="small_padding">4dp</dimen>
     <dimen name="medium_padding">8dp</dimen>
+    <dimen name="movie_row_height">300dp</dimen>
+
     <dimen name="large_padding">16dp</dimen>
     <dimen name="extra_large_padding">32dp</dimen>
 

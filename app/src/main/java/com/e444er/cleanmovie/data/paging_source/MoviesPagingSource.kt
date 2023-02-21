@@ -8,6 +8,8 @@ import com.e444er.cleanmovie.data.remote.TMDBApi
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.util.Constants.DEFAULT_REGION
 import com.e444er.cleanmovie.util.Constants.STARTING_PAGE
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 class MoviesPagingSource @Inject constructor(
@@ -53,7 +55,9 @@ class MoviesPagingSource @Inject constructor(
                     response.page.plus(1) else null
             )
 
-        } catch (e: Exception) {
+        } catch (e: IOException) {
+            LoadResult.Error(throwable = e)
+        } catch (e: HttpException) {
             LoadResult.Error(throwable = e)
         }
     }

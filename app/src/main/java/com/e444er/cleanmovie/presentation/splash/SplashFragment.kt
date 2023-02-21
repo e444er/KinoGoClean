@@ -13,6 +13,8 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.presentation.util.asString
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -35,10 +37,16 @@ class SplashFragment : Fragment() {
 
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-
                 launch {
                     viewModel.eventFlow.collectLatest { event ->
                         when (event) {
+                            is SplashEvent.NetworkError -> {
+                                Snackbar.make(
+                                    requireView(),
+                                    event.uiText.asString(requireContext()),
+                                    Snackbar.LENGTH_LONG
+                                ).show()
+                            }
                             is SplashEvent.NavigateTo -> {
                                 findNavController().navigate(event.directions)
                             }

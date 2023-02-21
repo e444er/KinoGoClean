@@ -9,6 +9,8 @@ import com.e444er.cleanmovie.presentation.filter_bottom_sheet.state.FilterBottom
 import com.e444er.cleanmovie.presentation.util.toDiscoveryQueryString
 import com.e444er.cleanmovie.presentation.util.toSeparateWithComma
 import com.e444er.cleanmovie.util.Constants
+import retrofit2.HttpException
+import java.io.IOException
 import javax.inject.Inject
 
 
@@ -40,8 +42,10 @@ class DiscoverTvPagingSource @Inject constructor(
                 nextKey = if (nextPage < apiResponse.totalPages) nextPage.plus(1) else null
             )
 
-        } catch (e: Exception) {
-            LoadResult.Error(e)
+        } catch (e: IOException) {
+            LoadResult.Error(throwable = e)
+        } catch (e: HttpException) {
+            LoadResult.Error(throwable = e)
         }
 
     }

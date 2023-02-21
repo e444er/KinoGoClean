@@ -1,5 +1,7 @@
 package com.e444er.cleanmovie.presentation.util
 
+import androidx.paging.CombinedLoadStates
+import androidx.paging.LoadState
 import com.e444er.cleanmovie.data.models.enums.Categories
 import com.e444er.cleanmovie.data.models.enums.Sort
 import com.e444er.cleanmovie.util.Constants
@@ -37,4 +39,22 @@ fun Sort.toDiscoveryQueryString(movieCategory: Categories): String {
     }
 
     return stringBuilder.append(".desc").toString()
+}
+
+fun CombinedLoadStates.isErrorWithLoadState(): LoadState.Error? {
+    return when {
+        this.refresh is LoadState.Error -> this.refresh as LoadState.Error
+        this.append is LoadState.Error -> this.append as LoadState.Error
+        this.prepend is LoadState.Error -> this.prepend as LoadState.Error
+        else -> null
+    }
+}
+
+fun CombinedLoadStates.isLoading(): Boolean {
+
+    return when (this.refresh) {
+        is LoadState.Loading -> true
+        is LoadState.NotLoading -> false
+        else -> false
+    }
 }
