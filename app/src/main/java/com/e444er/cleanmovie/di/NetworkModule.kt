@@ -3,9 +3,9 @@ package com.e444er.cleanmovie.di
 import android.content.Context
 import coil.ImageLoader
 import com.e444er.cleanmovie.R
-import com.e444er.cleanmovie.data.remote.RequestInterceptor
-import com.e444er.cleanmovie.data.remote.TMDBApi
-import com.e444er.cleanmovie.util.Constants
+import com.e444er.cleanmovie.core.data.data_source.remote.RequestInterceptor
+import com.e444er.cleanmovie.core.data.data_source.remote.TMDBApi
+import com.e444er.cleanmovie.core.util.Constants
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -21,6 +21,15 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object NetworkModule {
+
+    @Provides
+    @Singleton
+    fun provideImageLoader(@ApplicationContext context: Context): ImageLoader {
+        return ImageLoader.Builder(context)
+            .crossfade(500)
+            .placeholder(R.drawable.loading_animate)
+            .build()
+    }
 
 
     @Provides
@@ -39,25 +48,20 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideTmdbApi(
+    fun provideRetrofit(
         moshi: Moshi,
         okHttpClient: OkHttpClient
-    ): TMDBApi {
+    ): Retrofit {
         return Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .client(okHttpClient)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
-            .create(TMDBApi::class.java)
-
     }
 
     @Provides
     @Singleton
-    fun provideImageLoader(@ApplicationContext context: Context): ImageLoader {
-        return  ImageLoader.Builder(context)
-            .crossfade(500)
-            .placeholder(R.drawable.loading_animate)
-            .build()
+    fun provideTMDBApi(retrofit: Retrofit): TMDBApi {
+        return retrofit.create(TMDBApi::class.java)
     }
 }

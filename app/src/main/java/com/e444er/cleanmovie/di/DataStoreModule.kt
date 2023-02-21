@@ -5,7 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.preferencesDataStoreFile
-import com.e444er.cleanmovie.util.Constants
+import com.e444er.cleanmovie.core.util.Constants
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

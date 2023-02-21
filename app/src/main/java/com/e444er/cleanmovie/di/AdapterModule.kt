@@ -1,8 +1,8 @@
 package com.e444er.cleanmovie.di
 
 import coil.ImageLoader
-import com.e444er.cleanmovie.presentation.detail_fragment.DetailActorAdapter
-import com.e444er.cleanmovie.presentation.home.adapter.*
+import com.e444er.cleanmovie.feature_home.presentation.home.recyler.*
+import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.DetailActorAdapter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
