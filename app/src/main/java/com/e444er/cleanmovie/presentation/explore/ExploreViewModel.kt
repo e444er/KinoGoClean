@@ -2,9 +2,11 @@ package com.e444er.cleanmovie.presentation.explore
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
 import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.data.models.enums.Categories
 import com.e444er.cleanmovie.data.models.enums.Sort
+import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.Period
 import com.e444er.cleanmovie.domain.use_case.ExploreUseCases
 import com.e444er.cleanmovie.presentation.filter_bottom_sheet.state.FilterBottomState
@@ -25,7 +27,8 @@ class ExploreViewModel @Inject constructor(
     private val _language = MutableStateFlow<String>(DEFAULT_LANGUAGE)
     val language = _language.asStateFlow()
 
-    private val _genreList = MutableStateFlow<List<Genre>>(emptyList())
+    private val _genreList =
+        MutableStateFlow<List<Genre>>(emptyList())
     val genreList = _genreList.asStateFlow()
 
     private val _filterBottomSheetState = MutableStateFlow(FilterBottomState())
@@ -35,15 +38,19 @@ class ExploreViewModel @Inject constructor(
     val periodState = _periodState.asStateFlow()
 
     private val _isDownloadGenreOptions = MutableSharedFlow<Boolean>()
-    val isError = _isDownloadGenreOptions.asSharedFlow()
+    val isDownloadGenreOptions = _isDownloadGenreOptions.asSharedFlow()
+
 
     init {
         setupTimePeriods()
-        viewModelScope.launch() {
-//            getLocale().collectLatest {
-//                _language.value = it
-//            }
-        }
+    }
+
+
+    fun discoverMovie(): Flow<PagingData<Movie>> {
+        return exploreUseCases.discoverMovieUseCase(
+            language.value,
+            filterBottomState = filterBottomSheetState.value
+        )
     }
 
     fun setCategoryState(newCategory: Categories) {
@@ -56,6 +63,7 @@ class ExploreViewModel @Inject constructor(
             )
         }
         resetSelectedGenreIdsState()
+
     }
 
     private fun resetSelectedGenreIdsState() {
@@ -85,7 +93,6 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
-
     fun setCheckedPeriods(checkedPeriodId: Int) {
         _filterBottomSheetState.update {
             it.copy(
@@ -100,10 +107,6 @@ class ExploreViewModel @Inject constructor(
         }
     }
 
-//    private fun getLocale(): Flow<String> {
-//        return exploreUseCases.getLanguageIsoCodeUseCase.invoke()
-//    }
-
     fun setLocale(locale: String) {
         _language.value = locale
     }
@@ -114,16 +117,18 @@ class ExploreViewModel @Inject constructor(
             try {
                 _genreList.value =
                     if (_filterBottomSheetState.value.categoryState == Categories.TV) {
-                        exploreUseCases.tvGenreListUseCase.invoke(language).genres
+                        exploreUseCases.tvGenreListUseCase(language).genres
                     } else {
-                        exploreUseCases.movieGenreListUseCase.invoke(language).genres
+                        exploreUseCases.movieGenreListUseCase(language).genres
                     }
             } catch (e: Exception) {
                 _isDownloadGenreOptions.emit(true)
                 Timber.e("Didn't download genreList $e")
             }
         }
+
     }
+
 
     private fun setupTimePeriods() {
 
@@ -146,5 +151,3 @@ class ExploreViewModel @Inject constructor(
         }
     }
 }
-
-

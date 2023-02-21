@@ -1,4 +1,4 @@
-package com.e444er.cleanmovie.presentation.home
+package com.e444er.cleanmovie.presentation.home.event
 
 import com.e444er.cleanmovie.presentation.util.UiText
 

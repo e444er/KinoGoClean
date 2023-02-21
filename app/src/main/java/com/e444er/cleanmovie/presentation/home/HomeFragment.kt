@@ -1,12 +1,10 @@
 package com.e444er.cleanmovie.presentation.home
 
 import android.os.Bundle
-import android.os.Parcelable
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import androidx.activity.OnBackPressedCallback
-import androidx.annotation.StringRes
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,21 +12,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
-import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
-import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.presentation.home.adapter.*
-import com.e444er.cleanmovie.presentation.util.UiEvent
+import com.e444er.cleanmovie.presentation.home.event.AdapterLoadStateEvent
+import com.e444er.cleanmovie.presentation.home.event.HomeEvent
+import com.e444er.cleanmovie.presentation.home.event.HomeUiEvent
 import com.e444er.cleanmovie.presentation.util.UiText
 import com.e444er.cleanmovie.presentation.util.asString
-import com.e444er.cleanmovie.presentation.util.isErrorWithLoadState
 import com.e444er.cleanmovie.util.getCountryIsoCode
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -176,13 +171,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     launch {
                         viewModel.eventFlow.collect { uiEvent ->
                             when (uiEvent) {
-                                is HomeViewModel.HomeUiEvent.NavigateTo -> findNavController().navigate(
+                                is HomeUiEvent.NavigateTo -> findNavController().navigate(
                                     uiEvent.directions
                                 )
-                                is HomeViewModel.HomeUiEvent.RetryAllAdapters -> {
+                                is HomeUiEvent.RetryAllAdapters -> {
                                     retryAllPagingAdapter()
                                 }
-                                is HomeViewModel.HomeUiEvent.ShowSnackbar -> {
+                                is HomeUiEvent.ShowSnackbar -> {
                                     Snackbar.make(
                                         requireView(),
                                         uiEvent.uiText.asString(requireContext()),

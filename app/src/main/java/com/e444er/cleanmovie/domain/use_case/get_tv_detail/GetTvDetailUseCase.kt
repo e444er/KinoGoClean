@@ -3,6 +3,7 @@ package com.e444er.cleanmovie.domain.use_case.get_tv_detail
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.domain.models.TvDetail
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
+import com.e444er.cleanmovie.presentation.util.HandleUtils
 import com.e444er.cleanmovie.presentation.util.UiText
 import com.e444er.cleanmovie.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -21,7 +22,16 @@ class GetTvDetailUseCase @Inject constructor(
     ): Flow<Resource<TvDetail>> {
         return flow {
             try {
-                val tvDetail = remoteRepository.getTvDetail(language = language, tvId = tvId)
+
+                val result = remoteRepository.getTvDetail(language = language, tvId = tvId)
+                val tvDetail = result.copy(
+                    ratingValue = HandleUtils.calculateRatingBarValue(result.voteAverage),
+                    releaseDate = HandleUtils.convertTvSeriesReleaseDateBetweenFirstAndLastDate(
+                        firstAirDate = result.firstAirDate,
+                        lastAirDate = result.lastAirDate,
+                        status = result.status
+                    )
+                )
                 emit(Resource.Success(data = tvDetail))
             } catch (e: IOException) {
                 emit(Resource.Error(UiText.StringResource(R.string.internet_error)))

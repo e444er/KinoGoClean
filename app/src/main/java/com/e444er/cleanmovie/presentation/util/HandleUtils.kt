@@ -2,6 +2,7 @@ package com.e444er.cleanmovie.presentation.util
 
 import com.e444er.cleanmovie.data.models.Genre
 import com.e444er.cleanmovie.domain.models.Movie
+import com.e444er.cleanmovie.util.Constants
 
 object HandleUtils {
 
@@ -9,6 +10,34 @@ object HandleUtils {
         return releaseDate.split("-")[0]
     }
 
+    fun calculateRatingBarValue(voteAverage: Double): Float {
+        return ((voteAverage * 5) / 10).toFloat()
+    }
+
+    fun convertRuntimeAsHourAndMinutes(runtime: Int?): Map<String, String> {
+        runtime?.let {
+            val hour = runtime / 60
+            val minutes = (runtime % 60)
+            return mapOf(
+                Constants.HOUR_KEY to hour.toString(),
+                Constants.MINUTES_KEY to minutes.toString()
+            )
+        } ?: return emptyMap()
+    }
+
+    fun convertTvSeriesReleaseDateBetweenFirstAndLastDate(
+        firstAirDate: String,
+        lastAirDate: String,
+        status: String
+    ): String {
+        val firstAirDateValue = convertToYearFromDate(firstAirDate)
+        return if (status == Constants.TV_SERIES_STATUS_ENDED) {
+            val lastAirDateValue = convertToYearFromDate(lastAirDate)
+            "${firstAirDateValue}-${lastAirDateValue}"
+        } else {
+            "$firstAirDateValue-"
+        }
+    }
 
     fun convertGenreListToStringSeparatedByCommas(
         movieGenreList: List<Genre>,

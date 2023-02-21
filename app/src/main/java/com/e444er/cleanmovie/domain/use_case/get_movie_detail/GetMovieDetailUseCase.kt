@@ -3,6 +3,7 @@ package com.e444er.cleanmovie.domain.use_case.get_movie_detail
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.domain.models.MovieDetail
 import com.e444er.cleanmovie.domain.repository.RemoteRepository
+import com.e444er.cleanmovie.presentation.util.HandleUtils
 import com.e444er.cleanmovie.presentation.util.UiText
 import com.e444er.cleanmovie.util.Resource
 import kotlinx.coroutines.flow.Flow
@@ -21,8 +22,14 @@ class GetMovieDetailUseCase @Inject constructor(
     ): Flow<Resource<MovieDetail>> {
         return flow {
             try {
-                val movieDetail =
+
+                val result =
                     remoteRepository.getMovieDetail(language = language, movieId = movieId)
+
+                val movieDetail = result.copy(
+                    ratingValue = HandleUtils.calculateRatingBarValue(result.voteAverage),
+                    convertedRuntime = HandleUtils.convertRuntimeAsHourAndMinutes(result.runtime)
+                )
                 emit(Resource.Success(movieDetail))
 
             } catch (e: IOException) {

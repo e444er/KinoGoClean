@@ -2,7 +2,6 @@ package com.e444er.cleanmovie.presentation.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.NavDirections
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.e444er.cleanmovie.R
@@ -10,6 +9,9 @@ import com.e444er.cleanmovie.domain.models.Movie
 import com.e444er.cleanmovie.domain.models.TvSeries
 import com.e444er.cleanmovie.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.domain.use_case.HomeUseCases
+import com.e444er.cleanmovie.presentation.home.event.AdapterLoadStateEvent
+import com.e444er.cleanmovie.presentation.home.event.HomeEvent
+import com.e444er.cleanmovie.presentation.home.event.HomeUiEvent
 import com.e444er.cleanmovie.presentation.util.UiText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -26,7 +28,7 @@ class HomeViewModel @Inject constructor(
     val homeState: StateFlow<HomeState> get() = _homeState
 
     private val _adapterLoadState =
-        MutableStateFlow<PagingAdapterLoadState>(PagingAdapterLoadState())
+        MutableStateFlow(PagingAdapterLoadState())
     val adapterLoadState: StateFlow<PagingAdapterLoadState> get() = _adapterLoadState
 
     private val _eventFlow = MutableSharedFlow<HomeUiEvent>()
@@ -198,11 +200,5 @@ class HomeViewModel @Inject constructor(
         return homeUseCases.getTopRatedTvSeriesUseCase(
             language = homeState.value.languageIsoCode
         ).cachedIn(viewModelScope)
-    }
-
-    sealed class HomeUiEvent {
-        data class NavigateTo(val directions: NavDirections) : HomeUiEvent()
-        data class ShowSnackbar(val uiText: UiText) : HomeUiEvent()
-        object RetryAllAdapters : HomeUiEvent()
     }
 }

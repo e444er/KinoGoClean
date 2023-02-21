@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
@@ -29,9 +30,12 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
 
     private lateinit var binding: FragmentFilterBottomSheetBinding
 
-    private val viewModel: ExploreViewModel by viewModels()
+    lateinit var viewModel: ExploreViewModel
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View {
         binding = FragmentFilterBottomSheetBinding.inflate(inflater, container, false)
         return binding.root
@@ -40,31 +44,36 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(requireActivity())[ExploreViewModel::class.java]
+
         observeData()
+
         // Listen to change of the CategoriesChipGroup and update categories state in ViewModel
-        binding.categoriesChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
-            val categories =
+        binding.categoriesChipGroup.setOnCheckedStateChangeListener { group, _ ->
+            val category =
                 if (group.checkedChipId == binding.movieChip.id) Categories.MOVIE else Categories.TV
 
-            // Update categories selected state
-            viewModel.setCategoryState(categories)
+            // Update category selected state
+            viewModel.setCategoryState(category)
 
             // GetGenreList by categories state and language
             viewModel.getGenreListByCategoriesState(viewModel.language.value)
+
+
         }
 
         // Listener Selected GenreList and update checkedGenreIdsState in ViewModel
-        binding.genreListGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+        binding.genreListGroup.setOnCheckedStateChangeListener { _, checkedIds ->
             viewModel.setGenreList(checkedIds)
         }
 
         // Listen to change of the PeriodChipGroup and update checkedPeriod in ViewModel
-        binding.periodChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+        binding.periodChipGroup.setOnCheckedStateChangeListener { group, _ ->
             viewModel.setCheckedPeriods(group.checkedChipId)
         }
 
         // Listen to change of the sortChipGroup and update checkedSort in ViewModel
-        binding.sortChipGroup.setOnCheckedStateChangeListener { group, checkedIds ->
+        binding.sortChipGroup.setOnCheckedStateChangeListener { group, _ ->
             val checkedSort =
                 if (group.checkedChipId == binding.popularity.id) Sort.Popularity else Sort.LatestRelease
 
@@ -78,9 +87,21 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
         binding.btnApply.setOnClickListener {
             findNavController().popBackStack()
         }
+
+
+
     }
 
-    private fun inflateGenreChips(chips: List<Genre>, parentChip: ChipGroup) {
+
+    /**
+     *
+     * Add Chips in parentChip
+     * @param parentChip The main chip-group to which chips will be added
+     */
+    private fun inflateGenreChips(
+        chips: List<Genre>,
+        parentChip: ChipGroup
+    ) {
         chips.forEach {
             val chip = LayoutInflater.from(requireContext()).inflate(
                 R.layout.chip, parentChip, false
@@ -92,6 +113,11 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+    /**
+     *
+     * Add Chips in parentChip
+     * @param parentChip The main chip-group to which chips will be added
+     */
     private fun inflatePeriodChips(chips: List<Period>, parentChip: ChipGroup) {
         chips.forEach {
             val chip = LayoutInflater.from(requireContext()).inflate(
@@ -103,6 +129,7 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
             parentChip.addView(chip)
         }
     }
+
 
     private fun observeData() {
         viewLifecycleOwner.lifecycleScope.launch {
@@ -121,7 +148,7 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
                 }
 
                 launch {
-                    viewModel.isError.collectLatest {
+                    viewModel.isDownloadGenreOptions.collectLatest {
                         if (it) {
                             Toast.makeText(
                                 requireContext(),
@@ -131,6 +158,8 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
                         }
                     }
                 }
+
+
                 launch {
                     viewModel.periodState.collect {
                         inflatePeriodChips(it, binding.periodChipGroup)
@@ -138,11 +167,12 @@ class FilterBottomSheetFragment : BottomSheetDialogFragment() {
                 }
 
                 launch {
-                    viewModel.genreList.collectLatest { genre ->
+                    viewModel.genreList.collect { genre ->
                         binding.genreListGroup.removeAllViews()
                         inflateGenreChips(chips = genre, binding.genreListGroup)
                     }
                 }
+
                 launch {
                     viewModel.language.collectLatest {
                         viewModel.setLocale(it)

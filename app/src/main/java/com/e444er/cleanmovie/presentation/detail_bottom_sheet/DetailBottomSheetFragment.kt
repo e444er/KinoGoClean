@@ -22,7 +22,7 @@ import javax.inject.Inject
 class DetailBottomSheetFragment : BottomSheetDialogFragment() {
 
     private var _binding: FragmentDetailBottomSheetBinding? = null
-    private val binding get() = _binding
+    private val binding get() = _binding!!
 
     private val arguments: DetailBottomSheetFragmentArgs by navArgs()
 
@@ -47,8 +47,9 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
 
         setupButtonClickListeners()
 
-        binding?.apply {
+        binding.apply {
             if (movie != null) {
+
                 tvName.text = movie.title
                 tvReleaseDate.text = HandleUtils.convertToYearFromDate(movie.releaseDate)
                 tvOverview.text = movie.overview
@@ -74,28 +75,34 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
                 tvBottomInfoText.text =
                     requireContext().getString(R.string.detail_bottom_sheet_tv_info)
 
+
                 detailSection.setOnClickListener {
                     navigateToDetailFragment(tvId = tvSeries.id)
                 }
+
             }
             tvOverview.movementMethod = ScrollingMovementMethod()
         }
+
+
     }
 
     private fun navigateToDetailFragment(movieId: Int? = null, tvId: Int? = null) {
-        val action =
-            DetailBottomSheetFragmentDirections.actionDetailBottomSheetFragmentToDetailFragment()
+        val action = DetailBottomSheetFragmentDirections.actionDetailBottomSheetFragmentToDetailFragment()
+
         movieId?.let {
             action.movieId = movieId
         }
         tvId?.let {
             action.tvId = tvId
         }
+
         findNavController().navigate(action)
     }
 
+
     private fun loadImage(posterPath: String) {
-        binding?.let {
+        binding.let {
             it.ivPoster.load(
                 ImageApi.getImage(
                     imageSize = ImageSize.W185.path,
@@ -107,8 +114,9 @@ class DetailBottomSheetFragment : BottomSheetDialogFragment() {
         }
     }
 
+
     private fun setupButtonClickListeners() {
-        binding?.apply {
+        binding.apply {
             ibClose.setOnClickListener {
                 findNavController().popBackStack()
             }
