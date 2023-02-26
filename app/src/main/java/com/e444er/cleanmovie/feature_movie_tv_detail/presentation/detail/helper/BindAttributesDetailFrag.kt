@@ -97,6 +97,7 @@ class BindAttributesDetailFrag(
                 "fr" -> provider.fr
                 "de" -> provider.de
                 "es" -> provider.es
+                "ru" -> provider.ru
                 else -> provider.en
             }
 

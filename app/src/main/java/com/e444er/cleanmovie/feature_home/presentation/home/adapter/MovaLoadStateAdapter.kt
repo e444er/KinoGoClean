@@ -1,4 +1,4 @@
-package com.e444er.cleanmovie.feature_home.presentation.home
+package com.e444er.cleanmovie.feature_home.presentation.home.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -55,6 +55,4 @@ class MovaLoadStateAdapter(private val retry: () -> Unit) :
     ): MovaLoadStateViewHolder {
         return MovaLoadStateViewHolder.create(parent, retry)
     }
-
-
 }

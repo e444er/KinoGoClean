@@ -4,7 +4,6 @@ import com.e444er.cleanmovie.core.data.dto.GenreList
 import retrofit2.http.GET
 import retrofit2.http.Query
 
-
 interface TMDBApi {
 
     @GET("genre/movie/list")
@@ -16,5 +15,4 @@ interface TMDBApi {
     suspend fun getTvGenreList(
         @Query("language") language: String
     ): GenreList
-
 }

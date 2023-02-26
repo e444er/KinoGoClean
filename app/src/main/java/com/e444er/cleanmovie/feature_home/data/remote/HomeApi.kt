@@ -1,4 +1,4 @@
-package com.e444er.cleanmovie.feature_home.data_source.remote
+package com.e444er.cleanmovie.feature_home.data.remote
 
 import com.e444er.cleanmovie.core.data.dto.ApiResponse
 import com.e444er.cleanmovie.core.util.Constants

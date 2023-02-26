@@ -34,5 +34,4 @@ class SettingsViewModel @Inject constructor(
     fun getLanguageIsoCode(): Flow<String> {
         return settingUseCase.getLanguageIsoCodeUseCase()
     }
-
 }

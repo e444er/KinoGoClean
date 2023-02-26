@@ -1,7 +1,10 @@
 package com.e444er.cleanmovie.di
 
 import coil.ImageLoader
-import com.e444er.cleanmovie.feature_home.presentation.home.recyler.*
+import com.e444er.cleanmovie.feature_explore.presentation.adapter.SearchMoviesAdapter
+import com.e444er.cleanmovie.feature_explore.presentation.adapter.SearchRecyclerAdapter
+import com.e444er.cleanmovie.feature_explore.presentation.adapter.SearchTvSeriesAdapter
+import com.e444er.cleanmovie.feature_home.presentation.home.adapter.*
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.DetailActorAdapter
 import dagger.Module
 import dagger.Provides
@@ -58,5 +61,29 @@ object AdapterModule {
         imageLoader: ImageLoader
     ): DetailActorAdapter {
         return DetailActorAdapter(imageLoader)
+    }
+
+    @Provides
+    @FragmentScoped
+    fun provideSearchRecyclerAdapter(
+        imageLoader: ImageLoader
+    ): SearchRecyclerAdapter {
+        return SearchRecyclerAdapter(imageLoader)
+    }
+
+    @Provides
+    @FragmentScoped
+    fun provideSearchMoviesAdapter(
+        imageLoader: ImageLoader
+    ): SearchMoviesAdapter {
+        return SearchMoviesAdapter(imageLoader)
+    }
+
+    @Provides
+    @FragmentScoped
+    fun provideSearchTvSeriesAdapter(
+        imageLoader: ImageLoader
+    ): SearchTvSeriesAdapter {
+        return SearchTvSeriesAdapter(imageLoader)
     }
 }

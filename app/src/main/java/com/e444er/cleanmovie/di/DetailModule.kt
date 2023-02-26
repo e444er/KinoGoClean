@@ -1,6 +1,6 @@
 package com.e444er.cleanmovie.di
 
-import com.e444er.cleanmovie.feature_movie_tv_detail.data.data_source.remote.DetailApi
+import com.e444er.cleanmovie.feature_movie_tv_detail.data.remote.DetailApi
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.repository.DetailRepositoryImpl
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.repository.DetailRepository
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases.DetailUseCases

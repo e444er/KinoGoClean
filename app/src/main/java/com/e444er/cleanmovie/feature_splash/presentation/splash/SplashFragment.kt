@@ -23,7 +23,6 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SplashFragment : Fragment() {
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

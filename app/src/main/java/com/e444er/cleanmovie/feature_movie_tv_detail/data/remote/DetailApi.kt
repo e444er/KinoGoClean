@@ -1,4 +1,4 @@
-package com.e444er.cleanmovie.feature_movie_tv_detail.data.data_source.remote
+package com.e444er.cleanmovie.feature_movie_tv_detail.data.remote
 
 import com.e444er.cleanmovie.core.util.Constants
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.movie.MovieDetailDto

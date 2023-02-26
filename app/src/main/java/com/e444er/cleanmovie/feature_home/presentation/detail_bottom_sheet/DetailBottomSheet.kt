@@ -12,12 +12,10 @@ import coil.load
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageSize
-import com.e444er.cleanmovie.core.presentation.util.HandleUtils
 import com.e444er.cleanmovie.databinding.FragmentDetailBottomSheetBinding
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-
 
 @AndroidEntryPoint
 class DetailBottomSheet : BottomSheetDialogFragment() {
@@ -52,7 +50,7 @@ class DetailBottomSheet : BottomSheetDialogFragment() {
             if (movie != null) {
 
                 tvName.text = movie.title
-                tvReleaseDate.text = HandleUtils.convertToYearFromDate(movie.releaseDate)
+                tvReleaseDate.text = movie.releaseDate
                 tvOverview.text = movie.overview
                 if (movie.posterPath != null) {
                     loadImage(posterPath = movie.posterPath)
@@ -69,23 +67,19 @@ class DetailBottomSheet : BottomSheetDialogFragment() {
 
                 tvName.text = tvSeries.name
                 tvOverview.text = tvSeries.overview
-                tvReleaseDate.text = HandleUtils.convertToYearFromDate(tvSeries.firstAirDate)
+                tvReleaseDate.text = tvSeries.firstAirDate
                 if (tvSeries.posterPath != null) {
                     loadImage(posterPath = tvSeries.posterPath)
                 }
                 tvBottomInfoText.text =
                     requireContext().getString(R.string.detail_bottom_sheet_tv_info)
 
-
                 detailSection.setOnClickListener {
                     navigateToDetailFragment(tvId = tvSeries.id)
                 }
-
             }
             tvOverview.movementMethod = ScrollingMovementMethod()
         }
-
-
     }
 
     private fun navigateToDetailFragment(movieId: Int? = null, tvId: Int? = null) {
@@ -114,7 +108,6 @@ class DetailBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-
     private fun setupButtonClickListeners() {
         binding.apply {
             ibClose.setOnClickListener {
@@ -123,10 +116,8 @@ class DetailBottomSheet : BottomSheetDialogFragment() {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 }

@@ -7,7 +7,7 @@ import com.e444er.cleanmovie.core.domain.use_case.GetMovieGenreListUseCase
 import com.e444er.cleanmovie.core.domain.use_case.GetTvGenreListUseCase
 import com.e444er.cleanmovie.core.domain.use_case.UpdateLanguageIsoCodeUseCase
 import com.e444er.cleanmovie.feature_home.data.repository.HomeRepositoryImpl
-import com.e444er.cleanmovie.feature_home.data_source.remote.HomeApi
+import com.e444er.cleanmovie.feature_home.data.remote.HomeApi
 import com.e444er.cleanmovie.feature_home.domain.repository.HomeRepository
 import com.e444er.cleanmovie.feature_home.domain.use_cases.*
 import dagger.Module
@@ -43,15 +43,28 @@ object HomeModule {
         remoteRepository: RemoteRepository
     ): HomeUseCases {
         return HomeUseCases(
-            getMovieGenreList = GetMovieGenreListUseCase(remoteRepository),
-            getTvGenreList = GetTvGenreListUseCase(remoteRepository),
-            getNowPlayingMoviesUseCase = GetNowPlayingMoviesUseCase(homeRepository),
+            getNowPlayingMoviesUseCase = GetNowPlayingMoviesUseCase(
+                homeRepository,
+                GetMovieGenreListUseCase(remoteRepository)
+            ),
             getLanguageIsoCodeUseCase = GetLanguageIsoCodeUseCase(dataStoreOperations),
-            getPopularMoviesUseCase = GetPopularMoviesUseCase(homeRepository),
-            getTopRatedMoviesUseCase = GetTopRatedMoviesUseCase(homeRepository),
-            getPopularTvSeriesUseCase = GetPopularTvSeriesUseCase(homeRepository),
-            getTopRatedTvSeriesUseCase = GetTopRatedTvSeriesUseCase(homeRepository = homeRepository),
-            updateLanguageIsoCodeUseCase = UpdateLanguageIsoCodeUseCase(dataStoreOperations = dataStoreOperations)
+            getPopularMoviesUseCase = GetPopularMoviesUseCase(
+                homeRepository,
+                GetMovieGenreListUseCase(remoteRepository)
+            ),
+            getTopRatedMoviesUseCase = GetTopRatedMoviesUseCase(
+                homeRepository,
+                GetMovieGenreListUseCase(remoteRepository)
+            ),
+            getPopularTvSeriesUseCase = GetPopularTvSeriesUseCase(
+                homeRepository,
+                GetTvGenreListUseCase(remoteRepository)
+            ),
+            getTopRatedTvSeriesUseCase = GetTopRatedTvSeriesUseCase(
+                homeRepository,
+                GetTvGenreListUseCase(remoteRepository)
+            ),
+            updateLanguageIsoCodeUseCase = UpdateLanguageIsoCodeUseCase(dataStoreOperations)
         )
     }
 }

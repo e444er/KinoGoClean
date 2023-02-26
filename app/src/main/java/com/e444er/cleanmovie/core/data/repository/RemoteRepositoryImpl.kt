@@ -15,8 +15,6 @@ class RemoteRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             throw e
         }
-
-
     }
 
     override suspend fun getTvGenreList(language: String): GenreList {
@@ -25,6 +23,5 @@ class RemoteRepositoryImpl @Inject constructor(
         } catch (e: Exception) {
             throw e
         }
-
     }
 }

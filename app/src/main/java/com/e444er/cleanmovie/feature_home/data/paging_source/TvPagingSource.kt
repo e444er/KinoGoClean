@@ -1,11 +1,11 @@
-package com.e444er.cleanmovie.feature_home.data_source.paging_source
+package com.e444er.cleanmovie.feature_home.data.paging_source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.e444er.cleanmovie.core.data.models.enums.TvSeriesApiFunction
 import com.e444er.cleanmovie.core.util.Constants.STARTING_PAGE
 import com.e444er.cleanmovie.feature_home.data.dto.toTvSeries
-import com.e444er.cleanmovie.feature_home.data_source.remote.HomeApi
+import com.e444er.cleanmovie.feature_home.data.remote.HomeApi
 import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import okio.IOException
 import retrofit2.HttpException

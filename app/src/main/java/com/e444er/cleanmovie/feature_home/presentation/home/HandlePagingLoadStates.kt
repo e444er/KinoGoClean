@@ -6,7 +6,7 @@ import com.e444er.cleanmovie.core.presentation.util.BaseMovieAndTvRecyclerAdapte
 import com.e444er.cleanmovie.core.presentation.util.UiText
 import com.e444er.cleanmovie.core.util.isErrorWithLoadState
 import com.e444er.cleanmovie.core.util.isLoading
-import com.e444er.cleanmovie.feature_home.presentation.home.recyler.NowPlayingRecyclerAdapter
+import com.e444er.cleanmovie.feature_home.presentation.home.adapter.NowPlayingRecyclerAdapter
 import okio.IOException
 
 class HandlePagingLoadStates<T : Any>(

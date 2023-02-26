@@ -54,10 +54,10 @@ object HandleUtils {
     }
 
     fun handleConvertingGenreListToOneGenreString(
-        movieGenreList: List<Genre>,
+        genreList: List<Genre>,
         genreIds: List<Int>
     ): String {
-        for (genre: Genre in movieGenreList) {
+        for (genre: Genre in genreList) {
             for (genreId: Int in genreIds) {
                 if (genreId == genre.id) {
                     return genre.name

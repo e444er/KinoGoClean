@@ -1,4 +1,4 @@
-package com.e444er.cleanmovie.feature_home.presentation.home.recyler
+package com.e444er.cleanmovie.feature_home.presentation.home.adapter
 
 import android.content.Context
 import coil.ImageLoader
@@ -31,9 +31,5 @@ class TopRatedMoviesAdapter @Inject constructor(
                 this.itemClickListener(movie)
             }
         }
-    }
-
-    override fun passMovieGenreList(genreList: List<Genre>) {
-        this.genreList = genreList
     }
 }

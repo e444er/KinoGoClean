@@ -5,7 +5,6 @@ import com.e444er.cleanmovie.core.domain.use_case.GetUIModeUseCase
 import com.e444er.cleanmovie.core.domain.use_case.UpdateLanguageIsoCodeUseCase
 import com.e444er.cleanmovie.core.domain.use_case.UpdateUIModeUseCase
 
-
 data class SettingUseCase(
     val getUIModeUseCase: GetUIModeUseCase,
     val updateUIModeUseCase: UpdateUIModeUseCase,

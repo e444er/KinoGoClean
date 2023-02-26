@@ -6,8 +6,6 @@ import com.e444er.cleanmovie.core.domain.use_case.GetTvGenreListUseCase
 import com.e444er.cleanmovie.core.domain.use_case.UpdateLanguageIsoCodeUseCase
 
 data class HomeUseCases(
-    val getMovieGenreList: GetMovieGenreListUseCase,
-    val getTvGenreList: GetTvGenreListUseCase,
     val getNowPlayingMoviesUseCase: GetNowPlayingMoviesUseCase,
     val getLanguageIsoCodeUseCase: GetLanguageIsoCodeUseCase,
     val getPopularMoviesUseCase: GetPopularMoviesUseCase,

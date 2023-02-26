@@ -1,14 +1,14 @@
-package com.e444er.cleanmovie.feature_explore.data.data_source.paging_source
+package com.e444er.cleanmovie.feature_explore.data.paging_source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.e444er.cleanmovie.core.presentation.util.toDiscoveryQueryString
 import com.e444er.cleanmovie.core.presentation.util.toSeparateWithComma
 import com.e444er.cleanmovie.core.util.Constants
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_explore.data.data_source.remote.ExploreApi
+import com.e444er.cleanmovie.feature_explore.data.remote.ExploreApi
 import com.e444er.cleanmovie.feature_explore.presentation.filter_bottom_sheet.state.FilterBottomState
 import com.e444er.cleanmovie.feature_home.data.dto.toMovieList
+import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject
@@ -32,7 +32,6 @@ class DiscoverMoviePagingSource @Inject constructor(
                 page = nextPage,
                 language = language,
                 genres = filterBottomState.checkedGenreIdsState.toSeparateWithComma(),
-                releaseYear = filterBottomState.checkedPeriodId,
                 sort = filterBottomState.checkedSortState.toDiscoveryQueryString(filterBottomState.categoryState),
             )
 
