@@ -34,8 +34,8 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
     private var _binding: FragmentPersonDetailBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var personCrewAdapter: PersonCrewMovieAdapter
-    private lateinit var personCastAdapter: PersonCastMovieAdapter
+    private val personCrewAdapter: PersonCrewMovieAdapter by lazy { PersonCrewMovieAdapter() }
+    private val personCastAdapter: PersonCastMovieAdapter by lazy { PersonCastMovieAdapter() }
 
     private val viewModel: PersonDetailViewModel by viewModels()
 
@@ -46,7 +46,7 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
         binding.txtBio.movementMethod = ScrollingMovementMethod()
 
         collectData()
-        setupAdapters()
+
         setAdaptersClickListener()
 
         binding.btnNavigateUp.setOnClickListener {
@@ -66,11 +66,6 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
             }
         }
         requireActivity().onBackPressedDispatcher.addCallback(callback)
-    }
-
-    private fun setupAdapters() {
-        personCastAdapter = PersonCastMovieAdapter()
-        personCrewAdapter = PersonCrewMovieAdapter()
     }
 
     private fun setAdaptersClickListener() {

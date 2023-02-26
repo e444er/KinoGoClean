@@ -6,29 +6,23 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.ImageLoader
 import coil.load
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageSize
-import com.e444er.cleanmovie.core.data.dto.Genre
 import com.e444er.cleanmovie.core.presentation.util.HandleUtils
 import com.e444er.cleanmovie.databinding.NowPlayingRowBinding
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import timber.log.Timber
-import javax.inject.Inject
 
-class NowPlayingRecyclerAdapter @Inject constructor(
-    private val imageLoader: ImageLoader
-) :
+class NowPlayingRecyclerAdapter :
     PagingDataAdapter<Movie, NowPlayingRecyclerAdapter.MovieViewHolder>(DiffUtilCallBack<Movie>()) {
 
     private var onItemClickListener: (Movie) -> Unit = {}
 
     class MovieViewHolder(
         private val binding: NowPlayingRowBinding,
-        val imageLoader: ImageLoader
     ) : RecyclerView.ViewHolder(binding.root) {
 
         fun bind(movie: Movie, context: Context, onItemClickListener: (Movie) -> Unit = {}) {
@@ -46,8 +40,7 @@ class NowPlayingRecyclerAdapter @Inject constructor(
                 ImageApi.getImage(
                     imageUrl = movie.posterPath,
                     imageSize = ImageSize.W500.path
-                ),
-                imageLoader = imageLoader
+                )
             )
 
             Timber.d(movie.genresBySeparatedByComma)
@@ -73,8 +66,7 @@ class NowPlayingRecyclerAdapter @Inject constructor(
         val layoutInflater = LayoutInflater.from(parent.context)
         val binding = NowPlayingRowBinding.inflate(layoutInflater, parent, false)
         return MovieViewHolder(
-            binding = binding,
-            imageLoader = imageLoader
+            binding = binding
         )
     }
 

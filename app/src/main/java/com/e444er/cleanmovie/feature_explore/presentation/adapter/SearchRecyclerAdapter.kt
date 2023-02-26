@@ -21,9 +21,7 @@ import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import javax.inject.Inject
 
-class SearchRecyclerAdapter @Inject constructor(
-    private val imageLoader: ImageLoader
-) :
+class SearchRecyclerAdapter:
     PagingDataAdapter<SearchDto, RecyclerView.ViewHolder>(diffCallback = diffCallback) {
 
     private var onMovieSearchClickListener: (Movie) -> Unit = {}
@@ -84,16 +82,16 @@ class SearchRecyclerAdapter @Inject constructor(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return when (viewType) {
             SearchViewType.MOVIE.ordinal -> {
-                SearchMovieViewHolder.from(parent, imageLoader)
+                SearchMovieViewHolder.from(parent)
             }
             SearchViewType.TV.ordinal -> {
-                SearchTvViewHolder.from(parent, imageLoader)
+                SearchTvViewHolder.from(parent)
             }
             SearchViewType.PERSON.ordinal -> {
-                SearchPersonViewHolder.from(parent, imageLoader)
+                SearchPersonViewHolder.from(parent)
             }
             else -> {
-                SearchTvViewHolder.from(parent, imageLoader)
+                SearchTvViewHolder.from(parent)
             }
         }
     }

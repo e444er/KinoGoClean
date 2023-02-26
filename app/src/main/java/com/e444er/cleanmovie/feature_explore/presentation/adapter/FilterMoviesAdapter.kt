@@ -2,7 +2,6 @@ package com.e444er.cleanmovie.feature_explore.presentation.adapter
 
 import android.content.Context
 import android.view.View
-import coil.ImageLoader
 import coil.load
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
@@ -10,12 +9,8 @@ import com.e444er.cleanmovie.core.data.data_source.remote.ImageSize
 import com.e444er.cleanmovie.core.presentation.util.BaseMovieAndTvRecyclerAdapter
 import com.e444er.cleanmovie.databinding.MovieRowBinding
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import javax.inject.Inject
 
-
-class FilterMoviesAdapter @Inject constructor(
-    private val imageLoader: ImageLoader
-) : BaseMovieAndTvRecyclerAdapter<Movie>() {
+class FilterMoviesAdapter : BaseMovieAndTvRecyclerAdapter<Movie>() {
 
     override fun onBindViewHold(
         binding: MovieRowBinding,
@@ -30,8 +25,7 @@ class FilterMoviesAdapter @Inject constructor(
                 ImageApi.getImage(
                     imageSize = ImageSize.W185.path,
                     imageUrl = movie.posterPath
-                ),
-                imageLoader = imageLoader
+                )
             )
 
             binding.root.setOnClickListener {
@@ -44,6 +38,5 @@ class FilterMoviesAdapter @Inject constructor(
             binding.txtCategory.visibility = View.VISIBLE
             binding.txtCategory.text = context.getText(R.string.movie)
         }
-
     }
 }

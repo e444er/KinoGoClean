@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -13,17 +12,15 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import coil.ImageLoader
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.databinding.FragmentDetailBinding
-import com.google.android.material.snackbar.Snackbar
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.DetailActorAdapter
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailUiEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.helper.BindAttributesDetailFrag
-import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.util.Constants.DETAIL_DEFAULT_ID
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
@@ -44,8 +41,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     @Inject
     lateinit var imageLoader: ImageLoader
 
-    @Inject
-    lateinit var detailActorAdapter: DetailActorAdapter
+    private val detailActorAdapter: DetailActorAdapter by lazy { DetailActorAdapter() }
 
     private val viewModel: DetailViewModel by viewModels()
 

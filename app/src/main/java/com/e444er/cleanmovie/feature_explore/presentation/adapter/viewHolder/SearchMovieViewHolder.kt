@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import coil.ImageLoader
 import coil.load
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
@@ -15,18 +14,18 @@ import com.e444er.cleanmovie.feature_explore.domain.model.MovieSearch
 
 class SearchMovieViewHolder(
     private val binding: NowPlayingRowBinding,
-    val imageLoader: ImageLoader,
     val context: Context
 ) : RecyclerView.ViewHolder(binding.root) {
 
-    fun bindMovie(movieSearch: MovieSearch,
-                  onMovieSearchItemClick: (MovieSearch) -> Unit = {}) {
+    fun bindMovie(
+        movieSearch: MovieSearch,
+        onMovieSearchItemClick: (MovieSearch) -> Unit = {}
+    ) {
         binding.backdropImage.load(
             ImageApi.getImage(
                 imageUrl = movieSearch.posterPath,
                 imageSize = ImageSize.W500.path
-            ),
-            imageLoader = imageLoader
+            )
         )
 
 
@@ -52,13 +51,11 @@ class SearchMovieViewHolder(
 
         fun from(
             parent: ViewGroup,
-            imageLoader: ImageLoader,
         ): SearchMovieViewHolder {
             val layoutInflater = LayoutInflater.from(parent.context)
             val binding = NowPlayingRowBinding.inflate(layoutInflater, parent, false)
             return SearchMovieViewHolder(
                 binding = binding,
-                imageLoader = imageLoader,
                 context = parent.context
             )
         }
