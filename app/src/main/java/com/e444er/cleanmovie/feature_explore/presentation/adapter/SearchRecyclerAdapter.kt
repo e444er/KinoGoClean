@@ -1,29 +1,24 @@
 package com.e444er.cleanmovie.feature_explore.presentation.adapter
 
-import android.content.Context
-import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import coil.ImageLoader
-import coil.load
-import com.e444er.cleanmovie.R
-import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
-import com.e444er.cleanmovie.core.data.data_source.remote.ImageSize
 import com.e444er.cleanmovie.core.data.dto.Genre
-import com.e444er.cleanmovie.databinding.NowPlayingRowBinding
 import com.e444er.cleanmovie.feature_explore.data.dto.SearchDto
 import com.e444er.cleanmovie.feature_explore.data.dto.toMovieSearch
 import com.e444er.cleanmovie.feature_explore.data.dto.toPersonSearch
 import com.e444er.cleanmovie.feature_explore.data.dto.toTvSearch
-import com.e444er.cleanmovie.feature_explore.domain.model.MovieSearch
+import com.e444er.cleanmovie.feature_explore.domain.model.PersonSearch
+import com.e444er.cleanmovie.feature_explore.domain.model.toMovie
+import com.e444er.cleanmovie.feature_explore.domain.model.toTvSeries
 import com.e444er.cleanmovie.feature_explore.domain.util.MediaType
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.viewHolder.SearchMovieViewHolder
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.viewHolder.SearchPersonViewHolder
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.viewHolder.SearchTvViewHolder
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
+import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import javax.inject.Inject
 
 class SearchRecyclerAdapter @Inject constructor(
@@ -31,10 +26,9 @@ class SearchRecyclerAdapter @Inject constructor(
 ) :
     PagingDataAdapter<SearchDto, RecyclerView.ViewHolder>(diffCallback = diffCallback) {
 
-    private var movieGenreList: List<Genre> = emptyList()
-
-    private var onItemClickListener: (Movie) -> Unit = {}
-
+    private var onMovieSearchClickListener: (Movie) -> Unit = {}
+    private var onTvSearchClickListener: (TvSeries) -> Unit = {}
+    private var onPersonSearchClickListener: (PersonSearch) -> Unit = {}
 
     override fun getItemViewType(position: Int): Int {
         val item = getItem(position)
@@ -56,17 +50,32 @@ class SearchRecyclerAdapter @Inject constructor(
                 MediaType.MOVIE.value -> {
                     val movieSearch = searchDto.toMovieSearch()!!
                     val movieViewHolder = holder as SearchMovieViewHolder
-                    movieViewHolder.bindMovie(movieSearch = movieSearch)
+                    movieViewHolder.bindMovie(
+                        movieSearch = movieSearch,
+                        onMovieSearchItemClick = {
+                            onMovieSearchClickListener(it.toMovie())
+                        }
+                    )
                 }
                 MediaType.TV_SERIES.value -> {
                     val tvSearch = searchDto.toTvSearch()!!
                     val tvViewHolder = holder as SearchTvViewHolder
-                    tvViewHolder.bindSearchTv(searchTv = tvSearch)
+                    tvViewHolder.bindSearchTv(
+                        searchTv = tvSearch,
+                        onSearchTvItemClick = {
+                            onTvSearchClickListener(it.toTvSeries())
+                        }
+                    )
                 }
                 MediaType.PERSON.value -> {
                     val personSearch = searchDto.toPersonSearch()!!
                     val searchMovieHolder = holder as SearchPersonViewHolder
-                    searchMovieHolder.bindPerson(search = personSearch)
+                    searchMovieHolder.bindPerson(
+                        personSearch = personSearch,
+                        onClickPersonItem = {
+                            onPersonSearchClickListener(it)
+                        }
+                    )
                 }
             }
         }
@@ -89,6 +98,17 @@ class SearchRecyclerAdapter @Inject constructor(
         }
     }
 
+    fun setOnMovieSearchClickListener(listener: (Movie) -> Unit) {
+        onMovieSearchClickListener = listener
+    }
+
+    fun setOnTvSearchClickListener(listener: (TvSeries) -> Unit) {
+        onTvSearchClickListener = listener
+    }
+
+    fun setOnPersonSearchClickListener(listener: (PersonSearch) -> Unit) {
+        onPersonSearchClickListener = listener
+    }
 }
 
 

@@ -19,23 +19,29 @@ class SearchPersonViewHolder(
     val context: Context
 ) : ViewHolder(binding.root) {
 
-
-    fun bindPerson(search: PersonSearch) {
+    fun bindPerson(
+        personSearch: PersonSearch,
+        onClickPersonItem: (PersonSearch) -> Unit = {}
+    ) {
         binding.ivProfile.load(
             ImageApi.getImage(
-                imageUrl = search.profilePath,
+                imageUrl = personSearch.profilePath,
                 imageSize = ImageSize.W500.path
             ),
             imageLoader = imageLoader
         ) {
-            error(R.drawable.ic_baseline_person_24)
+            kotlin.error(R.drawable.ic_baseline_person_24)
         }
 
         binding.txtCategory.visibility = View.VISIBLE
 
-        binding.txPersonName.text = search.name
-        search.knownForDepartment?.let {
-            binding.tvKnownForDepartment.text = search.knownForDepartment
+        binding.txPersonName.text = personSearch.name
+        personSearch.knownForDepartment?.let {
+            binding.tvKnownForDepartment.text = personSearch.knownForDepartment
+        }
+
+        binding.root.setOnClickListener {
+            onClickPersonItem(personSearch)
         }
     }
 

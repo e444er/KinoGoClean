@@ -47,6 +47,10 @@
         <action
             android:id="@+id/action_exploreFragment_to_filterBottomSheetFragment"
             app:destination="@id/filterBottomSheetFragment" />
+        <action
+            android:id="@+id/action_exploreFragment_to_detailBottomSheet"
+            app:destination="@id/detailBottomSheet" />
+
     </fragment>
     <dialog
         android:id="@+id/filterBottomSheetFragment"

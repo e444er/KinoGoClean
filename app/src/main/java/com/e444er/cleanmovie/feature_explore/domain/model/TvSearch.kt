@@ -1,5 +1,7 @@
 package com.e444er.cleanmovie.feature_explore.domain.model
 
+import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
+
 data class TvSearch(
     val id: Int,
     val overview: String,
@@ -13,3 +15,18 @@ data class TvSearch(
     val genreByOneForTv: String = "",
     val voteCountByString: String = ""
 )
+fun TvSearch.toTvSeries(): TvSeries {
+    return TvSeries(
+        id = id,
+        overview = overview,
+        name = name,
+        originalName = originalName,
+        posterPath = posterPath,
+        firstAirDate = firstAirDate,
+        genreIds = genreIds,
+        voteCount = voteCount,
+        voteAverage = voteAverage,
+        genreByOne = genreByOneForTv,
+        voteCountByString = voteCountByString
+    )
+}

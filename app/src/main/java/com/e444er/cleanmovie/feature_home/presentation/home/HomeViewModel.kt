@@ -23,7 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeUseCases: HomeUseCases,
-    private val networkConnectivityObserver: ConnectivityObserver
 ) : ViewModel() {
 
     private val _homeState = MutableStateFlow(HomeState())
@@ -42,15 +41,6 @@ class HomeViewModel @Inject constructor(
                     _homeState.value = _homeState.value.copy(
                         languageIsoCode = languageIsoCode
                     )
-                }
-            }
-            launch {
-                networkConnectivityObserver.observe().collectLatest {
-                    if (it == ConnectivityObserver.Status.Unavaliable || it == ConnectivityObserver.Status.Lost) {
-                        emitErrorForShowSnackBar(UiText.StringResource(R.string.internet_error))
-                    } else if (it == ConnectivityObserver.Status.Avaliable) {
-                        _eventFlow.emit(HomeUiEvent.RetryAllAdapters)
-                    }
                 }
             }
         }
