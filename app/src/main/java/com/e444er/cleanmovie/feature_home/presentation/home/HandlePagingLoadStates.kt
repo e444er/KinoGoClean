@@ -6,17 +6,29 @@ import com.e444er.cleanmovie.core.presentation.util.BaseMovieAndTvRecyclerAdapte
 import com.e444er.cleanmovie.core.presentation.util.UiText
 import com.e444er.cleanmovie.core.util.isErrorWithLoadState
 import com.e444er.cleanmovie.core.util.isLoading
+import com.e444er.cleanmovie.feature_explore.presentation.adapter.SearchRecyclerAdapter
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.NowPlayingRecyclerAdapter
 import okio.IOException
+
 
 class HandlePagingLoadStates<T : Any>(
     nowPlayingRecyclerAdapter: NowPlayingRecyclerAdapter? = null,
     pagingAdapter: BaseMovieAndTvRecyclerAdapter<T>? = null,
+    searchPagingAdapter: SearchRecyclerAdapter? = null,
     onLoading: () -> Unit,
     onNotLoading: () -> Unit,
     onError: (UiText) -> Unit
 ) {
     init {
+        searchPagingAdapter?.addLoadStateListener { loadStates ->
+            handlePagingLoadState(
+                loadStates = loadStates,
+                onLoading = onLoading,
+                onNotLoading = onNotLoading,
+                onError = onError
+            )
+        }
+
         nowPlayingRecyclerAdapter?.addLoadStateListener { loadStates ->
             handlePagingLoadState(
                 loadStates = loadStates,

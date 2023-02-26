@@ -2,6 +2,7 @@ package com.e444er.cleanmovie.feature_explore.presentation.explore
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
@@ -19,6 +20,8 @@ import com.e444er.cleanmovie.feature_explore.presentation.adapter.SearchRecycler
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.FilterTvSeriesAdapter
 import com.e444er.cleanmovie.feature_explore.presentation.event.ExploreFragmentEvent
 import com.e444er.cleanmovie.feature_explore.presentation.event.ExploreUiEvent
+import com.e444er.cleanmovie.feature_explore.presentation.explore.event.ExploreAdapterLoadStateEvent
+import com.e444er.cleanmovie.feature_home.presentation.home.HandlePagingLoadStates
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -67,12 +70,53 @@ class ExploreFragment @Inject constructor(
         observeConnectivityStatus()
         addTextChangedListener()
         searchRecyclerAdapterListeners()
+        handlePagingLoadStates()
         binding.filter.setOnClickListener {
             findNavController().navigate(ExploreFragmentDirections.actionExploreFragmentToFilterBottomSheetFragment())
         }
-
     }
 
+
+    private fun handlePagingLoadStates() {
+        HandlePagingLoadStates(
+            pagingAdapter = tvFilterAdapter,
+            onLoading = { viewModel.onAdapterLoadStateEvent(ExploreAdapterLoadStateEvent.FilterAdapterLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(ExploreAdapterLoadStateEvent.FilterAdapterNotLoading) },
+            onError = {
+                viewModel.onAdapterLoadStateEvent(
+                    ExploreAdapterLoadStateEvent.PagingError(
+                        it
+                    )
+                )
+            }
+        )
+
+        HandlePagingLoadStates(
+            pagingAdapter = movieFilterAdapter,
+            onLoading = { viewModel.onAdapterLoadStateEvent(ExploreAdapterLoadStateEvent.FilterAdapterLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(ExploreAdapterLoadStateEvent.FilterAdapterNotLoading) },
+            onError = {
+                viewModel.onAdapterLoadStateEvent(
+                    ExploreAdapterLoadStateEvent.PagingError(
+                        it
+                    )
+                )
+            }
+        )
+
+        HandlePagingLoadStates<Any>(
+            searchPagingAdapter = searchRecyclerAdapter,
+            onLoading = { viewModel.onAdapterLoadStateEvent(ExploreAdapterLoadStateEvent.SearchAdapterLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(ExploreAdapterLoadStateEvent.SearchAdapterNotLoading) },
+            onError = {
+                viewModel.onAdapterLoadStateEvent(
+                    ExploreAdapterLoadStateEvent.PagingError(
+                        it
+                    )
+                )
+            }
+        )
+    }
     private fun collectUiEvent() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -91,6 +135,30 @@ class ExploreFragment @Inject constructor(
                             }
                             is ExploreUiEvent.NavigateTo -> {
                                 findNavController().navigate(event.directions)
+                            }
+                        }
+                    }
+                }
+                launch {
+                    viewModel.pagingState.collectLatest {
+
+                        when (viewModel.filterBottomSheetState.value.categoryState) {
+                            Category.MOVIE -> {
+                                binding.filterShimmerLayout.isVisible =
+                                    it.filterAdapterState.isLoading
+                                binding.recyclerDiscoverMovie.isVisible =
+                                    !it.filterAdapterState.isLoading
+                            }
+                            Category.TV -> {
+                                binding.filterShimmerLayout.isVisible =
+                                    it.filterAdapterState.isLoading
+                                binding.recyclerDiscoverTv.isVisible =
+                                    !it.filterAdapterState.isLoading
+                            }
+                            Category.SEARCH -> {
+                                binding.filterShimmerLayout.isVisible =
+                                    it.searchAdapterState.isLoading
+                                binding.recyclerSearch.isVisible = !it.searchAdapterState.isLoading
                             }
                         }
                     }

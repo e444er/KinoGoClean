@@ -21,7 +21,7 @@ import com.e444er.cleanmovie.core.util.getCountryIsoCode
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.*
-import com.e444er.cleanmovie.feature_home.presentation.home.event.AdapterLoadStateEvent
+import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeAdapterLoadStateEvent
 import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeEvent
 import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeUiEvent
 import com.google.android.material.snackbar.Snackbar
@@ -133,49 +133,48 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun handlePagingLoadStates() {
         HandlePagingLoadStates<Movie>(
             nowPlayingRecyclerAdapter = nowPlayingAdapter,
-            onLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.NowPlayingLoading) },
-            onNotLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.NowPlayingNotLoading) },
+            onLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.NowPlayingLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.NowPlayingNotLoading) },
             onError = { eventToPagingError(it) }
         )
 
         HandlePagingLoadStates(
             pagingAdapter = popularMoviesAdapter,
-            onLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.PopularMoviesLoading) },
-            onNotLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.PopularMoviesNotLoading) },
+            onLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.PopularMoviesLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.PopularMoviesNotLoading) },
             onError = { eventToPagingError(it) }
         )
 
         HandlePagingLoadStates(
             pagingAdapter = topRatedMoviesAdapter,
-            onLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.TopRatedMoviesLoading) },
-            onNotLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.TopRatedMoviesNotLoading) },
+            onLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.TopRatedMoviesLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.TopRatedMoviesNotLoading) },
             onError = { eventToPagingError(it) }
         )
 
         HandlePagingLoadStates(
             pagingAdapter = popularTvSeriesAdapter,
-            onLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.PopularTvSeriesLoading) },
-            onNotLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.PopularTvSeriesNotLoading) },
+            onLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.PopularTvSeriesLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.PopularTvSeriesNotLoading) },
             onError = { eventToPagingError(it) }
         )
 
         HandlePagingLoadStates(
             pagingAdapter = topRatedTvSeriesAdapter,
-            onLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.TopRatedTvSeriesLoading) },
-            onNotLoading = { viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.TopRatedTvSeriesNotLoading) },
+            onLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.TopRatedTvSeriesLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.TopRatedTvSeriesNotLoading) },
             onError = { eventToPagingError(it) }
         )
 
     }
 
     private fun eventToPagingError(uiText: UiText) {
-        viewModel.onAdapterLoadStateEvent(AdapterLoadStateEvent.PagingError(uiText))
+        viewModel.onAdapterLoadStateEvent(HomeAdapterLoadStateEvent.PagingError(uiText))
     }
 
     override fun onStart() {
         super.onStart()
         val context = requireContext()
-        binding.seeAllPage.isVisible = true
         val adapter = when (viewModel.homeState.value.seeAllPageToolBarText?.asString(context)) {
             context.getString(R.string.now_playing) -> {
                 nowPlayingAdapter
