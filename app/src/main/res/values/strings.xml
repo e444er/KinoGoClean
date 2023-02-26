@@ -84,4 +84,9 @@
     <string name="buy">Buy</string>
     <string name="provides_now_watch_information_by_justwatch">Provides \'Now Watch Information\' by <font color="#FFEB3B">JustWatch</font></string>
 
+    <string name="character">Character</string>
+    <string name="department">Department</string>
+    <string name="as_director_work">As Director\'s Works</string>
+    <string name="as_actor_works">As Actor\'s Works</string>
+
 </resources>

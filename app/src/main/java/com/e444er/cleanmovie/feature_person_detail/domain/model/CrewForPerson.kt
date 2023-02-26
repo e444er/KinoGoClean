@@ -7,6 +7,7 @@ data class CrewForPerson(
     val job: String,
     val mediaType: String,
     val name: String?,
+    val popularity: Double,
     val originalName: String?,
     val originalTitle: String?,
     val overview: String,

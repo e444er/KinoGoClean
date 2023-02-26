@@ -63,7 +63,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 viewModel.onEvent(DetailEvent.IntentToImdbWebSite(tmdbUrl))
             },
             onClickDirectorName = { directorId ->
-                viewModel.onEvent(DetailEvent.ClickToDirectorName(directorId = directorId))
+                viewModel.onEvent(
+                    DetailEvent.ClickToDirectorName(
+                        directorId = directorId
+                    )
+                )
             },
             onNavigateUp = {
                 findNavController().popBackStack()
@@ -77,8 +81,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         binding.swipeRefreshLayout.isEnabled = false
 
         addOnBackPressedCallback()
-
-        //setDetailIdToViewModel()
 
         collectDataLifecycleAware()
 

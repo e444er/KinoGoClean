@@ -32,6 +32,10 @@ class PersonDetailViewModel @Inject constructor(
         savedStateHandle.get<Int>("personId")?.let { personId ->
             getPersonDetail(personId = personId)
         }
+        savedStateHandle.get<Boolean>("isActor")?.let { isActor ->
+            timber.log.Timber.d(isActor.toString())
+            _state.update { it.copy(isActor = isActor) }
+        }
     }
 
     private fun getLanguage() {

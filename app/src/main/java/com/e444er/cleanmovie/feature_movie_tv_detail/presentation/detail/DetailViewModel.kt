@@ -61,26 +61,25 @@ class DetailViewModel @Inject constructor(
                 emitUiEventFlow(DetailUiEvent.PopBackStack)
             }
             is DetailEvent.ClickToDirectorName -> {
-                viewModelScope.launch {
-                    emitUiEventFlow(
-                        DetailUiEvent.NavigateTo(
-                            DetailFragmentDirections.actionDetailFragmentToPersonDetailFragment(
-                                event.directorId
-                            )
-                        )
-                    )
-                }
+                val action =
+                    DetailFragmentDirections.actionDetailFragmentToPersonDetailFragment(event.directorId)
+                action.isActor = false
+                emitUiEventFlow(
+                    DetailUiEvent.NavigateTo(action)
+                )
             }
             is DetailEvent.ClickActorName -> {
+                val action =
+                    DetailFragmentDirections.actionDetailFragmentToPersonDetailFragment(event.actorId)
+                action.isActor = true
                 emitUiEventFlow(
                     DetailUiEvent.NavigateTo(
-                        DetailFragmentDirections.actionDetailFragmentToPersonDetailFragment(event.actorId)
+                        action
                     )
                 )
             }
         }
     }
-
     private fun emitUiEventFlow(detailUiEvent: DetailUiEvent) {
         viewModelScope.launch {
             _eventUiFlow.emit(detailUiEvent)
