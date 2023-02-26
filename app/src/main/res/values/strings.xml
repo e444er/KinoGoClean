@@ -1,4 +1,4 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <string name="app_name">Kino</string>
 
     <string name="bottom_nav_home">Home</string>
@@ -69,6 +69,11 @@
     <string name="add_favorite_list">Add My Favorite List</string>
     <string name="add_watch_list">Add My Watch List</string>
 
+
+    <string name="person_detail_title"><b>Details: </b> %s</string>
+    <string name="person_date_of_birth_title"><b>Date of birth: </b> %s</string>
+    <string name="person_date_of_death_title"><b>Date of death: </b> %s</string>
+    <string name="person_nation_title"><b>Nation: </b> %s</string>
     <string name="director_title">Director: </string>
     <string name="singular_creator_title">Creator: </string>
     <string name="plural_creator_title">Creators: <br /> </string>

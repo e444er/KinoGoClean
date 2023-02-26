@@ -1,12 +1,12 @@
 package com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases
 
 import com.e444er.cleanmovie.R
-import com.e444er.cleanmovie.core.presentation.util.HandleUtils
 import com.e444er.cleanmovie.core.presentation.util.UiText
 import com.e444er.cleanmovie.core.util.Resource
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.tv.toTvDetail
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.models.detail.TvDetail
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.repository.DetailRepository
+import com.e444er.cleanmovie.feature_movie_tv_detail.domain.util.HandleUtils
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import okio.IOException

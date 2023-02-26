@@ -7,8 +7,6 @@ import com.e444er.cleanmovie.core.util.Constants.STARTING_PAGE
 import com.e444er.cleanmovie.feature_home.data.dto.toTvSeries
 import com.e444er.cleanmovie.feature_home.data.remote.HomeApi
 import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
-import okio.IOException
-import retrofit2.HttpException
 import javax.inject.Inject
 
 class TvPagingSource @Inject constructor(
@@ -49,9 +47,7 @@ class TvPagingSource @Inject constructor(
                     response.page.plus(1) else null
             )
 
-        } catch (e: IOException) {
-            LoadResult.Error(throwable = e)
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             LoadResult.Error(throwable = e)
         }
     }

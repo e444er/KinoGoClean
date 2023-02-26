@@ -8,8 +8,6 @@ import com.e444er.cleanmovie.core.util.Constants.STARTING_PAGE
 import com.e444er.cleanmovie.feature_home.data.dto.toMovieList
 import com.e444er.cleanmovie.feature_home.data.remote.HomeApi
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import okio.IOException
-import retrofit2.HttpException
 import javax.inject.Inject
 
 class MoviesPagingSource @Inject constructor(
@@ -47,9 +45,7 @@ class MoviesPagingSource @Inject constructor(
                 nextKey = if (nextPage < response.totalPages) response.page.plus(1) else null
             )
 
-        } catch (e: IOException) {
-            LoadResult.Error(throwable = e)
-        } catch (e: HttpException) {
+        } catch (e: Exception) {
             LoadResult.Error(throwable = e)
         }
     }

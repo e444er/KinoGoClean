@@ -3,6 +3,7 @@ package com.e444er.cleanmovie.feature_explore.presentation.explore
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.dto.Genre
 import com.e444er.cleanmovie.core.data.models.enums.Category
@@ -55,7 +56,7 @@ class ExploreViewModel @Inject constructor(
 
     private val _connectivityState = MutableStateFlow(ConnectivityObserver.Status.Avaliable)
 
-    var handler: CoroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
+    private var handler: CoroutineExceptionHandler = CoroutineExceptionHandler { _, throwable ->
         Timber.d(throwable.toString())
     }
 
@@ -80,14 +81,14 @@ class ExploreViewModel @Inject constructor(
         return exploreUseCases.discoverMovieUseCase(
             language = language.value,
             filterBottomState = filterBottomSheetState.value
-        )
+        ).cachedIn(viewModelScope)
     }
 
     fun discoverTv(): Flow<PagingData<TvSeries>> {
         return exploreUseCases.discoverTvUseCase(
             language = language.value,
             filterBottomState = filterBottomSheetState.value
-        )
+        ).cachedIn(viewModelScope)
     }
 
 
