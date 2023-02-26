@@ -70,10 +70,10 @@
     <string name="add_watch_list">Add My Watch List</string>
 
 
-    <string name="person_detail_title"><b>Details: </b> %s</string>
-    <string name="person_date_of_birth_title"><b>Date of birth: </b> %s</string>
-    <string name="person_date_of_death_title"><b>Date of death: </b> %s</string>
-    <string name="person_nation_title"><b>Nation: </b> %s</string>
+    <string name="person_detail_title">Details:</string>
+    <string name="person_date_of_birth_title">Date of birth:</string>
+    <string name="person_date_of_death_title">Date of death:</string>
+    <string name="person_nation_title">Nation:</string>
     <string name="director_title">Director: </string>
     <string name="singular_creator_title">Creator: </string>
     <string name="plural_creator_title">Creators: <br /> </string>

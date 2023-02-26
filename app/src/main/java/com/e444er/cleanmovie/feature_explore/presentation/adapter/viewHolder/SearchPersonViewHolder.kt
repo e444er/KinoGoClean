@@ -29,8 +29,9 @@ class SearchPersonViewHolder(
                 imageSize = ImageSize.W500.path
             ),
             imageLoader = imageLoader
-        ) {
-            kotlin.error(R.drawable.ic_baseline_person_24)
+        )
+        {
+            error(R.drawable.ic_baseline_person_24)
         }
 
         binding.txtCategory.visibility = View.VISIBLE
