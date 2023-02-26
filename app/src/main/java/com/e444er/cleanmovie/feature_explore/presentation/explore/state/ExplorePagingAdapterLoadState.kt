@@ -5,7 +5,7 @@ import com.e444er.cleanmovie.feature_home.presentation.home.state.PagingAdapterL
 
 
 data class ExplorePagingAdapterLoadState(
-    val uiText: UiText? = null,
+    val errorUiText: UiText? = null,
     val filterAdapterState: PagingAdapterLoadStateItem = PagingAdapterLoadStateItem(),
     val searchAdapterState: PagingAdapterLoadStateItem = PagingAdapterLoadStateItem()
 )

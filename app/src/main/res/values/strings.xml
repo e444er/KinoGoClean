@@ -57,6 +57,8 @@
 
     <string name="overview">Overview</string>
 
+    <string name="something_went_wrong">Something went wrong</string>
+    <string name="try_again">TRY AGAIN</string>
     <string name="voteAverageDetail">%1$s (%2$s reviews)</string>
     <string name="runtime">%1$sh %2$sm</string>
 
