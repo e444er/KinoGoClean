@@ -8,6 +8,7 @@ import com.e444er.cleanmovie.feature_explore.domain.repository.ExploreRepository
 import com.e444er.cleanmovie.feature_explore.presentation.filter_bottom_sheet.state.FilterBottomState
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.combineTransform
 import javax.inject.Inject
 
@@ -21,16 +22,18 @@ class DiscoverMovieUseCase @Inject constructor(
         filterBottomState: FilterBottomState
     ): Flow<PagingData<Movie>> {
 
-        return combineTransform(
+        return combine(
             exploreRepository.discoverMovie(language, filterBottomState),
             getMovieGenreListUseCase(language)
         ) { pagingData, movieGenreList ->
-            pagingData.map {
-                it.copy(
-                    genresBySeparatedByComma = HandleUtils.convertGenreListToStringSeparatedByCommas(
-                        movieGenreList = movieGenreList,
-                        it
-                    )
+            pagingData.map { movie ->
+                movie.copy(
+                    genreByOne = HandleUtils.handleConvertingGenreListToOneGenreString(
+                        genreList = movieGenreList,
+                        genreIds = movie.genreIds
+                    ),
+                    releaseDate = HandleUtils.convertToYearFromDate(movie.releaseDate ?: ""),
+                    voteCountByString = HandleUtils.convertingVoteCountToString(movie.voteCount)
                 )
             }
         }

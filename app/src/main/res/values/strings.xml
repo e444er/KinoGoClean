@@ -19,6 +19,7 @@
     <string name="tv_series">Tv Series</string>
     <string name="genre">Genre</string>
     <string name="movies">Movies</string>
+    <string name="person">Person</string>
     <string name="tv">Tv</string>
     <string name="voteAverage">%1$s (%2$s)</string>
     <string name="release_date_genre">%1$s  %2$s</string>

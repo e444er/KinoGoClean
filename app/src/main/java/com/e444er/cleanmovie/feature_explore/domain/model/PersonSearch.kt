@@ -6,6 +6,7 @@ data class PersonSearch(
     val id: Int,
     val name: String,
     val profilePath: String?,
+    val knownForDepartment: String?,
     val knownFor: List<KnownForSearch>
 )
 
@@ -47,8 +48,8 @@ fun KnownForSearch.toTvSearch(): TvSearch? {
     if (mediaType == MediaType.TV_SERIES.value) {
         return TvSearch(
             id = id,
-            name = name!!,
             overview = overview!!,
+            name = name!!,
             originalName = originalName!!,
             posterPath = posterPath,
             firstAirDate = firstAirDate!!,
