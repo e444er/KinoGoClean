@@ -1,4 +1,4 @@
-package com.e444er.cleanmovie.feature_home.presentation.detail_bottom_sheet
+package com.e444er.cleanmovie.core.presentation.detail_bottom_sheet
 
 import android.os.Bundle
 import android.text.method.ScrollingMovementMethod

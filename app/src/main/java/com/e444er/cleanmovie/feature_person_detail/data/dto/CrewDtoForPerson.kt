@@ -44,6 +44,7 @@ fun CrewDtoForPerson.toCrewForPerson(): CrewForPerson {
         releaseDate = releaseDate,
         voteAverage = voteAverage,
         voteCount = voteCount,
-        popularity = popularity
+        popularity = popularity,
+        title = title
     )
 }

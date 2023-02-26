@@ -1,5 +1,8 @@
 package com.e444er.cleanmovie.feature_person_detail.domain.model
 
+import com.e444er.cleanmovie.feature_home.domain.models.Movie
+import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
+
 data class CastForPerson(
     val id: Int,
     val name: String?,
@@ -13,5 +16,35 @@ data class CastForPerson(
     val releaseDate: String?,
     val voteAverage: Double,
     val voteCount: Int,
+    val title: String?,
     val popularity: Double
 )
+
+
+fun CastForPerson.toMovie(): Movie {
+    return Movie(
+        id = id,
+        overview = overview,
+        title = title ?: "",
+        originalTitle = originalTitle ?: "",
+        posterPath = posterPath,
+        releaseDate = releaseDate,
+        voteCount = voteCount,
+        genreIds = emptyList(),
+        voteAverage = voteAverage
+    )
+}
+
+fun CastForPerson.toTvSeries(): TvSeries {
+    return TvSeries(
+        id = id,
+        overview = overview,
+        posterPath = posterPath,
+        voteCount = voteCount,
+        genreIds = emptyList(),
+        voteAverage = voteAverage,
+        name = name ?: "",
+        originalName = originalName ?: "",
+        firstAirDate = firstAirDate
+    )
+}

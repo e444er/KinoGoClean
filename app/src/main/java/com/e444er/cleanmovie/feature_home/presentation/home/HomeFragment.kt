@@ -71,7 +71,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setupRecyclerAdapters()
         setAdaptersClickListener()
         setupListenerSeeAllClickEvents()
-        addCallback()
+        addOnBackPressedCallback()
         binding.btnNavigateUp.setOnClickListener {
             viewModel.onEvent(HomeEvent.NavigateUpFromSeeAllSection)
         }
@@ -272,7 +272,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun addCallback() {
+    private fun addOnBackPressedCallback() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 viewModel.onEvent(HomeEvent.OnBackPressed)

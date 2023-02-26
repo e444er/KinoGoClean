@@ -41,6 +41,7 @@ fun CastDtoForPerson.toCastForPerson(): CastForPerson {
         overview = overview,
         posterPath = posterPath,
         popularity = popularity,
+        title = title,
         releaseDate = releaseDate,
         voteAverage = voteAverage,
         voteCount = voteCount

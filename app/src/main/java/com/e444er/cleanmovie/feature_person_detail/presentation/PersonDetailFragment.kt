@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.text.method.ScrollingMovementMethod
 import android.view.View
 import android.widget.ImageView
+import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -17,9 +18,8 @@ import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
 import com.e444er.cleanmovie.core.presentation.util.UiEvent
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.databinding.FragmentPersonDetailBinding
-import com.e444er.cleanmovie.feature_person_detail.domain.model.CastForPerson
-import com.e444er.cleanmovie.feature_person_detail.domain.model.CrewForPerson
-import com.e444er.cleanmovie.feature_person_detail.domain.model.PersonDetail
+import com.e444er.cleanmovie.feature_explore.domain.util.MediaType
+import com.e444er.cleanmovie.feature_person_detail.domain.model.*
 import com.e444er.cleanmovie.feature_person_detail.presentation.adapter.PersonCastMovieAdapter
 import com.e444er.cleanmovie.feature_person_detail.presentation.adapter.PersonCrewMovieAdapter
 import com.google.android.material.snackbar.Snackbar
@@ -46,19 +46,76 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
         binding.txtBio.movementMethod = ScrollingMovementMethod()
 
         collectData()
-
         setupAdapters()
+        setAdaptersClickListener()
 
         binding.btnNavigateUp.setOnClickListener {
             findNavController().popBackStack()
         }
 
+        addOnBackPressedCallback()
+
         _binding = binding
+    }
+
+
+    private fun addOnBackPressedCallback() {
+        val callback = object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                findNavController().popBackStack()
+            }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(callback)
     }
 
     private fun setupAdapters() {
         personCastAdapter = PersonCastMovieAdapter()
         personCrewAdapter = PersonCrewMovieAdapter()
+    }
+
+    private fun setAdaptersClickListener() {
+        personCastAdapter.setOnClickListener { castForPerson ->
+            val action = setupAction(castForPerson = castForPerson)
+            findNavController().navigate(action)
+        }
+
+        personCrewAdapter.setOnClickListener { crewForPerson ->
+            val action = setupAction(crewForPerson = crewForPerson)
+            findNavController().navigate(action)
+        }
+
+    }
+
+    private fun setupAction(crewForPerson: CrewForPerson): PersonDetailFragmentDirections.ActionPersonDetailFragmentToDetailBottomSheet {
+        val action =
+            PersonDetailFragmentDirections.actionPersonDetailFragmentToDetailBottomSheet(null, null)
+        when (crewForPerson.mediaType) {
+            MediaType.MOVIE.value -> {
+                action.movie = crewForPerson.toMovie()
+                action.tvSeries = null
+            }
+            MediaType.TV_SERIES.value -> {
+                action.movie = null
+                action.tvSeries = crewForPerson.toTvSeries()
+            }
+        }
+        return action
+    }
+
+    private fun setupAction(castForPerson: CastForPerson): PersonDetailFragmentDirections.ActionPersonDetailFragmentToDetailBottomSheet {
+        val action =
+            PersonDetailFragmentDirections.actionPersonDetailFragmentToDetailBottomSheet(null, null)
+        when (castForPerson.mediaType) {
+            MediaType.MOVIE.value -> {
+                action.movie = castForPerson.toMovie()
+                action.tvSeries = null
+            }
+            MediaType.TV_SERIES.value -> {
+                action.movie = null
+                action.tvSeries = castForPerson.toTvSeries()
+            }
+        }
+        return action
     }
 
     private fun collectData() {
@@ -115,6 +172,7 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
             personCrewAdapter.submitList(crewList)
         }
     }
+
     private fun bindAttributes(personDetail: PersonDetail) {
         binding.imvPerson.load(
             ImageApi.getImage(imageUrl = personDetail.profilePath)
@@ -150,6 +208,7 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
 
         binding.txtNation.text = personDetail.placeOfBirth
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()

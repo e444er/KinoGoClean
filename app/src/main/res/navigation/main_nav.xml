@@ -7,7 +7,7 @@
 
     <dialog
         android:id="@+id/detailBottomSheet"
-        android:name="com.e444er.cleanmovie.feature_home.presentation.detail_bottom_sheet.DetailBottomSheet"
+        android:name="com.e444er.cleanmovie.core.presentation.detail_bottom_sheet.DetailBottomSheet"
         android:label="DetailBottomSheet"
         tools:layout="@layout/fragment_detail_bottom_sheet">
         <action
@@ -107,5 +107,8 @@
             android:name="isActor"
             app:argType="boolean"
             android:defaultValue="false"/>
+        <action
+            android:id="@+id/action_personDetailFragment_to_detailBottomSheet"
+            app:destination="@id/detailBottomSheet" />
     </fragment>
 </navigation>
