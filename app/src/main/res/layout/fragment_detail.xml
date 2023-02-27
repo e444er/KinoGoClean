@@ -14,7 +14,6 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@android:color/transparent"
             android:elevation="@dimen/medium_margin"
             app:contentInsetStart="0dp">
 
@@ -494,7 +493,8 @@
                     app:layout_constraintEnd_toEndOf="@id/recyclerViewActor"
                     app:layout_constraintStart_toStartOf="@id/recyclerViewActor"
                     app:layout_constraintTop_toBottomOf="@+id/tabLayout"
-                    tools:listitem="@layout/youtube_player_view" />
+                    tools:listitem="@layout/youtube_player_view"
+                    tools:itemCount="3" />
 
                 <!-- endregion trailer,recommendations section-->
 

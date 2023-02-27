@@ -65,6 +65,30 @@ class DetailViewModel @Inject constructor(
             if (tvId != DETAIL_DEFAULT_ID) {
                 _tvIdState.value = tvId
                 getTvDetail(tvId = tvId)
+                getTvVideos(tvId = tvId)
+            }
+        }
+    }
+
+    private fun getTvVideos(tvId: Int) {
+        viewModelScope.launch {
+            updateVideosLoading(isLoading = true)
+            val resource = detailUseCases.getTvVideosUseCase(
+                tvId = tvId, language = languageIsoCode.value
+            )
+            when (resource) {
+                is Resource.Success -> {
+                    updateVideosLoading(isLoading = false)
+                    _detailState.update { it.copy(videos = resource.data) }
+                }
+                is Resource.Error -> {
+                    updateVideosLoading(isLoading = false)
+                    _eventUiFlow.emit(
+                        DetailUiEvent.ShowSnackbar(
+                            resource.uiText ?: UiText.unknownError()
+                        )
+                    )
+                }
             }
         }
     }
