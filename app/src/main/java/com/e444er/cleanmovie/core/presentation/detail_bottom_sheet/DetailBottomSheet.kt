@@ -49,7 +49,15 @@ class DetailBottomSheet : BottomSheetDialogFragment() {
         binding.apply {
             if (movie != null) {
 
-                tvName.text = movie.title
+                tvName.text = if (movie.title == movie.originalTitle) {
+                    movie.title
+                } else {
+                    getString(
+                        R.string.tv_name_with_original_name,
+                        movie.title,
+                        movie.originalTitle
+                    )
+                }
                 tvReleaseDate.text = movie.releaseDate
                 tvOverview.text = movie.overview
                 if (movie.posterPath != null) {
@@ -65,7 +73,15 @@ class DetailBottomSheet : BottomSheetDialogFragment() {
 
             if (tvSeries != null) {
 
-                tvName.text = tvSeries.name
+                tvName.text = if (tvSeries.name == tvSeries.originalName) {
+                    tvSeries.name
+                } else {
+                    getString(
+                        R.string.tv_name_with_original_name,
+                        tvSeries.name,
+                        tvSeries.originalName
+                    )
+                }
                 tvOverview.text = tvSeries.overview
                 tvReleaseDate.text = tvSeries.firstAirDate
                 if (tvSeries.posterPath != null) {

@@ -13,7 +13,6 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.models.enums.Category
-import com.e444er.cleanmovie.core.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.core.domain.repository.isAvaliable
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.core.presentation.util.isEmpty
@@ -80,6 +79,7 @@ class ExploreFragment @Inject constructor(
                 viewModel.networkState.collectLatest { networkState ->
                     if (networkState.isAvaliable()) {
                         job?.cancel()
+                        hideErrorScreenAndShowDetailScreen()
                         collectData()
                     } else {
                         if (isAdaptersEmpty()) {

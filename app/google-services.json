@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "844302919232",
+    "project_id": "kinogo-b1d65",
+    "storage_bucket": "kinogo-b1d65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:844302919232:android:141bdf44d62c70ebbb21a5",
+        "android_client_info": {
+          "package_name": "com.e444er.cleanmovie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "844302919232-cveahs4f98bsqpsfcu6ub062mm4aef9u.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtxrE895DNZg8XC6EmN0OqHEpA6EBFqfw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "844302919232-cveahs4f98bsqpsfcu6ub062mm4aef9u.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -16,6 +16,8 @@
     <dimen name="large_padding">16dp</dimen>
     <dimen name="extra_large_padding">32dp</dimen>
 
+    <dimen name="mova_button_height">60dp</dimen>
+
     <dimen name="shape_medium">8dp</dimen>
     <dimen name="shape_large">16dp</dimen>
 
