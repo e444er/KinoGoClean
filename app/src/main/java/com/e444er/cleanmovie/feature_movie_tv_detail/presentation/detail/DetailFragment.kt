@@ -14,7 +14,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
-import coil.ImageLoader
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.core.util.toolBarTextVisibilityByScrollPositionOfNestedScrollView
@@ -39,11 +38,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
-
 
     private var job: Job? = null
     private var jobMovieId: Job? = null
@@ -52,9 +49,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
-
-    @Inject
-    lateinit var imageLoader: ImageLoader
 
     private val detailActorAdapter: DetailActorAdapter by lazy { DetailActorAdapter() }
     private val movieRecommendationAdapter: NowPlayingRecyclerAdapter by lazy { NowPlayingRecyclerAdapter() }
@@ -85,6 +79,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         setDirectorTextListener()
 
+        setRecommendationsAdapterListener()
+
         binding.swipeRefreshLayout.isEnabled = false
 
         addOnBackPressedCallback()
@@ -101,6 +97,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         handleTvRecommendationsPagingLoadStates()
         handleMovieRecommendationsPagingLoadStates()
+    }
+
+    private fun setRecommendationsAdapterListener() {
+        movieRecommendationAdapter.setOnClickListener { movie ->
+            viewModel.onEvent(DetailEvent.ClickRecommendationItemClick(movie = movie))
+        }
+
+        tvRecommendationAdapter.setOnItemClickListener { tvSeries ->
+            viewModel.onEvent(DetailEvent.ClickRecommendationItemClick(tvSeries = tvSeries))
+        }
     }
 
     private fun setBtnNavigateUpListener() {

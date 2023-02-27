@@ -111,6 +111,7 @@ class DetailViewModel @Inject constructor(
                 _detailState.update { it.copy(recommendationLoading = false) }
                 emitUiEventFlow(DetailUiEvent.ShowSnackbar(event.uiText))
             }
+
         }
     }
     private fun getMovieVideos(movieId: Int) {
@@ -170,6 +171,17 @@ class DetailViewModel @Inject constructor(
             }
             is DetailEvent.SelectedTab -> {
                 _selectedTabPosition.value = event.selectedTabPosition
+            }
+            is DetailEvent.ClickRecommendationItemClick -> {
+                val action =
+                    DetailFragmentDirections.actionDetailFragmentToDetailBottomSheet(null, null)
+                event.tvSeries?.let {
+                    action.tvSeries = it
+                }
+                event.movie?.let {
+                    action.movie = it
+                }
+                emitUiEventFlow(DetailUiEvent.NavigateTo(action))
             }
         }
     }
