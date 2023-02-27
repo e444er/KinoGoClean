@@ -13,6 +13,7 @@ import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases.DetailUseCases
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailEvent
+import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailLoadStateEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailUiEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.util.Constants.DETAIL_DEFAULT_ID
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -93,6 +94,21 @@ class DetailViewModel @Inject constructor(
         }
     }
 
+
+    fun onAdapterLoadStateEvent(event: DetailLoadStateEvent) {
+        when (event) {
+            is DetailLoadStateEvent.RecommendationLoading -> {
+                _detailState.update { it.copy(recommendationLoading = true) }
+            }
+            is DetailLoadStateEvent.RecommendationNotLoading -> {
+                _detailState.update { it.copy(recommendationLoading = false) }
+            }
+            is DetailLoadStateEvent.PagingError -> {
+                _detailState.update { it.copy(recommendationLoading = false) }
+                emitUiEventFlow(DetailUiEvent.ShowSnackbar(event.uiText))
+            }
+        }
+    }
     private fun getMovieVideos(movieId: Int) {
         viewModelScope.launch {
             updateVideosLoading(isLoading = true)

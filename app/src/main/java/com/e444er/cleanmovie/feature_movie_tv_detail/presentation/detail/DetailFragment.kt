@@ -1,5 +1,6 @@
 package com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.graphics.Color
 import android.net.Uri
@@ -18,11 +19,14 @@ import coil.ImageLoader
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.databinding.FragmentDetailBinding
+import com.e444er.cleanmovie.feature_home.domain.models.Movie
+import com.e444er.cleanmovie.feature_home.presentation.home.HandlePagingLoadStates
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.NowPlayingRecyclerAdapter
-import com.e444er.cleanmovie.feature_home.presentation.home.adapter.PopularTvSeriesAdapter
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.DetailActorAdapter
+import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.TvRecommendationAdapter
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.VideosAdapter
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailEvent
+import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailLoadStateEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailUiEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.helper.BindAttributesDetailFrag
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.util.Constants
@@ -39,7 +43,6 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class DetailFragment : Fragment(R.layout.fragment_detail) {
 
-
     private var job: Job? = null
     private var jobMovieId: Job? = null
     private var jobTvId: Job? = null
@@ -53,20 +56,19 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     lateinit var imageLoader: ImageLoader
 
     private val detailActorAdapter: DetailActorAdapter by lazy { DetailActorAdapter() }
-    private val movieAdapter: NowPlayingRecyclerAdapter by lazy { NowPlayingRecyclerAdapter() }
-    private val tvAdapter: PopularTvSeriesAdapter by lazy { PopularTvSeriesAdapter() }
+    private val movieRecommendationAdapter: NowPlayingRecyclerAdapter by lazy { NowPlayingRecyclerAdapter() }
+    private val tvRecommendationAdapter: TvRecommendationAdapter by lazy { TvRecommendationAdapter() }
     private val videosAdapter: VideosAdapter by lazy { VideosAdapter(viewLifecycleOwner.lifecycle) }
-
 
     private val viewModel: DetailViewModel by viewModels()
 
+    @SuppressLint("ResourceType")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         _binding = FragmentDetailBinding.bind(view)
-        binding.recommendationRecyclerView.adapter = movieAdapter
+        binding.recommendationRecyclerView.adapter = movieRecommendationAdapter
         binding.videosRecyclerView.adapter = videosAdapter
-
         setupDetailActorAdapter()
 
         addTabLayoutListener()
@@ -82,6 +84,9 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         setAdapterListener()
 
         setOnScrollListenerForNestedScroll()
+
+        handleTvRecommendationsPagingLoadStates()
+        handleMovieRecommendationsPagingLoadStates()
     }
 
     private fun setOnScrollListenerForNestedScroll() {
@@ -141,6 +146,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             override fun onTabReselected(tab: TabLayout.Tab?) {
             }
         })
+
     }
 
     private fun setAdapterListener() {
@@ -177,12 +183,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                             collectTvIdState(selectedTabPosition = selectedTabPosition)
                         }
                         if (selectedTabPosition.isSelectedTrailerTab()) {
-                        binding.recommendationRecyclerView.isVisible = false
-                        binding.videosRecyclerView.isVisible = true
-                    } else {
-                        binding.videosRecyclerView.isVisible = false
-                        binding.recommendationRecyclerView.isVisible = true
-                    }
+                            binding.recommendationRecyclerView.isVisible = false
+                            binding.videosRecyclerView.isVisible = true
+                        } else {
+                            binding.videosRecyclerView.isVisible = false
+                            binding.recommendationRecyclerView.isVisible = true
+                        }
                     }
                 }
 
@@ -213,11 +219,29 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         }
     }
 
+    private fun handleTvRecommendationsPagingLoadStates() {
+        HandlePagingLoadStates(
+            pagingAdapter = tvRecommendationAdapter,
+            onLoading = { viewModel.onAdapterLoadStateEvent(DetailLoadStateEvent.RecommendationLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(DetailLoadStateEvent.RecommendationNotLoading) },
+            onError = { viewModel.onAdapterLoadStateEvent(DetailLoadStateEvent.PagingError(it)) }
+        )
+    }
+
+    private fun handleMovieRecommendationsPagingLoadStates() {
+        HandlePagingLoadStates<Movie>(
+            nowPlayingRecyclerAdapter = movieRecommendationAdapter,
+            onLoading = { viewModel.onAdapterLoadStateEvent(DetailLoadStateEvent.RecommendationLoading) },
+            onNotLoading = { viewModel.onAdapterLoadStateEvent(DetailLoadStateEvent.RecommendationNotLoading) },
+            onError = { viewModel.onAdapterLoadStateEvent(DetailLoadStateEvent.PagingError(it)) }
+        )
+    }
+
     private suspend fun collectMovieRecommendationsAndSwapAdapter(movieId: Int) {
-        binding.recommendationRecyclerView.swapAdapter(movieAdapter, true)
+        binding.recommendationRecyclerView.swapAdapter(movieRecommendationAdapter, true)
         viewModel.getMovieRecommendations(movieId = movieId)
             .collectLatest { pagingData ->
-                movieAdapter.submitData(pagingData)
+                movieRecommendationAdapter.submitData(pagingData)
             }
     }
 
@@ -232,10 +256,10 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     }
 
     private suspend fun collectTvRecommendationsAndSwapAdapter(tvId: Int) {
-        binding.recommendationRecyclerView.swapAdapter(tvAdapter, true)
+        binding.recommendationRecyclerView.swapAdapter(tvRecommendationAdapter, true)
         viewModel.getTvRecommendations(tvId = tvId)
             .collectLatest { pagingData ->
-                tvAdapter.submitData(pagingData)
+                tvRecommendationAdapter.submitData(pagingData)
             }
     }
 
@@ -248,6 +272,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             }
         }
     }
+
 
     private suspend fun collectDetailState() {
         viewModel.detailState.collectLatest { detailState ->
@@ -266,6 +291,11 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                 )
                 detailActorAdapter.submitList(movieDetail.credit.cast)
             }
+
+            binding.recommendationShimmerLayout.isVisible = detailState.recommendationLoading
+
+            binding.videosShimmerLayout.isVisible = detailState.videosLoading
+
             detailState.videos?.let { videos ->
                 videosAdapter.submitList(videos.result)
             }
@@ -277,7 +307,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         intent.data = Uri.parse(tmdbUrl)
         startActivity(intent)
     }
-
 
     override fun onDestroyView() {
         super.onDestroyView()
