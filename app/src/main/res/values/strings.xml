@@ -108,6 +108,9 @@
     <string name="sign_in_with_facebook">sign In With Facebook</string>
 
     <string name="error_field_empty">This field can\'t be empty</string>
+    <string name="cancel">Cancel</string>
+    <string name="must_login_able_to_add_in_list"> You must to login to able to add in list</string>
+
 
     // FirebaseAuth Error Message
     <string name="error_invalid_custom_token">Invalid custom token provided.</string>

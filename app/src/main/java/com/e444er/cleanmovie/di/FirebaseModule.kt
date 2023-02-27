@@ -1,5 +1,11 @@
 package com.e444er.cleanmovie.di
 
+import com.e444er.cleanmovie.core.data.repository.FirebaseCoreRepositoryImpl
+import com.e444er.cleanmovie.core.domain.repository.FirebaseCoreRepository
+import com.e444er.cleanmovie.core.domain.use_case.FirebaseCoreUseCases
+import com.e444er.cleanmovie.core.domain.use_case.GetCurrentUserUseCase
+import com.e444er.cleanmovie.core.domain.use_case.IsUserSignInUseCase
+import com.e444er.cleanmovie.core.domain.use_case.SignOutUseCase
 import com.e444er.cleanmovie.feature_authentication.data.repository.AuthenticaitonRepositoryImpl
 import com.e444er.cleanmovie.feature_authentication.domain.repository.AuthenticationRepository
 import com.e444er.cleanmovie.feature_authentication.domain.use_case.CreateUserWithEmailAndPasswordUseCase
@@ -13,8 +19,7 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AuthenticationModule {
-
+object FirebaseModule {
     @Provides
     @Singleton
     fun provideFirebaseAuth(): FirebaseAuth {
@@ -43,5 +48,25 @@ object AuthenticationModule {
         repository: AuthenticationRepository
     ): CreateUserWithEmailAndPasswordUseCase {
         return CreateUserWithEmailAndPasswordUseCase(repository)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseCoreRepository(
+        auth: FirebaseAuth
+    ): FirebaseCoreRepository {
+        return FirebaseCoreRepositoryImpl(auth)
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseCoreUseCases(
+        repository: FirebaseCoreRepository
+    ): FirebaseCoreUseCases {
+        return FirebaseCoreUseCases(
+            getCurrentUserUseCase = GetCurrentUserUseCase(repository),
+            signOutUseCase = SignOutUseCase(repository),
+            isUserSignInUseCase = IsUserSignInUseCase(repository)
+        )
     }
 }

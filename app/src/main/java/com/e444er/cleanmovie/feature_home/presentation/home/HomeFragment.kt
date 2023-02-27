@@ -16,16 +16,13 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.domain.repository.isAvaliable
-import com.e444er.cleanmovie.core.presentation.util.UiText
-import com.e444er.cleanmovie.core.presentation.util.asString
-import com.e444er.cleanmovie.core.presentation.util.isEmpty
+import com.e444er.cleanmovie.core.presentation.util.*
 import com.e444er.cleanmovie.core.util.getCountryIsoCode
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.*
 import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeAdapterLoadStateEvent
 import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeEvent
-import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeUiEvent
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -64,7 +61,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setupRecyclerAdapters()
         setAdaptersClickListener()
         setupListenerSeeAllClickEvents()
-        addOnBackPressedCallback()
+        addOnBackPressedCallback(
+            activity = requireActivity(),
+            onBackPressed = {
+                viewModel.onEvent(HomeEvent.OnBackPressed)
+            }
+        )
         binding.btnNavigateUp.setOnClickListener {
             viewModel.onEvent(HomeEvent.NavigateUpFromSeeAllSection)
         }
@@ -128,16 +130,17 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 launch {
                     viewModel.eventFlow.collectLatest { uiEvent ->
                         when (uiEvent) {
-                            is HomeUiEvent.NavigateTo -> findNavController().navigate(
+                            is BaseUiEvent.NavigateTo -> findNavController().navigate(
                                 uiEvent.directions
                             )
-                            is HomeUiEvent.ShowSnackbar -> {
+                            is BaseUiEvent.ShowSnackbar -> {
                                 Snackbar.make(
                                     requireView(),
                                     uiEvent.uiText.asString(requireContext()),
                                     Snackbar.LENGTH_LONG
                                 ).show()
                             }
+                            else -> return@collectLatest
                         }
                     }
                 }
@@ -301,16 +304,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             recyclerViewSeeAll.removeAllViews()
         }
     }
-
-    private fun addOnBackPressedCallback() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.onEvent(HomeEvent.OnBackPressed)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(callback)
-    }
-
     private fun setupListenerSeeAllClickEvents() {
         binding.apply {
 

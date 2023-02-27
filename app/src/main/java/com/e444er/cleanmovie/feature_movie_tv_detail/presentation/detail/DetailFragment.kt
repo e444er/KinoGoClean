@@ -15,6 +15,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.core.presentation.util.addOnBackPressedCallback
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.core.util.toolBarTextVisibilityByScrollPositionOfNestedScrollView
 import com.e444er.cleanmovie.databinding.FragmentDetailBinding
@@ -83,7 +84,12 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         binding.swipeRefreshLayout.isEnabled = false
 
-        addOnBackPressedCallback()
+        addOnBackPressedCallback(
+            activity = requireActivity(),
+            onBackPressed = {
+                viewModel.onEvent(DetailEvent.OnBackPressed)
+            }
+        )
 
         collectDataLifecycleAware()
 
@@ -177,15 +183,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
     private fun setupDetailActorAdapter() {
         binding.recyclerViewActor.adapter = detailActorAdapter
-    }
-
-    private fun addOnBackPressedCallback() {
-        val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-                viewModel.onEvent(DetailEvent.OnBackPressed)
-            }
-        }
-        requireActivity().onBackPressedDispatcher.addCallback(callback)
     }
 
     private fun collectDataLifecycleAware() {

@@ -8,4 +8,6 @@ sealed class LoginEvent {
     object SignInWithFacebook : LoginEvent()
     object SignIn : LoginEvent()
     object ClickedSignUp : LoginEvent()
+
+    object OnBackPressed : LoginEvent()
 }

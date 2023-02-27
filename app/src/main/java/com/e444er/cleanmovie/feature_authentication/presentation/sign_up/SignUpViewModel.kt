@@ -3,6 +3,7 @@ package com.e444er.cleanmovie.feature_authentication.presentation.sign_up
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.e444er.cleanmovie.core.presentation.util.StandardTextFieldState
+import com.e444er.cleanmovie.core.presentation.util.UiEvent
 import com.e444er.cleanmovie.feature_authentication.domain.use_case.CreateUserWithEmailAndPasswordUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
@@ -22,8 +23,8 @@ class SignUpViewModel @Inject constructor(
     private val _isLoading = MutableStateFlow(false)
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
-    private val _uiEvent = MutableSharedFlow<SignUpUiEvent>()
-    val uiEvent: SharedFlow<SignUpUiEvent> = _uiEvent.asSharedFlow()
+    private val _uiEvent = MutableSharedFlow<UiEvent>()
+    val uiEvent: SharedFlow<UiEvent> = _uiEvent.asSharedFlow()
 
     fun onEvent(event: SignUpEvent) {
         when (event) {
@@ -43,12 +44,15 @@ class SignUpViewModel @Inject constructor(
 
             }
             is SignUpEvent.ClickedSignIn -> {
-                emitUiEvent(SignUpUiEvent.PopBackStack)
+                emitUiEvent(UiEvent.PopBackStack)
+            }
+            is SignUpEvent.OnBackPressed -> {
+                emitUiEvent(UiEvent.PopBackStack)
             }
         }
     }
 
-    private fun emitUiEvent(uiEvent: SignUpUiEvent) {
+    private fun emitUiEvent(uiEvent: UiEvent) {
         viewModelScope.launch {
             _uiEvent.emit(uiEvent)
         }
@@ -62,11 +66,11 @@ class SignUpViewModel @Inject constructor(
             email = email,
             password = password,
             onSuccess = {
-                emitUiEvent(SignUpUiEvent.NavigateTo(SignUpFragmentDirections.actionSignUpFragmentToHomeFragment()))
+                emitUiEvent(UiEvent.NavigateTo(SignUpFragmentDirections.actionSignUpFragmentToHomeFragment()))
                 _isLoading.value = false
             },
             onFailure = { uiText ->
-                emitUiEvent(SignUpUiEvent.ShowSnackbar(uiText = uiText))
+                emitUiEvent(UiEvent.ShowSnackbar(uiText = uiText))
                 _isLoading.value = false
             }
         )

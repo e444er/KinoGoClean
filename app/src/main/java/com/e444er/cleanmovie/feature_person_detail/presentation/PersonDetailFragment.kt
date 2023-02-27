@@ -15,7 +15,7 @@ import androidx.navigation.fragment.findNavController
 import coil.load
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
-import com.e444er.cleanmovie.core.presentation.util.UiEvent
+import com.e444er.cleanmovie.core.presentation.util.BaseUiEvent
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.core.util.toolBarTextVisibilityByScrollPositionOfNestedScrollView
 import com.e444er.cleanmovie.databinding.FragmentPersonDetailBinding
@@ -140,16 +140,17 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
                 launch {
                     viewModel.eventFlow.collectLatest { event ->
                         when (event) {
-                            is UiEvent.ShowSnackbar -> {
+                            is BaseUiEvent.ShowSnackbar -> {
                                 Snackbar.make(
                                     requireView(),
                                     event.uiText.asString(requireContext()),
                                     Snackbar.LENGTH_SHORT
                                 ).show()
                             }
-                            is UiEvent.NavigateTo -> {
+                            is BaseUiEvent.NavigateTo -> {
                                 return@collectLatest
                             }
+                            else -> return@collectLatest
                         }
                     }
                 }

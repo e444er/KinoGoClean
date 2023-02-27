@@ -12,6 +12,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.presentation.util.UiEvent
+import com.e444er.cleanmovie.core.presentation.util.addOnBackPressedCallback
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.databinding.FragmentLoginBinding
 import com.e444er.cleanmovie.feature_authentication.presentation.util.AuthUtil
@@ -33,6 +34,13 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         _binding = binding
 
         collectData()
+
+        addOnBackPressedCallback(
+            activity = requireActivity(),
+            onBackPressed = {
+                viewModel.onEvent(LoginEvent.OnBackPressed)
+            }
+        )
 
         binding.edtEmail.addTextChangedListener {
             it?.let {
@@ -118,6 +126,9 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
                         ),
                         Snackbar.LENGTH_LONG
                     ).show()
+                }
+                is UiEvent.PopBackStack -> {
+                    findNavController().popBackStack()
                 }
             }
         }

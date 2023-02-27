@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.models.enums.Category
 import com.e444er.cleanmovie.core.domain.repository.isAvaliable
+import com.e444er.cleanmovie.core.presentation.util.UiEvent
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.core.presentation.util.isEmpty
 import com.e444er.cleanmovie.databinding.FragmentExploreBinding
@@ -21,7 +22,6 @@ import com.e444er.cleanmovie.feature_explore.presentation.adapter.FilterMoviesAd
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.FilterTvSeriesAdapter
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.SearchRecyclerAdapter
 import com.e444er.cleanmovie.feature_explore.presentation.event.ExploreFragmentEvent
-import com.e444er.cleanmovie.feature_explore.presentation.event.ExploreUiEvent
 import com.e444er.cleanmovie.feature_explore.presentation.explore.event.ExploreAdapterLoadStateEvent
 import com.e444er.cleanmovie.feature_home.presentation.home.HandlePagingLoadStates
 import com.google.android.material.snackbar.Snackbar
@@ -170,17 +170,17 @@ class ExploreFragment @Inject constructor(
                 launch {
                     viewModel.eventFlow.collectLatest { event ->
                         when (event) {
-                            is ExploreUiEvent.ShowSnackbar -> {
+                            is UiEvent.ShowSnackbar -> {
                                 Snackbar.make(
                                     requireView(),
                                     event.uiText.asString(requireContext()),
                                     Snackbar.LENGTH_SHORT
                                 ).show()
                             }
-                            is ExploreUiEvent.PopBackStack -> {
+                            is UiEvent.PopBackStack -> {
                                 findNavController().popBackStack()
                             }
-                            is ExploreUiEvent.NavigateTo -> {
+                            is UiEvent.NavigateTo -> {
                                 findNavController().navigate(event.directions)
                             }
                         }

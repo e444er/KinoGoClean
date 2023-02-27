@@ -50,6 +50,9 @@ class LoginViewModel @Inject constructor(
             is LoginEvent.ClickedSignUp -> {
                 emitUiEvent(UiEvent.NavigateTo(LoginFragmentDirections.actionLoginFragmentToSignUpFragment()))
             }
+            is LoginEvent.OnBackPressed -> {
+                emitUiEvent(UiEvent.PopBackStack)
+            }
         }
     }
 
