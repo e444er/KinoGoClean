@@ -247,4 +247,12 @@ class DetailViewModel @Inject constructor(
             language = languageIsoCode.value
         ).cachedIn(viewModelScope)
     }
+
+    fun isTvIdEmpty(): Boolean {
+        return _tvIdState.value == DETAIL_DEFAULT_ID
+    }
+
+    fun isMovieIdEmpty(): Boolean {
+        return _movieIdState.value == DETAIL_DEFAULT_ID
+    }
 }

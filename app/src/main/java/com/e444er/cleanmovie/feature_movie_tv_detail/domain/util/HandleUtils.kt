@@ -1,7 +1,7 @@
 package com.e444er.cleanmovie.feature_movie_tv_detail.domain.util
 
-import com.e444er.cleanmovie.core.util.Constants
 import com.e444er.cleanmovie.core.presentation.util.HandleUtils
+import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.util.Constants
 
 object HandleUtils {
 
