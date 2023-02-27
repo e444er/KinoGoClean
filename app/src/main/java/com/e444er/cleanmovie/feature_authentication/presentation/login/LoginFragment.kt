@@ -55,7 +55,7 @@ class LoginFragment : Fragment(R.layout.fragment_login) {
         }
 
         binding.txtForgotPassword.setOnClickListener {
-
+            viewModel.onEvent(LoginEvent.ClickedForgetPassword)
         }
 
         binding.btnSignIn.setOnClickListener {

@@ -20,5 +20,6 @@ class AuthUtil {
                 null -> return
             }
         }
+        const val EMAIL_ARGUMENT_NAME = "email"
     }
 }
