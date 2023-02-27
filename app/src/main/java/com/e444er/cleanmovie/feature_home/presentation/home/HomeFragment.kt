@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -14,9 +15,10 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.e444er.cleanmovie.R
-import com.e444er.cleanmovie.core.domain.repository.ConnectivityObserver
+import com.e444er.cleanmovie.core.domain.repository.isAvaliable
 import com.e444er.cleanmovie.core.presentation.util.UiText
 import com.e444er.cleanmovie.core.presentation.util.asString
+import com.e444er.cleanmovie.core.presentation.util.isEmpty
 import com.e444er.cleanmovie.core.util.getCountryIsoCode
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
@@ -29,16 +31,12 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
-
-    @Inject
-    lateinit var connectivityObserver: ConnectivityObserver
 
     private val nowPlayingAdapter: NowPlayingRecyclerAdapter by lazy { NowPlayingRecyclerAdapter() }
 
@@ -70,21 +68,42 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         binding.btnNavigateUp.setOnClickListener {
             viewModel.onEvent(HomeEvent.NavigateUpFromSeeAllSection)
         }
+        binding.btnError.setOnClickListener {
+            if (viewModel.isNetworkAvaliable()) {
+                collectDataLifecycleAware()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.internet_error),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
     }
 
     private fun observeConnectivityStatus() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                connectivityObserver.observe().collectLatest {
-                    if (it == ConnectivityObserver.Status.Avaliable) {
+                viewModel.networkState.collectLatest { networkState ->
+                    if (networkState.isAvaliable()) {
                         job?.cancel()
+                        binding.scrollView.isVisible = true
+                        binding.errorScreen.isVisible = false
                         collectDataLifecycleAware()
                     } else {
                         job?.cancel()
+                        if (isEmptyAdapters()) {
+                            binding.scrollView.isVisible = false
+                            binding.errorScreen.isVisible = true
+                        }
                     }
                 }
             }
         }
+    }
+
+    private fun isEmptyAdapters(): Boolean {
+        return nowPlayingAdapter.itemCount <= 0 || popularMoviesAdapter.isEmpty() || popularTvSeriesAdapter.isEmpty() || topRatedMoviesAdapter.isEmpty() || topRatedTvSeriesAdapter.isEmpty()
     }
 
     private fun collectHomeUiEventsAndLoadState() {

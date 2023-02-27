@@ -154,7 +154,6 @@ class DetailViewModel @Inject constructor(
             is DetailEvent.ClickToDirectorName -> {
                 val action =
                     DetailFragmentDirections.actionDetailFragmentToPersonDetailFragment(event.directorId)
-                action.isActor = false
                 emitUiEventFlow(
                     DetailUiEvent.NavigateTo(action)
                 )
@@ -162,7 +161,6 @@ class DetailViewModel @Inject constructor(
             is DetailEvent.ClickActorName -> {
                 val action =
                     DetailFragmentDirections.actionDetailFragmentToPersonDetailFragment(event.actorId)
-                action.isActor = true
                 emitUiEventFlow(
                     DetailUiEvent.NavigateTo(
                         action

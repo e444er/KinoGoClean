@@ -32,7 +32,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ExploreViewModel @Inject constructor(
-    private val exploreUseCases: ExploreUseCases
+    private val exploreUseCases: ExploreUseCases,
+    private val observeNetwork: ConnectivityObserver
 ) : ViewModel() {
 
 
@@ -44,6 +45,9 @@ class ExploreViewModel @Inject constructor(
 
     private val _query = MutableStateFlow("")
     val query: StateFlow<String> get() = _query
+
+    private val _networkState = MutableStateFlow(ConnectivityObserver.Status.Unavaliable)
+    val networkState: StateFlow<ConnectivityObserver.Status> = _networkState.asStateFlow()
 
     private val _filterBottomSheetState = MutableStateFlow(FilterBottomState())
     val filterBottomSheetState = _filterBottomSheetState.asStateFlow()
@@ -60,13 +64,33 @@ class ExploreViewModel @Inject constructor(
         Timber.d(throwable.toString())
     }
 
+
     init {
         viewModelScope.launch(handler) {
+            collectNetworkState()
+            collectLanguageIsoCode()
+        }
+    }
+
+    private fun collectNetworkState() {
+        viewModelScope.launch {
+            observeNetwork.observe().collectLatest { status ->
+                _networkState.value = status
+            }
+        }
+    }
+
+    private fun collectLanguageIsoCode() {
+        viewModelScope.launch {
             exploreUseCases.getLanguageIsoCodeUseCase().collectLatest { language ->
                 _language.value = language
                 getGenreListByCategoriesState()
             }
         }
+    }
+
+    fun isNetworkAvaliable(): Boolean {
+        return networkState.value.isAvaliable()
     }
 
     fun multiSearch(query: String): Flow<PagingData<SearchDto>> {
@@ -116,6 +140,11 @@ class ExploreViewModel @Inject constructor(
                     viewModelScope.launch {
                         _eventFlow.emit(ExploreUiEvent.ShowSnackbar(UiText.StringResource(R.string.internet_error)))
                     }
+                }
+            }
+            is ExploreFragmentEvent.NavigateToPersonDetail -> {
+                viewModelScope.launch {
+                    _eventFlow.emit(ExploreUiEvent.NavigateTo(event.directions))
                 }
             }
         }

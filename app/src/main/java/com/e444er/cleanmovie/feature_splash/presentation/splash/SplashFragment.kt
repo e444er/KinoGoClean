@@ -31,7 +31,7 @@ class SplashFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_splash, container, false)
     }
 
-    val viewModel: SplashViewModel by viewModels()
+    private val viewModel: SplashViewModel by viewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -41,13 +41,6 @@ class SplashFragment : Fragment() {
                 launch {
                     viewModel.eventFlow.collectLatest { event ->
                         when (event) {
-                            is SplashEvent.NetworkError -> {
-                                Snackbar.make(
-                                    requireView(),
-                                    event.uiText.asString(requireContext()),
-                                    Snackbar.LENGTH_LONG
-                                ).show()
-                            }
                             is SplashEvent.NavigateTo -> {
                                 findNavController().navigate(event.directions)
                             }
@@ -71,4 +64,5 @@ class SplashFragment : Fragment() {
             }
         }
     }
+
 }

@@ -2,6 +2,7 @@ package com.e444er.cleanmovie.feature_explore.presentation.explore
 
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
@@ -13,7 +14,9 @@ import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.models.enums.Category
 import com.e444er.cleanmovie.core.domain.repository.ConnectivityObserver
+import com.e444er.cleanmovie.core.domain.repository.isAvaliable
 import com.e444er.cleanmovie.core.presentation.util.asString
+import com.e444er.cleanmovie.core.presentation.util.isEmpty
 import com.e444er.cleanmovie.databinding.FragmentExploreBinding
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.FilterMoviesAdapter
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.FilterTvSeriesAdapter
@@ -35,13 +38,11 @@ class ExploreFragment @Inject constructor(
 
 ) : Fragment(R.layout.fragment_explore) {
 
+
     private var _binding: FragmentExploreBinding? = null
     private val binding get() = _binding!!
 
-    lateinit var viewModel: ExploreViewModel
-
-    @Inject
-    lateinit var connectivityObserver: ConnectivityObserver
+    private lateinit var viewModel: ExploreViewModel
 
     private val searchRecyclerAdapter: SearchRecyclerAdapter by lazy { SearchRecyclerAdapter() }
 
@@ -76,17 +77,23 @@ class ExploreFragment @Inject constructor(
     private fun observeConnectivityStatus() {
         viewLifecycleOwner.lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
-                connectivityObserver.observe().collectLatest {
-                    if (it == ConnectivityObserver.Status.Avaliable) {
+                viewModel.networkState.collectLatest { networkState ->
+                    if (networkState.isAvaliable()) {
                         job?.cancel()
                         collectData()
                     } else {
-                        showErrorScreenAndHideDetailScreen()
+                        if (isAdaptersEmpty()) {
+                            showErrorScreenAndHideDetailScreen()
+                        }
                         job?.cancel()
                     }
                 }
             }
         }
+    }
+
+    private fun isAdaptersEmpty(): Boolean {
+        return movieFilterAdapter.isEmpty() || tvFilterAdapter.isEmpty() || searchRecyclerAdapter.itemCount <= 0
     }
 
     private fun addTextChangedListener() {
@@ -207,7 +214,6 @@ class ExploreFragment @Inject constructor(
                         if (it.errorUiText != null) {
                             showErrorScreenAndHideDetailScreen()
                         }
-
                     }
                 }
             }
@@ -232,13 +238,16 @@ class ExploreFragment @Inject constructor(
 
     private fun setBtnErrorClickListener() {
         binding.btnError.setOnClickListener {
-            hideErrorScreenAndShowDetailScreen()
-            when (viewModel.filterBottomSheetState.value.categoryState) {
-                Category.MOVIE -> movieFilterAdapter.retry()
-                Category.TV -> tvFilterAdapter.retry()
-                Category.SEARCH -> searchRecyclerAdapter.retry()
+            if (viewModel.isNetworkAvaliable()) {
+                collectData()
+                hideErrorScreenAndShowDetailScreen()
+            } else {
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.internet_error),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
-
         }
     }
 
@@ -328,8 +337,15 @@ class ExploreFragment @Inject constructor(
                 )
             )
         }
-        searchRecyclerAdapter.setOnPersonSearchClickListener {
+        searchRecyclerAdapter.setOnPersonSearchClickListener { person ->
+            val action =
+                ExploreFragmentDirections.actionExploreFragmentToPersonDetailFragment(person.id)
 
+            viewModel.onEventExploreFragment(
+                ExploreFragmentEvent.NavigateToPersonDetail(
+                    action
+                )
+            )
         }
     }
 

@@ -59,6 +59,9 @@
         <action
             android:id="@+id/action_exploreFragment_to_detailBottomSheet"
             app:destination="@id/detailBottomSheet" />
+        <action
+            android:id="@+id/action_exploreFragment_to_personDetailFragment"
+            app:destination="@id/personDetailFragment" />
 
     </fragment>
     <dialog

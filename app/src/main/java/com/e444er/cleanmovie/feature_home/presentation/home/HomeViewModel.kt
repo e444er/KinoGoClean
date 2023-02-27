@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.e444er.cleanmovie.core.domain.repository.ConnectivityObserver
+import com.e444er.cleanmovie.core.domain.repository.isAvaliable
 import com.e444er.cleanmovie.core.presentation.util.UiText
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
@@ -24,6 +26,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val homeUseCases: HomeUseCases,
+    private val observeNetwork: ConnectivityObserver
 ) : ViewModel() {
 
     private val _homeState = MutableStateFlow(HomeState())
@@ -31,6 +34,9 @@ class HomeViewModel @Inject constructor(
 
     private val _adapterLoadState = MutableStateFlow(HomePagingAdapterLoadState())
     val adapterLoadState: StateFlow<HomePagingAdapterLoadState> get() = _adapterLoadState
+
+    private val _networkState = MutableStateFlow(ConnectivityObserver.Status.Unavaliable)
+    val networkState: StateFlow<ConnectivityObserver.Status> = _networkState.asStateFlow()
 
     private val _eventFlow = MutableSharedFlow<HomeUiEvent>()
     val eventFlow = _eventFlow.asSharedFlow()
@@ -41,14 +47,32 @@ class HomeViewModel @Inject constructor(
 
     init {
         viewModelScope.launch(handler) {
-            launch {
-                homeUseCases.getLanguageIsoCodeUseCase().collect { languageIsoCode ->
-                    _homeState.value = _homeState.value.copy(
-                        languageIsoCode = languageIsoCode
-                    )
-                }
+            collectNetworkState()
+            collectLanguageIsoCode()
+        }
+
+    }
+
+    private fun collectNetworkState() {
+        viewModelScope.launch {
+            observeNetwork.observe().collectLatest { status ->
+                _networkState.value = status
             }
         }
+    }
+
+    private fun collectLanguageIsoCode() {
+        viewModelScope.launch {
+            homeUseCases.getLanguageIsoCodeUseCase().collect { languageIsoCode ->
+                _homeState.value = _homeState.value.copy(
+                    languageIsoCode = languageIsoCode
+                )
+            }
+        }
+    }
+
+    fun isNetworkAvaliable(): Boolean {
+        return networkState.value.isAvaliable()
     }
 
     fun onEvent(event: HomeEvent) {
