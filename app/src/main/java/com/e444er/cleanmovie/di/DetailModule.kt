@@ -1,11 +1,11 @@
 package com.e444er.cleanmovie.di
 
+import com.e444er.cleanmovie.core.domain.use_case.GetMovieGenreListUseCase
+import com.e444er.cleanmovie.core.domain.use_case.GetTvGenreListUseCase
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.remote.DetailApi
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.repository.DetailRepositoryImpl
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.repository.DetailRepository
-import com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases.DetailUseCases
-import com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases.GetMovieDetailUseCase
-import com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases.GetTvDetailUseCase
+import com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -34,11 +34,21 @@ object DetailModule {
     @Provides
     @Singleton
     fun provideDetailUseCases(
-        detailRepository: DetailRepository
+        detailRepository: DetailRepository,
+        getMovieGenreListUseCase: GetMovieGenreListUseCase,
+        getTvGenreListUseCase: GetTvGenreListUseCase
     ): DetailUseCases {
         return DetailUseCases(
             movieDetailUseCase = GetMovieDetailUseCase(detailRepository),
-            tvDetailUseCase = GetTvDetailUseCase(detailRepository)
+            tvDetailUseCase = GetTvDetailUseCase(detailRepository),
+            getMovieRecommendationUseCase = GetMovieRecommendationUseCase(
+                detailRepository,
+                getMovieGenreListUseCase
+            ),
+            getTvRecommendationUseCase = GetTvRecommendationUseCase(
+                detailRepository,
+                getTvGenreListUseCase
+            )
         )
     }
 }

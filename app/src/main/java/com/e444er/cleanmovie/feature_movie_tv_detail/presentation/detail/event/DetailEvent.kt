@@ -6,4 +6,7 @@ sealed class DetailEvent {
     data class ClickToDirectorName(val directorId: Int) : DetailEvent()
     data class ClickActorName(val actorId: Int) : DetailEvent()
     object OnBackPressed : DetailEvent()
+
+    data class SelectedTab(val selectedTabPosition: Int) : DetailEvent()
+
 }

@@ -50,9 +50,7 @@
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-
         </androidx.appcompat.widget.Toolbar>
-
 
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
@@ -101,9 +99,9 @@
                     android:id="@+id/imvPoster"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/movie_detail_poster_image_size"
+                    android:layout_marginTop="8dp"
                     android:importantForAccessibility="no"
                     android:scaleType="centerCrop"
-                    android:layout_marginTop="8dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="parent"
@@ -381,7 +379,6 @@
                     android:paddingHorizontal="@dimen/medium_padding"
                     android:text="@string/rent"
                     android:textSize="20sp"
-                    android:backgroundTint="@color/dark_red_variant"
                     app:layout_constraintEnd_toStartOf="@+id/txtBuy"
                     app:layout_constraintStart_toEndOf="@+id/txtStream"
                     app:layout_constraintTop_toTopOf="@+id/txtStream" />
@@ -391,6 +388,7 @@
                     android:layout_width="@dimen/watchProvidersImageSize"
                     android:layout_height="@dimen/watchProvidersImageSize"
                     android:layout_marginTop="@dimen/medium_margin"
+                    android:backgroundTint="@color/dark_red_variant"
                     app:layout_constraintEnd_toEndOf="@id/txtRent"
                     app:layout_constraintStart_toStartOf="@id/txtRent"
                     app:layout_constraintTop_toBottomOf="@id/txtRent" />
@@ -419,19 +417,19 @@
                 <!--endregion Watch Provider -->
 
 
-                <!--region actor and director info section-->
+                <!--region actor  info section-->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txtActor"
                     style="@style/Mova.H6"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/medium_margin"
-                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginTop="8dp"
                     android:paddingHorizontal="@dimen/medium_padding"
                     android:text="@string/actor"
                     android:textSize="20sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/txtCopyright" />
+                    app:layout_constraintTop_toBottomOf="@+id/txtCopyright" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerViewActor"
@@ -442,14 +440,51 @@
                     android:padding="@dimen/medium_padding"
                     app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                     app:layout_constraintEnd_toEndOf="@+id/creatorDirectorLinearLayout"
-                    app:layout_constraintHorizontal_bias="1.0"
                     app:layout_constraintStart_toStartOf="@id/txtActor"
                     app:layout_constraintTop_toBottomOf="@id/txtActor"
                     tools:itemCount="5"
                     tools:listitem="@layout/actor_row" />
 
+                <!--endregion actor info section-->
 
-                <!--endregion actor and director info section-->
+                <!-- region trailer,recommendations section-->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/large_margin"
+                    android:paddingHorizontal="@dimen/medium_padding"
+                    app:layout_constraintEnd_toEndOf="@id/recyclerViewActor"
+                    app:layout_constraintStart_toStartOf="@id/recyclerViewActor"
+                    app:layout_constraintTop_toBottomOf="@id/recyclerViewActor">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/trailers" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/recommendation" />
+                </com.google.android.material.tabs.TabLayout>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recommendationRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="400dp"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/recyclerViewActor"
+                    app:layout_constraintStart_toStartOf="@id/recyclerViewActor"
+                    app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+                    app:spanCount="2"
+                    tools:listitem="@layout/movie_row" />
+
+                <!-- endregion trailer,recommendations section-->
+
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -458,7 +493,6 @@
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
 
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

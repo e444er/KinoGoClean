@@ -3,10 +3,14 @@ package com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.e444er.cleanmovie.core.domain.repository.DataStoreOperations
 import com.e444er.cleanmovie.core.presentation.util.UiText
 import com.e444er.cleanmovie.core.util.Constants.DEFAULT_LANGUAGE
 import com.e444er.cleanmovie.core.util.Resource
+import com.e444er.cleanmovie.feature_home.domain.models.Movie
+import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases.DetailUseCases
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailUiEvent
@@ -24,10 +28,20 @@ class DetailViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
+
     private val _detailState = MutableStateFlow(DetailState())
     val detailState: StateFlow<DetailState> = _detailState.asStateFlow()
 
     private val languageIsoCode = MutableStateFlow(DEFAULT_LANGUAGE)
+
+    private val _movieIdState = MutableStateFlow(DETAIL_DEFAULT_ID)
+    val movieIdState = _movieIdState.asStateFlow()
+
+    private val _tvIdState = MutableStateFlow(DETAIL_DEFAULT_ID)
+    val tvIdState = _tvIdState.asStateFlow()
+
+    private val _selectedTabPosition = MutableStateFlow(0)
+    val selectedTabPosition = _selectedTabPosition.asStateFlow()
 
     private val _eventUiFlow = MutableSharedFlow<DetailUiEvent>()
     val eventUiFlow: SharedFlow<DetailUiEvent> = _eventUiFlow.asSharedFlow()
@@ -42,11 +56,13 @@ class DetailViewModel @Inject constructor(
         }
         savedStateHandle.get<Int>("movieId")?.let { movieId ->
             if (movieId != DETAIL_DEFAULT_ID) {
+                _movieIdState.value = movieId
                 getMovieDetail(movieId = movieId)
             }
         }
         savedStateHandle.get<Int>("tvId")?.let { tvId ->
             if (tvId != DETAIL_DEFAULT_ID) {
+                _tvIdState.value = tvId
                 getTvDetail(tvId = tvId)
             }
         }
@@ -78,8 +94,12 @@ class DetailViewModel @Inject constructor(
                     )
                 )
             }
+            is DetailEvent.SelectedTab -> {
+                _selectedTabPosition.value = event.selectedTabPosition
+            }
         }
     }
+
     private fun emitUiEventFlow(detailUiEvent: DetailUiEvent) {
         viewModelScope.launch {
             _eventUiFlow.emit(detailUiEvent)
@@ -138,5 +158,19 @@ class DetailViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun getMovieRecommendations(movieId: Int): Flow<PagingData<Movie>> {
+        return detailUseCases.getMovieRecommendationUseCase(
+            movieId = movieId,
+            language = languageIsoCode.value
+        ).cachedIn(viewModelScope)
+    }
+
+    fun getTvRecommendations(tvId: Int): Flow<PagingData<TvSeries>> {
+        return detailUseCases.getTvRecommendationUseCase(
+            tvId = tvId,
+            language = languageIsoCode.value
+        ).cachedIn(viewModelScope)
     }
 }
