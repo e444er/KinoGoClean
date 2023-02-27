@@ -17,6 +17,7 @@ import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
 import com.e444er.cleanmovie.core.presentation.util.UiEvent
 import com.e444er.cleanmovie.core.presentation.util.asString
+import com.e444er.cleanmovie.core.util.toolBarTextVisibilityByScrollPositionOfNestedScrollView
 import com.e444er.cleanmovie.databinding.FragmentPersonDetailBinding
 import com.e444er.cleanmovie.feature_explore.domain.util.MediaType
 import com.e444er.cleanmovie.feature_person_detail.domain.model.*
@@ -52,6 +53,14 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
         binding.btnNavigateUp.setOnClickListener {
             findNavController().popBackStack()
         }
+
+        toolBarTextVisibilityByScrollPositionOfNestedScrollView(
+            nestedScrollView = binding.nestedScrollView,
+            position = 1000,
+            toolBarTitle = binding.txtToolBarTitle,
+            toolbar = binding.toolbar,
+            context = requireContext()
+        )
 
         addOnBackPressedCallback()
 
@@ -185,6 +194,7 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
         }
 
         binding.txtPersonName.text = personDetail.name
+        binding.txtToolBarTitle.text = personDetail.name
 
         personDetail.deathday?.let { deathday ->
             binding.txtDateOfDeath.isVisible = true

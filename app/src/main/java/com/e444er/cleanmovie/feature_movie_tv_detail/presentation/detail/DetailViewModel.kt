@@ -11,6 +11,7 @@ import com.e444er.cleanmovie.core.util.Constants.DEFAULT_LANGUAGE
 import com.e444er.cleanmovie.core.util.Resource
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
+import com.e444er.cleanmovie.feature_movie_tv_detail.domain.models.detail.video.Videos
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.use_cases.DetailUseCases
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailLoadStateEvent
@@ -37,6 +38,9 @@ class DetailViewModel @Inject constructor(
 
     private val _movieIdState = MutableStateFlow(DETAIL_DEFAULT_ID)
     val movieIdState = _movieIdState.asStateFlow()
+
+    private val _videos = MutableStateFlow<Videos?>(null)
+    val videos: StateFlow<Videos?> = _videos.asStateFlow()
 
     private val _tvIdState = MutableStateFlow(DETAIL_DEFAULT_ID)
     val tvIdState = _tvIdState.asStateFlow()
@@ -80,7 +84,7 @@ class DetailViewModel @Inject constructor(
             when (resource) {
                 is Resource.Success -> {
                     updateVideosLoading(isLoading = false)
-                    _detailState.update { it.copy(videos = resource.data) }
+                    _videos.value = resource.data
                 }
                 is Resource.Error -> {
                     updateVideosLoading(isLoading = false)
@@ -119,11 +123,7 @@ class DetailViewModel @Inject constructor(
             when (resource) {
                 is Resource.Success -> {
                     updateVideosLoading(isLoading = false)
-                    _detailState.update {
-                        it.copy(
-                            videos = resource.data
-                        )
-                    }
+                    _videos.value = resource.data
                 }
                 is Resource.Error -> {
                     updateVideosLoading(isLoading = false)

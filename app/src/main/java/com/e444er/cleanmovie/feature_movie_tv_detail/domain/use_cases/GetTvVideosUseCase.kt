@@ -6,6 +6,7 @@ import com.e444er.cleanmovie.core.util.Resource
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.video.toVideo
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.models.detail.video.Videos
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.repository.DetailRepository
+import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.util.Constants
 import okio.IOException
 import retrofit2.HttpException
 import timber.log.Timber
@@ -24,6 +25,7 @@ class GetTvVideosUseCase @Inject constructor(
 
             val result = tvVideos.copy(
                 result = tvVideos.result.reversed()
+                    .sortedByDescending { it.type == Constants.TYPE_TRAILER }
             )
 
             Resource.Success(data = result)

@@ -18,6 +18,7 @@ import androidx.navigation.fragment.findNavController
 import coil.ImageLoader
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.presentation.util.asString
+import com.e444er.cleanmovie.core.util.toolBarTextVisibilityByScrollPositionOfNestedScrollView
 import com.e444er.cleanmovie.databinding.FragmentDetailBinding
 import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.presentation.home.HandlePagingLoadStates
@@ -46,6 +47,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private var job: Job? = null
     private var jobMovieId: Job? = null
     private var jobTvId: Job? = null
+    private var jobVideos: Job? = null
 
     private lateinit var bindAttributesDetailFrag: BindAttributesDetailFrag
 
@@ -83,28 +85,16 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         setAdapterListener()
 
-        setOnScrollListenerForNestedScroll()
+        toolBarTextVisibilityByScrollPositionOfNestedScrollView(
+            nestedScrollView = binding.nestedScrollView,
+            position = 1500,
+            toolBarTitle = binding.txtToolBarTitle,
+            toolbar = binding.toolbar,
+            context = requireContext()
+        )
 
         handleTvRecommendationsPagingLoadStates()
         handleMovieRecommendationsPagingLoadStates()
-    }
-
-    private fun setOnScrollListenerForNestedScroll() {
-        binding.nestedScrollView.setOnScrollChangeListener { _, _, scrollY, _, _ ->
-            if (scrollY >= 1500) {
-                val isNightMode =
-                    AppCompatDelegate.getDefaultNightMode() == AppCompatDelegate.MODE_NIGHT_YES
-                if (isNightMode) {
-                    binding.toolbar.setBackgroundResource(R.color.surface)
-                } else {
-                    binding.toolbar.setBackgroundResource(R.color.light_gray_no_alpha)
-                }
-                binding.txtToolBarTitle.isVisible = true
-            } else {
-                binding.toolbar.setBackgroundColor(Color.argb(0, 255, 255, 255))
-                binding.txtToolBarTitle.isVisible = false
-            }
-        }
     }
 
     private fun setBindAttributesDetailFrag() {
@@ -182,10 +172,24 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         jobTvId = launch {
                             collectTvIdState(selectedTabPosition = selectedTabPosition)
                         }
+                        jobVideos = launch {
+                            viewModel.videos.collectLatest {
+                                it?.let { videos ->
+                                    binding.videosRecyclerView.isVisible =
+                                        videos.result.isNotEmpty()
+                                    binding.txtVideoInfo.isVisible = videos.result.isEmpty()
+                                    videosAdapter.submitList(videos.result)
+                                }
+                            }
+                        }
+
                         if (selectedTabPosition.isSelectedTrailerTab()) {
+                            jobTvId?.cancel()
+                            jobMovieId?.cancel()
                             binding.recommendationRecyclerView.isVisible = false
                             binding.videosRecyclerView.isVisible = true
                         } else {
+                            jobVideos?.cancel()
                             binding.videosRecyclerView.isVisible = false
                             binding.recommendationRecyclerView.isVisible = true
                         }
@@ -248,6 +252,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private suspend fun collectMovieIdState(selectedTabPosition: Int) {
         viewModel.movieIdState.collectLatest { movieId ->
             if (movieId != Constants.DETAIL_DEFAULT_ID && selectedTabPosition.isSelectedRecommendationTab()) {
+                jobVideos?.cancel()
                 collectMovieRecommendationsAndSwapAdapter(movieId = movieId)
             } else {
                 jobMovieId?.cancel()
@@ -267,6 +272,7 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
         viewModel.tvIdState.collectLatest { tvId ->
             if (tvId != Constants.DETAIL_DEFAULT_ID && selectedTabPosition.isSelectedRecommendationTab()) {
                 collectTvRecommendationsAndSwapAdapter(tvId = tvId)
+                jobVideos?.cancel()
             } else {
                 jobTvId?.cancel()
             }
@@ -277,7 +283,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private suspend fun collectDetailState() {
         viewModel.detailState.collectLatest { detailState ->
             binding.progressBar.isVisible = detailState.loading
-
             detailState.tvDetail?.let {
                 bindAttributesDetailFrag.bindTvDetail(
                     tvDetail = it
@@ -295,10 +300,6 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
             binding.recommendationShimmerLayout.isVisible = detailState.recommendationLoading
 
             binding.videosShimmerLayout.isVisible = detailState.videosLoading
-
-            detailState.videos?.let { videos ->
-                videosAdapter.submitList(videos.result)
-            }
         }
     }
 
