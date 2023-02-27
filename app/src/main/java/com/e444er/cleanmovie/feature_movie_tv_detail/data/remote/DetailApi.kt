@@ -6,6 +6,7 @@ import com.e444er.cleanmovie.feature_home.data.dto.MovieDto
 import com.e444er.cleanmovie.feature_home.data.dto.TvSeriesDto
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.movie.MovieDetailDto
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.tv.TvDetailDto
+import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.video.VideosDto
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -39,4 +40,10 @@ interface DetailApi {
         @Query("language") language: String,
         @Query("page") page: Int
     ): ApiResponse<TvSeriesDto>
+
+    @GET("movie/{movie_id}/videos")
+    suspend fun getMovieVideos(
+        @Path("movie_id") movieId: Int,
+        @Query("language") language: String
+    ): VideosDto
 }

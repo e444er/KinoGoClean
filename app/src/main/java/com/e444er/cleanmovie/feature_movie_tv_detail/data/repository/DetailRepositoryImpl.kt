@@ -9,6 +9,7 @@ import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.remote.DetailApi
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.movie.MovieDetailDto
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.tv.TvDetailDto
+import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.video.VideosDto
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.paging_source.MovieRecPagingSource
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.paging_source.TvRecPagingSource
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.repository.DetailRepository
@@ -60,5 +61,12 @@ class DetailRepositoryImpl @Inject constructor(
                 )
             }
         ).flow
+    }
+
+    override suspend fun getMovieVideos(movieId: Int, language: String): VideosDto {
+        return detailApi.getMovieVideos(
+            movieId = movieId,
+            language = language
+        )
     }
 }

@@ -19,11 +19,13 @@ import com.e444er.cleanmovie.databinding.FragmentDetailBinding
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.NowPlayingRecyclerAdapter
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.PopularTvSeriesAdapter
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.DetailActorAdapter
+import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.VideosAdapter
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event.DetailUiEvent
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.helper.BindAttributesDetailFrag
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.util.Constants
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.util.isSelectedRecommendationTab
+import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.util.isSelectedTrailerTab
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,6 +53,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
     private val detailActorAdapter: DetailActorAdapter by lazy { DetailActorAdapter() }
     private val movieAdapter: NowPlayingRecyclerAdapter by lazy { NowPlayingRecyclerAdapter() }
     private val tvAdapter: PopularTvSeriesAdapter by lazy { PopularTvSeriesAdapter() }
+    private val videosAdapter: VideosAdapter by lazy { VideosAdapter(viewLifecycleOwner.lifecycle) }
+
 
     private val viewModel: DetailViewModel by viewModels()
 
@@ -59,6 +63,8 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
 
         _binding = FragmentDetailBinding.bind(view)
         binding.recommendationRecyclerView.adapter = movieAdapter
+        binding.videosRecyclerView.adapter = videosAdapter
+
         setupDetailActorAdapter()
 
         addTabLayoutListener()
@@ -148,6 +154,13 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                         jobTvId = launch {
                             collectTvIdState(selectedTabPosition = selectedTabPosition)
                         }
+                        if (selectedTabPosition.isSelectedTrailerTab()) {
+                        binding.recommendationRecyclerView.isVisible = false
+                        binding.videosRecyclerView.isVisible = true
+                    } else {
+                        binding.videosRecyclerView.isVisible = false
+                        binding.recommendationRecyclerView.isVisible = true
+                    }
                     }
                 }
 
@@ -230,6 +243,9 @@ class DetailFragment : Fragment(R.layout.fragment_detail) {
                     movieDetail = movieDetail
                 )
                 detailActorAdapter.submitList(movieDetail.credit.cast)
+            }
+            detailState.videos?.let { videos ->
+                videosAdapter.submitList(videos.result)
             }
         }
     }

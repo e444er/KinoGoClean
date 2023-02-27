@@ -5,6 +5,7 @@ import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.movie.MovieDetailDto
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.tv.TvDetailDto
+import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.video.VideosDto
 import kotlinx.coroutines.flow.Flow
 
 interface DetailRepository {
@@ -27,4 +28,9 @@ interface DetailRepository {
         tvId: Int,
         language: String
     ): Flow<PagingData<TvSeries>>
+
+    suspend fun getMovieVideos(
+        movieId: Int,
+        language: String
+    ): VideosDto
 }

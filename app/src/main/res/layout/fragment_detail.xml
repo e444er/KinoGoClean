@@ -11,6 +11,7 @@
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@android:color/transparent"
@@ -53,6 +54,7 @@
         </androidx.appcompat.widget.Toolbar>
 
         <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -358,7 +360,6 @@
                     app:layout_constraintStart_toStartOf="@id/txtStream"
                     app:layout_constraintTop_toBottomOf="@id/txtStream" />
 
-
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txtCopyright"
                     android:layout_width="wrap_content"
@@ -370,7 +371,6 @@
                     app:layout_constraintEnd_toEndOf="@+id/txtBuy"
                     app:layout_constraintStart_toStartOf="@+id/txtStream"
                     app:layout_constraintTop_toBottomOf="@+id/imvStream" />
-
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/txtRent"
@@ -475,6 +475,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="400dp"
+                    tools:visibility="gone"
                     app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="@id/recyclerViewActor"
@@ -482,6 +483,18 @@
                     app:layout_constraintTop_toBottomOf="@+id/tabLayout"
                     app:spanCount="2"
                     tools:listitem="@layout/movie_row" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/videosRecyclerView"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:minHeight="400dp"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@id/recyclerViewActor"
+                    app:layout_constraintStart_toStartOf="@id/recyclerViewActor"
+                    app:layout_constraintTop_toBottomOf="@+id/tabLayout"
+                    tools:listitem="@layout/youtube_player_view" />
 
                 <!-- endregion trailer,recommendations section-->
 
