@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
             val isVisibleBottomBar = when (destination.id) {
                 R.id.homeFragment -> true
                 R.id.exploreFragment -> true
-                R.id.myListFragment -> true
+                R.id.listFragment -> true
                 R.id.settingsFragment -> true
                 else -> false
             }

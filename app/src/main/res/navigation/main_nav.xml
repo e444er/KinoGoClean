@@ -83,10 +83,14 @@
             app:popEnterAnim="@anim/slide_in_left" />
     </fragment>
     <fragment
-        android:id="@+id/myListFragment"
-        android:name="com.e444er.cleanmovie.feature_mylist.presentation.myList.MyListFragment"
-        android:label="MyListFragment"
-        tools:layout="@layout/fragment_my_list"/>
+        android:id="@+id/listFragment"
+        android:name="com.e444er.cleanmovie.feature_mylist.presentation.ListFragment"
+        android:label="ListFragment"
+        tools:layout="@layout/fragment_list">
+        <action
+            android:id="@+id/action_ListFragment_to_detailBottomSheet"
+            app:destination="@id/detailBottomSheet" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.e444er.cleanmovie.feature_settings.presentation.setting.SettingsFragment"

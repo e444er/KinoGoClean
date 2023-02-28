@@ -9,7 +9,7 @@
         android:icon="@drawable/bottom_nav_explore_selector"
         android:title="@string/bottom_nav_explore"/>
 
-    <item android:id="@+id/myListFragment"
+    <item android:id="@+id/listFragment"
         android:icon="@drawable/bottom_nav_mylist_selector"
         android:title="@string/bottom_nav_my_list"/>
 
