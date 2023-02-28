@@ -30,7 +30,7 @@ class FirebaseMovieWorker @AssistedInject constructor(
         var error: Boolean = false
 
         coroutineScope.launch {
-            localDatabaseUseCases.getFavoriteMovieIdsUseCase().collectLatest { favoriteMovieIds ->
+            localDatabaseUseCases.getFavoriteMovieIdsUseCase().collect { favoriteMovieIds ->
                 firebaseCoreUseCases.addMovieToFavoriteListInFirebaseUseCase(
                     movieIdsInFavoriteList = favoriteMovieIds,
                     onSuccess = { error = false },
@@ -41,7 +41,7 @@ class FirebaseMovieWorker @AssistedInject constructor(
 
         coroutineScope.launch {
             localDatabaseUseCases.getMovieWatchListItemIdsUseCase()
-                .collectLatest { movieIdsInWatchList ->
+                .collect { movieIdsInWatchList ->
                     firebaseCoreUseCases.addMovieToWatchListInFirebaseUseCase(
                         movieIdsInWatchList = movieIdsInWatchList,
                         onSuccess = { error = false },

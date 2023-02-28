@@ -1,6 +1,7 @@
 package com.e444er.cleanmovie.core.domain.use_case
 
 data class LocalDatabaseUseCases(
+    val clearAllDatabaseUseCase: ClearAllDatabaseUseCase,
     val toggleMovieForFavoriteListUseCase: ToggleMovieForFavoriteListUseCase,
     val toggleMovieForWatchListUseCase: ToggleMovieForWatchListUseCase,
     val getFavoriteMovieIdsUseCase: GetFavoriteMovieIdsUseCase,

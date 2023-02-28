@@ -4,10 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.domain.use_case.FirebaseCoreUseCases
+import com.e444er.cleanmovie.core.domain.use_case.LocalDatabaseUseCases
 import com.e444er.cleanmovie.core.presentation.util.BaseUiEvent
 import com.e444er.cleanmovie.core.presentation.util.UiText
 import com.e444er.cleanmovie.feature_settings.domain.use_case.SettingUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -15,7 +17,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingUseCase: SettingUseCase,
-    private val firebaseCoreUseCases: FirebaseCoreUseCases
+    private val firebaseCoreUseCases: FirebaseCoreUseCases,
+    private val localDatabaseUseCases: LocalDatabaseUseCases
 ) : ViewModel() {
 
     private val _isSignedIn = MutableStateFlow(false)
@@ -46,15 +49,74 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun logOut() {
+        viewModelScope.launch {
+            getMovieFavoriteFromLocalDatabaseThenUpdateFirebase()
+            getMovieWatchListItemFromLocalDatabaseThenUpdateFirebase()
+            getTvSeriesFavoriteFromLocalDatabaseThenUpdateFirebase()
+            getTvSeriesWatchListItemFromLocalDatabaseThenUpdateFirebase()
+            delay(2000)
+            signOut()
+            localDatabaseUseCases.clearAllDatabaseUseCase()
+        }
+    }
+
+    private fun signOut() {
         firebaseCoreUseCases.signOutUseCase()
         _isSignedIn.value = false
+        emitUiEvent(BaseUiEvent.ShowSnackbar(UiText.StringResource(R.string.successfully_log_out)))
+    }
+
+    private fun getMovieFavoriteFromLocalDatabaseThenUpdateFirebase() {
         viewModelScope.launch {
-            _eventFlow.emit(BaseUiEvent.ShowSnackbar(UiText.StringResource(R.string.successfully_log_out)))
+            localDatabaseUseCases.getFavoriteMovieIdsUseCase().collect { favoriteMovieIds ->
+                firebaseCoreUseCases.addMovieToFavoriteListInFirebaseUseCase(movieIdsInFavoriteList = favoriteMovieIds,
+                    onSuccess = { },
+                    onFailure = { emitUiEvent(BaseUiEvent.ShowSnackbar(it)) })
+            }
+        }
+    }
+
+    private fun getMovieWatchListItemFromLocalDatabaseThenUpdateFirebase() {
+        viewModelScope.launch {
+            localDatabaseUseCases.getMovieWatchListItemIdsUseCase().collect { movieIdsInWatchList ->
+                firebaseCoreUseCases.addMovieToWatchListInFirebaseUseCase(movieIdsInWatchList = movieIdsInWatchList,
+                    onSuccess = { },
+                    onFailure = { emitUiEvent(BaseUiEvent.ShowSnackbar(it)) })
+            }
+        }
+    }
+
+    private fun getTvSeriesFavoriteFromLocalDatabaseThenUpdateFirebase() {
+        viewModelScope.launch {
+            localDatabaseUseCases.getFavoriteTvSeriesIdsUseCase().collect { favoriteTvSeriesIds ->
+                firebaseCoreUseCases.addTvSeriesToFavoriteListInFirebaseUseCase(
+                    tvSeriesIdsInFavoriteList = favoriteTvSeriesIds,
+                    onSuccess = { },
+                    onFailure = { emitUiEvent(BaseUiEvent.ShowSnackbar(it)) })
+            }
+        }
+    }
+
+    private fun getTvSeriesWatchListItemFromLocalDatabaseThenUpdateFirebase() {
+        viewModelScope.launch {
+            localDatabaseUseCases.getTvSeriesWatchListItemIdsUseCase()
+                .collect { tvSeriesIdsInWatchList ->
+                    firebaseCoreUseCases.addTvSeriesToWatchListInFirebaseUseCase(
+                        tvSeriesIdsInWatchList = tvSeriesIdsInWatchList,
+                        onSuccess = { },
+                        onFailure = { emitUiEvent(BaseUiEvent.ShowSnackbar(it)) })
+                }
+        }
+    }
+
+
+    private fun emitUiEvent(event: BaseUiEvent) {
+        viewModelScope.launch {
+            _eventFlow.emit(event)
         }
     }
 
     fun getLanguageIsoCode(): Flow<String> {
         return settingUseCase.getLanguageIsoCodeUseCase()
     }
-
 }
