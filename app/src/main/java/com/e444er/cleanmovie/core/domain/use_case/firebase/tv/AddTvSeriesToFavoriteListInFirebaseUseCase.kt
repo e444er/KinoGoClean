@@ -1,29 +1,32 @@
 package com.e444er.cleanmovie.core.domain.use_case.firebase.tv
 
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.core.domain.models.FavoriteTvSeries
 import com.e444er.cleanmovie.core.domain.repository.FirebaseCoreRepository
+import com.e444er.cleanmovie.core.domain.repository.FirebaseCoreTvSeriesRepository
 import com.e444er.cleanmovie.core.presentation.util.UiText
-import com.e444er.cleanmovie.core.util.Constants.FIREBASE_TV_SERIES_IDS_FIELD_NAME
+import com.e444er.cleanmovie.core.util.Constants
 import javax.inject.Inject
 
 class AddTvSeriesToFavoriteListInFirebaseUseCase @Inject constructor(
-    private val repository: FirebaseCoreRepository
+    private val firebaseCoreRepository: FirebaseCoreRepository,
+    private val firebaseCoreTvSeriesRepository: FirebaseCoreTvSeriesRepository
 ) {
 
     operator fun invoke(
-        tvSeriesIdsInFavoriteList: List<Int>,
+        tvSeriesInFavoriteList: List<FavoriteTvSeries>,
         onSuccess: () -> Unit,
         onFailure: (uiText: UiText) -> Unit
     ) {
-        val currentUser = repository.getCurrentUser()
+        val currentUser = firebaseCoreRepository.getCurrentUser()
         val userUid = currentUser?.uid
             ?: return onFailure(UiText.StringResource(R.string.must_login_able_to_add_in_list))
 
         val data = mapOf(
-            FIREBASE_TV_SERIES_IDS_FIELD_NAME to tvSeriesIdsInFavoriteList
+            Constants.FIREBASE_TV_SERIES_FIELD_NAME to tvSeriesInFavoriteList
         )
 
-        repository.addTvSeriesToFavoriteList(
+        firebaseCoreTvSeriesRepository.addTvSeriesToFavoriteList(
             userUid = userUid,
             data = data,
             onSuccess = onSuccess,

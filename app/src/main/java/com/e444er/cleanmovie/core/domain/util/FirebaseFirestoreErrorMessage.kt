@@ -1,6 +1,9 @@
 package com.e444er.cleanmovie.core.domain.util
 
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.core.presentation.util.UiText
+import com.google.firebase.firestore.FirebaseFirestoreException
+import timber.log.Timber
 
 
 class FirebaseFirestoreErrorMessage {
@@ -26,5 +29,19 @@ class FirebaseFirestoreErrorMessage {
             "ABORTED" to R.string.aborted_error,
             "UNAVAILABLE" to R.string.unavailable_error
         )
+
+        fun setExceptionToFirebaseMessage(
+            exception: Exception,
+            onFailure: (uiText: UiText) -> Unit
+        ) {
+            Timber.e(exception.localizedMessage?.toString())
+            if (exception is FirebaseFirestoreException) {
+                val errorCode = exception.code.toString()
+                val errorStringId = getMessage(errorCode = errorCode)
+                onFailure(UiText.StringResource(errorStringId))
+            } else {
+                onFailure(UiText.unknownError())
+            }
+        }
     }
 }

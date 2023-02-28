@@ -1,20 +1,12 @@
 package com.e444er.cleanmovie.core.data.repository
 
 import com.e444er.cleanmovie.core.domain.repository.FirebaseCoreRepository
-import com.e444er.cleanmovie.core.domain.util.FirebaseFirestoreErrorMessage
-import com.e444er.cleanmovie.core.presentation.util.UiText
-import com.e444er.cleanmovie.core.util.Constants.FIREBASE_FAVORITE_DOCUMENT_NAME
-import com.e444er.cleanmovie.core.util.Constants.FIREBASE_WATCH_DOCUMENT_NAME
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreException
-import com.google.firebase.firestore.SetOptions
 import javax.inject.Inject
 
 class FirebaseCoreRepositoryImpl @Inject constructor(
-    private val auth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val auth: FirebaseAuth
 ) : FirebaseCoreRepository {
 
     override fun getCurrentUser(): FirebaseUser? {
@@ -24,77 +16,4 @@ class FirebaseCoreRepositoryImpl @Inject constructor(
     override fun signOut() {
         auth.signOut()
     }
-
-    override fun addMovieToFavoriteList(
-        userUid: String,
-        data: Map<String, List<Int>>,
-        onSuccess: () -> Unit,
-        onFailure: (uiText: UiText) -> Unit
-    ) {
-        firestore.collection(userUid).document(FIREBASE_FAVORITE_DOCUMENT_NAME)
-            .set(data, SetOptions.merge())
-            .addOnSuccessListener {
-                onSuccess()
-            }.addOnFailureListener { exception ->
-                setException(exception = exception, onFailure = onFailure)
-            }
-    }
-
-    override fun addMovieToWatchList(
-        userUid: String,
-        data: Map<String, List<Int>>,
-        onSuccess: () -> Unit,
-        onFailure: (uiText: UiText) -> Unit
-
-    ) {
-        firestore.collection(userUid).document(FIREBASE_WATCH_DOCUMENT_NAME)
-            .set(data, SetOptions.merge())
-            .addOnSuccessListener {
-                onSuccess()
-            }.addOnFailureListener { exception ->
-                setException(exception = exception, onFailure = onFailure)
-            }
-    }
-
-    override fun addTvSeriesToFavoriteList(
-        userUid: String,
-        data: Map<String, List<Int>>,
-        onSuccess: () -> Unit,
-        onFailure: (uiText: UiText) -> Unit
-    ) {
-        firestore.collection(userUid).document(FIREBASE_FAVORITE_DOCUMENT_NAME)
-            .set(data, SetOptions.merge())
-            .addOnSuccessListener {
-                onSuccess()
-            }.addOnFailureListener { exception ->
-                setException(exception = exception, onFailure = onFailure)
-            }
-    }
-
-    override fun addTvSeriesToWatchList(
-        userUid: String,
-        data: Map<String, List<Int>>,
-        onSuccess: () -> Unit,
-        onFailure: (uiText: UiText) -> Unit
-    ) {
-        firestore.collection(userUid).document(FIREBASE_WATCH_DOCUMENT_NAME)
-            .set(data, SetOptions.merge())
-            .addOnSuccessListener {
-                onSuccess()
-            }.addOnFailureListener { exception ->
-                setException(exception = exception, onFailure = onFailure)
-            }
-    }
-
-    private fun setException(
-        exception: Exception,
-        onFailure: (uiText: UiText) -> Unit
-    ) {
-        if (exception is FirebaseFirestoreException) {
-            val errorCode = exception.code.toString()
-            val errorStringId = FirebaseFirestoreErrorMessage.getMessage(errorCode = errorCode)
-            onFailure(UiText.StringResource(errorStringId))
-        } else {
-            onFailure(UiText.unknownError())
-        }
-    }}
+}

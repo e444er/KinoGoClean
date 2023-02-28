@@ -3,9 +3,10 @@ package com.e444er.cleanmovie
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.*
-import com.e444er.cleanmovie.core.data.data_source.FirebaseMovieWorker
-import com.e444er.cleanmovie.core.data.data_source.FirebaseTvSeriesWorker
+import com.e444er.cleanmovie.core.data.data_source.worker.UpdateFirebaseMovieWorker
+import com.e444er.cleanmovie.core.data.data_source.worker.UpdateFirebaseTvSeriesWorker
 import dagger.hilt.android.HiltAndroidApp
+import timber.log.Timber
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -15,25 +16,26 @@ class MovaApp @Inject constructor(
 
     @Inject
     lateinit var workerFactory: HiltWorkerFactory
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
+
+    override fun getWorkManagerConfiguration(): Configuration =
+        Configuration.Builder()
             .setWorkerFactory(workerFactory)
             .build()
-    }
 
     override fun onCreate() {
         super.onCreate()
+        Timber.plant(Timber.DebugTree())
 
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
 
-        val firebaseMovieWorker = PeriodicWorkRequestBuilder<FirebaseMovieWorker>(
-            repeatInterval = 5, repeatIntervalTimeUnit = TimeUnit.HOURS
+        val updateFirebaseMovieWorker = PeriodicWorkRequestBuilder<UpdateFirebaseMovieWorker>(
+            repeatInterval = 1, repeatIntervalTimeUnit = TimeUnit.DAYS
         ).setConstraints(constraints).build()
 
-        val firebaseTvSeriesWorker = PeriodicWorkRequestBuilder<FirebaseTvSeriesWorker>(
-            repeatInterval = 5, repeatIntervalTimeUnit = TimeUnit.HOURS
+        val updateFirebaseTvSeriesWorker = PeriodicWorkRequestBuilder<UpdateFirebaseTvSeriesWorker>(
+            repeatInterval = 1, repeatIntervalTimeUnit = TimeUnit.DAYS
         ).setConstraints(constraints).build()
 
         val workManager = WorkManager.getInstance(this)
@@ -41,14 +43,12 @@ class MovaApp @Inject constructor(
         workManager.enqueueUniquePeriodicWork(
             "FirebaseMovieWork",
             ExistingPeriodicWorkPolicy.KEEP,
-            firebaseMovieWorker
+            updateFirebaseMovieWorker
         )
         workManager.enqueueUniquePeriodicWork(
             "FirebaseTvSeriesWork",
             ExistingPeriodicWorkPolicy.KEEP,
-            firebaseTvSeriesWorker
+            updateFirebaseTvSeriesWorker
         )
     }
-
-
 }

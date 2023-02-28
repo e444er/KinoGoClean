@@ -5,7 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.domain.use_case.database.LocalDatabaseUseCases
 import com.e444er.cleanmovie.core.domain.use_case.firebase.FirebaseCoreUseCases
-import com.e444er.cleanmovie.core.domain.use_case.firebase.movie.GetFavoriteMovieIdsFromLocalDatabaseThenUpdateToFirebaseUseCase
+import com.e444er.cleanmovie.core.domain.use_case.firebase.movie.GetFavoriteMoviesFromLocalDatabaseThenUpdateToFirebaseUseCase
 import com.e444er.cleanmovie.core.domain.use_case.firebase.movie.GetMovieWatchListFromLocalDatabaseThenUpdateToFirebase
 import com.e444er.cleanmovie.core.domain.use_case.firebase.tv.GetFavoriteTvSeriesFromLocalDatabaseThenUpdateToFirebase
 import com.e444er.cleanmovie.core.domain.use_case.firebase.tv.GetTvSeriesWatchFromLocalDatabaseThenUpdateToFirebase
@@ -25,7 +25,7 @@ class SettingsViewModel @Inject constructor(
     private val settingUseCase: SettingUseCase,
     private val firebaseCoreUseCases: FirebaseCoreUseCases,
     private val localDatabaseUseCases: LocalDatabaseUseCases,
-    private val getFavoriteMovieIdsFromLocalDatabaseThenUpdateToFirebaseUseCase: GetFavoriteMovieIdsFromLocalDatabaseThenUpdateToFirebaseUseCase,
+    private val getFavoriteMoviesFromLocalDatabaseThenUpdateToFirebaseUseCase: GetFavoriteMoviesFromLocalDatabaseThenUpdateToFirebaseUseCase,
     private val getMovieWatchListFromLocalDatabaseThenUpdateToFirebase: GetMovieWatchListFromLocalDatabaseThenUpdateToFirebase,
     private val getFavoriteTvSeriesFromLocalDatabaseThenUpdateToFirebase: GetFavoriteTvSeriesFromLocalDatabaseThenUpdateToFirebase,
     private val getTvSeriesWatchFromLocalDatabaseThenUpdateToFirebase: GetTvSeriesWatchFromLocalDatabaseThenUpdateToFirebase
@@ -86,8 +86,8 @@ class SettingsViewModel @Inject constructor(
 
     private fun getMovieFavoriteFromLocalDatabaseThenUpdateFirebase() {
         viewModelScope.launch {
-            getFavoriteMovieIdsFromLocalDatabaseThenUpdateToFirebaseUseCase(
-                onSuccess = { return@getFavoriteMovieIdsFromLocalDatabaseThenUpdateToFirebaseUseCase },
+            getFavoriteMoviesFromLocalDatabaseThenUpdateToFirebaseUseCase(
+                onSuccess = { return@getFavoriteMoviesFromLocalDatabaseThenUpdateToFirebaseUseCase },
                 onFailure = { emitUiEvent(BaseUiEvent.ShowSnackbar(it)) }
             )
         }

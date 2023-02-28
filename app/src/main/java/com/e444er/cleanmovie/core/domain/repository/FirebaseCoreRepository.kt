@@ -8,32 +8,5 @@ interface FirebaseCoreRepository {
     fun getCurrentUser(): FirebaseUser?
     fun signOut()
 
-    fun addMovieToFavoriteList(
-        userUid: String,
-        data: Map<String, List<Int>>,
-        onSuccess: () -> Unit,
-        onFailure: (uiText: UiText) -> Unit
-    )
 
-    fun addMovieToWatchList(
-        userUid: String,
-        data: Map<String, List<Int>>,
-        onSuccess: () -> Unit,
-        onFailure: (uiText: UiText) -> Unit
-    )
-
-    fun addTvSeriesToFavoriteList(
-        userUid: String,
-        data: Map<String, List<Int>>,
-        onSuccess: () -> Unit,
-        onFailure: (uiText: UiText) -> Unit
-
-    )
-
-    fun addTvSeriesToWatchList(
-        userUid: String,
-        data: Map<String, List<Int>>,
-        onSuccess: () -> Unit,
-        onFailure: (uiText: UiText) -> Unit
-    )
 }
