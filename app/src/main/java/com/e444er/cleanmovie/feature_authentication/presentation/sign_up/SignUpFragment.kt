@@ -88,8 +88,6 @@ class SignUpFragment : Fragment(R.layout.fragment_sign_up) {
             binding.edtEmail.isEnabled = !isLoading
             binding.edtPassword.isEnabled = !isLoading
             binding.btnSignUp.isEnabled = !isLoading
-            binding.btnSignInFacebook.isEnabled = !isLoading
-            binding.btnSignInGoogle.isEnabled = !isLoading
             binding.progressBar.isVisible = isLoading
         }
     }

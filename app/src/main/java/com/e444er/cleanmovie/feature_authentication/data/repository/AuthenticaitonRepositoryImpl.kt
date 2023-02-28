@@ -3,6 +3,7 @@ package com.e444er.cleanmovie.feature_authentication.data.repository
 import com.e444er.cleanmovie.core.presentation.util.UiText
 import com.e444er.cleanmovie.feature_authentication.domain.repository.AuthenticationRepository
 import com.e444er.cleanmovie.feature_authentication.domain.util.FirebaseAuthMessage
+import com.google.firebase.auth.AuthCredential
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseAuthException
 import javax.inject.Inject
@@ -59,6 +60,18 @@ class AuthenticaitonRepositoryImpl @Inject constructor(
             .addOnFailureListener { exception ->
                 setException(exception = exception, onFailure = onFailure)
             }
+    }
+
+    override fun signInWithCredential(
+        credential: AuthCredential,
+        onSuccess: () -> Unit,
+        onFailure: (uiText: UiText) -> Unit
+    ) {
+        firebaseAuth.signInWithCredential(credential).addOnSuccessListener {
+            onSuccess()
+        }.addOnFailureListener { exception ->
+            setException(exception = exception, onFailure = onFailure)
+        }
     }
 
     private fun setException(
