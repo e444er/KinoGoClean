@@ -3,6 +3,11 @@ package com.e444er.cleanmovie.di
 import com.e444er.cleanmovie.core.data.repository.FirebaseCoreRepositoryImpl
 import com.e444er.cleanmovie.core.domain.repository.FirebaseCoreRepository
 import com.e444er.cleanmovie.core.domain.use_case.*
+import com.e444er.cleanmovie.core.domain.use_case.firebase.*
+import com.e444er.cleanmovie.core.domain.use_case.firebase.movie.AddMovieToFavoriteListInFirebaseUseCase
+import com.e444er.cleanmovie.core.domain.use_case.firebase.movie.AddMovieToWatchListInFirebaseUseCase
+import com.e444er.cleanmovie.core.domain.use_case.firebase.tv.AddTvSeriesToFavoriteListInFirebaseUseCase
+import com.e444er.cleanmovie.core.domain.use_case.firebase.tv.AddTvSeriesToWatchListInFirebaseUseCase
 import com.e444er.cleanmovie.feature_authentication.data.repository.AuthenticaitonRepositoryImpl
 import com.e444er.cleanmovie.feature_authentication.domain.repository.AuthenticationRepository
 import com.e444er.cleanmovie.feature_authentication.domain.use_case.CreateUserWithEmailAndPasswordUseCase

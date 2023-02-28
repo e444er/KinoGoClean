@@ -1,4 +1,4 @@
-package com.e444er.cleanmovie.core.domain.use_case
+package com.e444er.cleanmovie.core.domain.use_case.database.movie
 
 import com.e444er.cleanmovie.core.domain.models.FavoriteMovie
 import com.e444er.cleanmovie.core.domain.repository.LocalDatabaseRepository

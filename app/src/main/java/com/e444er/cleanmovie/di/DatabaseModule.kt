@@ -6,6 +6,13 @@ import com.e444er.cleanmovie.core.data.data_source.local.MovaDatabase
 import com.e444er.cleanmovie.core.data.repository.LocalDatabaseRepositoryImpl
 import com.e444er.cleanmovie.core.domain.repository.LocalDatabaseRepository
 import com.e444er.cleanmovie.core.domain.use_case.*
+import com.e444er.cleanmovie.core.domain.use_case.database.ClearAllDatabaseUseCase
+import com.e444er.cleanmovie.core.domain.use_case.database.LocalDatabaseUseCases
+import com.e444er.cleanmovie.core.domain.use_case.database.movie.GetFavoriteMovieIdsUseCase
+import com.e444er.cleanmovie.core.domain.use_case.database.movie.GetFavoriteMoviesUseCase
+import com.e444er.cleanmovie.core.domain.use_case.database.movie.ToggleMovieForFavoriteListUseCase
+import com.e444er.cleanmovie.core.domain.use_case.database.movie.ToggleMovieForWatchListUseCase
+import com.e444er.cleanmovie.core.domain.use_case.database.tv.*
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

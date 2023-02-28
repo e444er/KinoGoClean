@@ -1,4 +1,4 @@
-package com.e444er.cleanmovie.core.domain.use_case
+package com.e444er.cleanmovie.core.domain.use_case.firebase
 
 import com.e444er.cleanmovie.core.domain.repository.FirebaseCoreRepository
 import javax.inject.Inject

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.e444er.cleanmovie.core.domain.models.Movie
 import com.e444er.cleanmovie.core.domain.models.TvSeries
-import com.e444er.cleanmovie.core.domain.use_case.LocalDatabaseUseCases
+import com.e444er.cleanmovie.core.domain.use_case.database.LocalDatabaseUseCases
 import com.e444er.cleanmovie.core.presentation.util.BaseUiEvent
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
