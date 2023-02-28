@@ -135,6 +135,11 @@
     <string name="error_invalid_user_token">Invalid user token provided.</string>
     <string name="error_operation_not_allowed">This operation is not allowed.</string>
     <string name="error_weak_password">Password is too weak.</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    // FirebaseFirestore Error Message
+    <string name="permission_denied_error">You do not have the necessary permissions to perform this operation. Please contact the administrator.</string>
+    <string name="not_found_error">The requested record/document could not be found. Please try a different query.</string>
+    <string name="already_exists_error">The record could not be added because it already exists. Please add a different record.</string>
+    <string name="aborted_error">The operation could not be completed because the required resource is no longer available. Please try again later.</string>
+    <string name="unavailable_error">Unable to connect to Firebase servers. Please check your internet connection and try again.</string>
 </resources>
