@@ -8,6 +8,8 @@ import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.dto.Genre
 import com.e444er.cleanmovie.core.data.models.enums.Category
 import com.e444er.cleanmovie.core.data.models.enums.isTv
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.core.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.core.domain.repository.isAvaliable
 import com.e444er.cleanmovie.core.presentation.util.UiEvent
@@ -20,8 +22,6 @@ import com.e444er.cleanmovie.feature_explore.presentation.event.ExploreFragmentE
 import com.e444er.cleanmovie.feature_explore.presentation.explore.event.ExploreAdapterLoadStateEvent
 import com.e444er.cleanmovie.feature_explore.presentation.explore.state.ExplorePagingAdapterLoadState
 import com.e444er.cleanmovie.feature_explore.presentation.filter_bottom_sheet.state.FilterBottomState
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.flow.*

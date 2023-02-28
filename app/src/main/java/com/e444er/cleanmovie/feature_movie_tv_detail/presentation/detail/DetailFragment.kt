@@ -6,7 +6,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,11 +14,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.core.domain.models.Movie
 import com.e444er.cleanmovie.core.presentation.util.addOnBackPressedCallback
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.core.util.toolBarTextVisibilityByScrollPositionOfNestedScrollView
 import com.e444er.cleanmovie.databinding.FragmentDetailBinding
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.presentation.home.HandlePagingLoadStates
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.NowPlayingRecyclerAdapter
 import com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.adapter.DetailActorAdapter

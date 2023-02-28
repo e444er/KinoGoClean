@@ -31,7 +31,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/large_margin"
-        android:layout_marginTop="8dp"
+        android:ellipsize="end"
+        android:lines="2"
         android:textSize="18sp"
         app:layout_constraintEnd_toStartOf="@+id/guideline4"
         app:layout_constraintHorizontal_bias="0.0"
@@ -50,23 +51,13 @@
         app:layout_constraintTop_toBottomOf="@+id/tvName"
         tools:text="2009" />
 
-    <TextView
-        android:id="@+id/tvRuntime"
-        style="@style/Mova.Subtitle1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/medium_margin"
-        android:textColor="@color/subtitleColor"
-        app:layout_constraintStart_toEndOf="@+id/tvReleaseDate"
-        app:layout_constraintTop_toTopOf="@+id/tvReleaseDate"
-        tools:text="2sa. 42 dk. (2h 45m)" />
-
 
     <TextView
         android:id="@+id/tvOverview"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:paddingTop="@dimen/small_padding"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:paddingTop="@dimen/medium_padding"
         android:scrollbars="vertical"
         android:textColor="?attr/colorOnBackground"
         app:layout_constraintBottom_toTopOf="@+id/guideline5"
@@ -113,6 +104,7 @@
         app:layout_constraintStart_toStartOf="@+id/btnFavoriteList"
         app:layout_constraintTop_toBottomOf="@+id/btnFavoriteList" />
 
+
     <ImageButton
         android:id="@+id/ibShare"
         style="@style/CircleImageLargeButton"
@@ -140,7 +132,7 @@
         style="@style/CircleImageLargeButton"
         android:contentDescription="@string/add_watch_list"
         android:padding="@dimen/small_padding"
-        android:src="@drawable/ic_baseline_video_library_24"
+        android:src="@drawable/outline_video_library_24"
         app:layout_constraintBottom_toBottomOf="@+id/btnFavoriteList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -172,11 +164,12 @@
         android:id="@+id/detailSection"
         android:layout_width="match_parent"
         android:layout_height="@dimen/iconSizeLarge"
+        android:layout_marginTop="@dimen/small_margin"
+        android:background="@drawable/text_ripple"
         android:clickable="true"
         android:focusable="true"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingTop="@dimen/medium_padding"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/materialDivider3">

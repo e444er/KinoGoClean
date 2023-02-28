@@ -1,6 +1,6 @@
 package com.e444er.cleanmovie.feature_home.data.dto
 
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.Movie
 import com.squareup.moshi.Json
 
 data class MovieDto(

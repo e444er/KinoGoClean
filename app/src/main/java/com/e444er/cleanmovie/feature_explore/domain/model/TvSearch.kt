@@ -1,6 +1,7 @@
 package com.e444er.cleanmovie.feature_explore.domain.model
 
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
+import com.e444er.cleanmovie.core.domain.models.TvSeries
+
 
 data class TvSearch(
     val id: Int,

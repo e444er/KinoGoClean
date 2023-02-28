@@ -2,9 +2,9 @@ package com.e444er.cleanmovie.feature_movie_tv_detail.data.paging_source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.e444er.cleanmovie.core.domain.models.Movie
 import com.e444er.cleanmovie.core.util.Constants.STARTING_PAGE
 import com.e444er.cleanmovie.feature_home.data.dto.toMovieList
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.remote.DetailApi
 import okio.IOException
 import retrofit2.HttpException

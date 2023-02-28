@@ -6,9 +6,9 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.databinding.MovieRowBinding
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.DiffUtilCallBack
 
 abstract class BaseMovieAndTvRecyclerAdapter<T : Any>(

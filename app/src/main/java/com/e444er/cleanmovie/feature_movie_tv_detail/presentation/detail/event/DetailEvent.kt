@@ -1,7 +1,8 @@
 package com.e444er.cleanmovie.feature_movie_tv_detail.presentation.detail.event
 
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
+
 
 sealed class DetailEvent {
     data class IntentToImdbWebSite(val url: String) : DetailEvent()

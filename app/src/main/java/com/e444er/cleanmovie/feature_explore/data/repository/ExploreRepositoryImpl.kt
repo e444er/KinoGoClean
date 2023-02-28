@@ -3,6 +3,8 @@ package com.e444er.cleanmovie.feature_explore.data.repository
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.core.util.Constants
 import com.e444er.cleanmovie.feature_explore.data.dto.SearchDto
 import com.e444er.cleanmovie.feature_explore.data.paging_source.DiscoverMoviePagingSource
@@ -11,8 +13,6 @@ import com.e444er.cleanmovie.feature_explore.data.paging_source.MultiSearchPagin
 import com.e444er.cleanmovie.feature_explore.data.remote.ExploreApi
 import com.e444er.cleanmovie.feature_explore.domain.repository.ExploreRepository
 import com.e444er.cleanmovie.feature_explore.presentation.filter_bottom_sheet.state.FilterBottomState
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

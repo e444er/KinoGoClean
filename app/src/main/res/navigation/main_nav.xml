@@ -16,11 +16,11 @@
             app:enterAnim="@anim/slide_in_left"/>
         <argument
             android:name="Movie"
-            app:argType="com.e444er.cleanmovie.feature_home.domain.models.Movie"
+            app:argType="com.e444er.cleanmovie.core.domain.models.Movie"
             app:nullable="true" />
         <argument
             android:name="TvSeries"
-            app:argType="com.e444er.cleanmovie.feature_home.domain.models.TvSeries"
+            app:argType="com.e444er.cleanmovie.core.domain.models.TvSeries"
             app:nullable="true" />
         <action
             android:id="@+id/action_detailBottomSheet_to_loginFragment"
@@ -153,6 +153,7 @@
             app:popUpTo="@id/signUpFragment"
             app:popUpToInclusive="true" />
     </fragment>
+
     <fragment
         android:id="@+id/forgetPasswordFragment"
         android:name="com.e444er.cleanmovie.feature_authentication.presentation.forget_password.ForgetPasswordFragment"

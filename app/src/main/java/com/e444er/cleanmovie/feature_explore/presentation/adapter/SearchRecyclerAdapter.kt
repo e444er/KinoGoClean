@@ -4,8 +4,8 @@ import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.ImageLoader
-import com.e444er.cleanmovie.core.data.dto.Genre
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_explore.data.dto.SearchDto
 import com.e444er.cleanmovie.feature_explore.data.dto.toMovieSearch
 import com.e444er.cleanmovie.feature_explore.data.dto.toPersonSearch
@@ -17,11 +17,8 @@ import com.e444er.cleanmovie.feature_explore.domain.util.MediaType
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.viewHolder.SearchMovieViewHolder
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.viewHolder.SearchPersonViewHolder
 import com.e444er.cleanmovie.feature_explore.presentation.adapter.viewHolder.SearchTvViewHolder
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
-import javax.inject.Inject
 
-class SearchRecyclerAdapter:
+class SearchRecyclerAdapter :
     PagingDataAdapter<SearchDto, RecyclerView.ViewHolder>(diffCallback = diffCallback) {
 
     private var onMovieSearchClickListener: (Movie) -> Unit = {}

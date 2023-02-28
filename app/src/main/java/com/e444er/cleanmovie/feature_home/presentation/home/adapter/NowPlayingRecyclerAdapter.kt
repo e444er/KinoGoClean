@@ -10,10 +10,10 @@ import coil.load
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageSize
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.core.presentation.util.HandleUtils
 import com.e444er.cleanmovie.databinding.NowPlayingRowBinding
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import timber.log.Timber
 
 class NowPlayingRecyclerAdapter :

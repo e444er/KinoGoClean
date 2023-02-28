@@ -5,7 +5,6 @@ import android.view.View
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.Toast
-import androidx.activity.OnBackPressedCallback
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -15,11 +14,11 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.e444er.cleanmovie.R
+import com.e444er.cleanmovie.core.domain.models.Movie
 import com.e444er.cleanmovie.core.domain.repository.isAvaliable
 import com.e444er.cleanmovie.core.presentation.util.*
 import com.e444er.cleanmovie.core.util.getCountryIsoCode
 import com.e444er.cleanmovie.databinding.FragmentHomeBinding
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
 import com.e444er.cleanmovie.feature_home.presentation.home.adapter.*
 import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeAdapterLoadStateEvent
 import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeEvent
@@ -28,6 +27,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 @AndroidEntryPoint
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -61,12 +61,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         setupRecyclerAdapters()
         setAdaptersClickListener()
         setupListenerSeeAllClickEvents()
+
         addOnBackPressedCallback(
             activity = requireActivity(),
             onBackPressed = {
                 viewModel.onEvent(HomeEvent.OnBackPressed)
             }
         )
+
         binding.btnNavigateUp.setOnClickListener {
             viewModel.onEvent(HomeEvent.NavigateUpFromSeeAllSection)
         }
@@ -130,9 +132,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 launch {
                     viewModel.eventFlow.collectLatest { uiEvent ->
                         when (uiEvent) {
-                            is BaseUiEvent.NavigateTo -> findNavController().navigate(
-                                uiEvent.directions
-                            )
+                            is BaseUiEvent.NavigateTo -> {
+                                Timber.d("asdasd")
+                                findNavController().navigate(
+                                    uiEvent.directions
+                                )
+                            }
                             is BaseUiEvent.ShowSnackbar -> {
                                 Snackbar.make(
                                     requireView(),
@@ -304,6 +309,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             recyclerViewSeeAll.removeAllViews()
         }
     }
+
     private fun setupListenerSeeAllClickEvents() {
         binding.apply {
 

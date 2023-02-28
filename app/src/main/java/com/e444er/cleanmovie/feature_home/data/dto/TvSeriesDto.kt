@@ -1,6 +1,6 @@
 package com.e444er.cleanmovie.feature_home.data.dto
 
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.squareup.moshi.Json
 
 data class TvSeriesDto(

@@ -1,8 +1,8 @@
 package com.e444er.cleanmovie.feature_movie_tv_detail.domain.repository
 
 import androidx.paging.PagingData
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.movie.MovieDetailDto
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.tv.TvDetailDto
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.video.VideosDto

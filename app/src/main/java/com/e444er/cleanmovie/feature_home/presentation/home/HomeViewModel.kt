@@ -4,12 +4,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.core.domain.repository.ConnectivityObserver
 import com.e444er.cleanmovie.core.domain.repository.isAvaliable
 import com.e444er.cleanmovie.core.presentation.util.BaseUiEvent
 import com.e444er.cleanmovie.core.presentation.util.UiText
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_home.domain.use_cases.HomeUseCases
 import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeAdapterLoadStateEvent
 import com.e444er.cleanmovie.feature_home.presentation.home.event.HomeEvent

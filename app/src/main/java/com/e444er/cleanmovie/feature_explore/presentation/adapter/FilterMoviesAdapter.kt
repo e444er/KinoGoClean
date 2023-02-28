@@ -6,10 +6,9 @@ import coil.load
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageApi
 import com.e444er.cleanmovie.core.data.data_source.remote.ImageSize
+import com.e444er.cleanmovie.core.domain.models.Movie
 import com.e444er.cleanmovie.core.presentation.util.BaseMovieAndTvRecyclerAdapter
 import com.e444er.cleanmovie.databinding.MovieRowBinding
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-
 class FilterMoviesAdapter : BaseMovieAndTvRecyclerAdapter<Movie>() {
 
     override fun onBindViewHold(

@@ -2,13 +2,13 @@ package com.e444er.cleanmovie.feature_explore.data.paging_source
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.core.presentation.util.toDiscoveryQueryString
 import com.e444er.cleanmovie.core.presentation.util.toSeparateWithComma
 import com.e444er.cleanmovie.core.util.Constants
 import com.e444er.cleanmovie.feature_explore.data.remote.ExploreApi
 import com.e444er.cleanmovie.feature_explore.presentation.filter_bottom_sheet.state.FilterBottomState
 import com.e444er.cleanmovie.feature_home.data.dto.toTvSeries
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import okio.IOException
 import retrofit2.HttpException
 import javax.inject.Inject

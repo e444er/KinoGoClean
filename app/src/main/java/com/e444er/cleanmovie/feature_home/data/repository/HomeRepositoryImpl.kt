@@ -5,11 +5,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.e444er.cleanmovie.core.data.models.enums.MoviesApiFunction
 import com.e444er.cleanmovie.core.data.models.enums.TvSeriesApiFunction
+import com.e444er.cleanmovie.core.domain.models.Movie
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.core.util.Constants
 import com.e444er.cleanmovie.feature_home.data.paging_source.TvPagingSource
 import com.e444er.cleanmovie.feature_home.data.remote.HomeApi
-import com.e444er.cleanmovie.feature_home.domain.models.Movie
-import com.e444er.cleanmovie.feature_home.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_home.domain.repository.HomeRepository
 import com.e444er.cleanmovie.feature_home.data.paging_source.MoviesPagingSource
 import kotlinx.coroutines.flow.Flow
