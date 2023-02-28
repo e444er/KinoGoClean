@@ -7,6 +7,7 @@ import android.widget.AdapterView.OnItemSelectedListener
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.os.LocaleListCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -14,7 +15,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import com.e444er.cleanmovie.R
 import com.e444er.cleanmovie.core.domain.supportedLanguages
+import com.e444er.cleanmovie.core.presentation.util.AlertDialogUtil
+import com.e444er.cleanmovie.core.presentation.util.BaseUiEvent
+import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.databinding.FragmentSettingsBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -58,6 +63,19 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
         }
 
+        binding.txtLogOut.setOnClickListener {
+            AlertDialogUtil.showAlertDialog(
+                context = requireContext(),
+                title = R.string.are_you_sure_log_out,
+                message = R.string.log_out_message,
+                positiveBtnMessage = R.string.log_out,
+                negativeBtnMessage = R.string.cancel,
+                onClickPositiveButton = {
+                    viewModel.logOut()
+                }
+            )
+        }
+
     }
 
     private fun setListenerSwitch() {
@@ -79,24 +97,51 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
     private fun collectDataLifecycleAware() {
         viewLifecycleOwner.lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED)
-            {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
                 launch {
-                    viewModel.getUIMode().collectLatest { uiMode ->
-                        binding.switchDarkTheme.isChecked =
-                            uiMode == AppCompatDelegate.MODE_NIGHT_YES
-                    }
+                    collectUiEvent()
                 }
+                launch { collectUIMode() }
+
+                launch { collectLanguageIsoCode() }
 
                 launch {
-                    viewModel.getLanguageIsoCode().collectLatest { langIsoCode ->
-                        val selectedLangIsoIndex = supportedLanguages.indexOfFirst {
-                            it.iso == langIsoCode
-                        }
-                        binding.spinner.setSelection(selectedLangIsoIndex)
+                    viewModel.isSignedIn.collectLatest { isUserSignIn ->
+                        binding.txtLogOut.isVisible = isUserSignIn
                     }
                 }
             }
+        }
+    }
+
+    private suspend fun collectUiEvent() {
+        viewModel.eventFlow.collectLatest { event ->
+            when (event) {
+                is BaseUiEvent.ShowSnackbar -> {
+                    Snackbar.make(
+                        requireView(),
+                        event.uiText.asString(requireContext()),
+                        Snackbar.LENGTH_SHORT
+                    ).show()
+                }
+                else -> return@collectLatest
+            }
+        }
+    }
+
+    private suspend fun collectUIMode() {
+        viewModel.getUIMode().collectLatest { uiMode ->
+            binding.switchDarkTheme.isChecked =
+                uiMode == AppCompatDelegate.MODE_NIGHT_YES
+        }
+    }
+
+    private suspend fun collectLanguageIsoCode() {
+        viewModel.getLanguageIsoCode().collectLatest { langIsoCode ->
+            val selectedLangIsoIndex = supportedLanguages.indexOfFirst {
+                it.iso == langIsoCode
+            }
+            binding.spinner.setSelection(selectedLangIsoIndex)
         }
     }
 
