@@ -38,8 +38,8 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
         binding.listTypeChipGroup.setOnCheckedStateChangeListener { group, _ ->
             val listType =
-                if (group.checkedChipId == binding.movieChip.id) ListType.MOVIE else ListType.TVSERIES
-            viewModel.onEvent(ListEvent.UpdateListType(listType = listType))
+                if (group.checkedChipId == binding.movieChip.id) ChipType.MOVIE else ChipType.TVSERIES
+            viewModel.onEvent(ListEvent.UpdateListType(chipType = listType))
         }
 
         binding.tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -89,8 +89,8 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
             binding.progressBar.isVisible = state.isLoading
 
-            when (state.whichTypeOfList) {
-                ListType.MOVIE -> {
+            when (state.chipType) {
+                ChipType.MOVIE -> {
                     movieAdapter.submitList(state.movieList)
                     binding.recyclerView.swapAdapter(movieAdapter, true)
 
@@ -98,7 +98,7 @@ class ListFragment : Fragment(R.layout.fragment_list) {
                         viewModel.onEvent(ListEvent.ClickedMovieItem(movie))
                     }
                 }
-                ListType.TVSERIES -> {
+                ChipType.TVSERIES -> {
                     tvSeriesAdapter.submitList(state.tvSeriesList)
                     binding.recyclerView.swapAdapter(tvSeriesAdapter, true)
                     tvSeriesAdapter.setOnclickListener { tvSeries ->

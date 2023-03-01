@@ -78,14 +78,7 @@ class LoginViewModel @Inject constructor(
             email = email,
             password = password,
             onSuccess = {
-                val movieJob = getMoviesFromFirebaseThenUpdateLocalDatabase()
-                val tvSeriesJob = getTvSeriesFromFirebaseThenUpdateLocalDatabase()
-                viewModelScope.launch {
-                    movieJob.join()
-                    tvSeriesJob.join()
-                    _uiEvent.emit(UiEvent.NavigateTo(LoginFragmentDirections.actionLoginFragmentToHomeFragment()))
-                    _isLoading.value = false
-                }
+                onLoginSuccess()
             },
             onFailure = { uiText ->
                 emitUiEvent(UiEvent.ShowSnackbar(uiText = uiText))
@@ -105,6 +98,17 @@ class LoginViewModel @Inject constructor(
         }
     }
 
+    private fun onLoginSuccess() {
+        val movieJob = getMoviesFromFirebaseThenUpdateLocalDatabase()
+        val tvSeriesJob = getTvSeriesFromFirebaseThenUpdateLocalDatabase()
+        viewModelScope.launch {
+            movieJob.join()
+            tvSeriesJob.join()
+            _uiEvent.emit(UiEvent.NavigateTo(LoginFragmentDirections.actionLoginFragmentToHomeFragment()))
+            _isLoading.value = false
+        }
+    }
+
     private fun emitUiEvent(uiEvent: UiEvent) {
         viewModelScope.launch {
             _uiEvent.emit(uiEvent)
@@ -117,9 +121,7 @@ class LoginViewModel @Inject constructor(
             val result = signInWithCredentialUseCase(
                 task = task,
                 onSuccess = {
-                    emitUiEvent(UiEvent.ShowSnackbar(UiText.DynamicText("Successfully login.")))
-                    emitUiEvent(UiEvent.NavigateTo(LoginFragmentDirections.actionLoginFragmentToHomeFragment()))
-                    _isLoading.value = false
+                    onLoginSuccess()
                 },
                 onFailure = { uiText ->
                     emitUiEvent(UiEvent.ShowSnackbar(uiText))

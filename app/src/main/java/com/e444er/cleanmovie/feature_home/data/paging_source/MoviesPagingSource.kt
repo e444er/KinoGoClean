@@ -8,6 +8,8 @@ import com.e444er.cleanmovie.core.util.Constants.DEFAULT_REGION
 import com.e444er.cleanmovie.core.util.Constants.STARTING_PAGE
 import com.e444er.cleanmovie.feature_home.data.dto.toMovieList
 import com.e444er.cleanmovie.feature_home.data.remote.HomeApi
+import kotlinx.coroutines.withTimeout
+import timber.log.Timber
 import javax.inject.Inject
 
 class MoviesPagingSource @Inject constructor(
@@ -19,24 +21,31 @@ class MoviesPagingSource @Inject constructor(
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Movie> {
 
-        val nextPage = params.key ?: STARTING_PAGE
+        val timeOutTimeMilli = 15000L
 
+        val nextPage = params.key ?: STARTING_PAGE
         return try {
             val response = when (apiFunc) {
                 MoviesApiFunction.NOW_PLAYING_MOVIES -> {
-                    homeApi.getNowPlayingMovies(
-                        page = nextPage, language = language, region = region
-                    )
+                    withTimeout(timeOutTimeMilli) {
+                        homeApi.getNowPlayingMovies(
+                            page = nextPage, language = language, region = region
+                        )
+                    }
                 }
                 MoviesApiFunction.POPULAR_MOVIES -> {
-                    homeApi.getPopularMovies(
-                        page = nextPage, language = language, region = region
-                    )
+                    withTimeout(timeOutTimeMilli) {
+                        homeApi.getPopularMovies(
+                            page = nextPage, language = language, region = region
+                        )
+                    }
                 }
                 MoviesApiFunction.TOP_RATED_MOVIES -> {
-                    homeApi.getTopRatedMovies(
-                        page = nextPage, language = language, region = region
-                    )
+                    withTimeout(timeOutTimeMilli) {
+                        homeApi.getTopRatedMovies(
+                            page = nextPage, language = language, region = region
+                        )
+                    }
                 }
             }
             LoadResult.Page(
@@ -46,6 +55,7 @@ class MoviesPagingSource @Inject constructor(
             )
 
         } catch (e: Exception) {
+            Timber.d(e)
             LoadResult.Error(throwable = e)
         }
     }
@@ -55,4 +65,3 @@ class MoviesPagingSource @Inject constructor(
         return state.anchorPosition
     }
 }
-

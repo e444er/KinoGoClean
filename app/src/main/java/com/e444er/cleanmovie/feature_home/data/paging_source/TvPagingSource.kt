@@ -7,6 +7,7 @@ import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.core.util.Constants.STARTING_PAGE
 import com.e444er.cleanmovie.feature_home.data.dto.toTvSeries
 import com.e444er.cleanmovie.feature_home.data.remote.HomeApi
+import kotlinx.coroutines.withTimeout
 import javax.inject.Inject
 
 class TvPagingSource @Inject constructor(
@@ -14,11 +15,9 @@ class TvPagingSource @Inject constructor(
     private val language: String,
     private val apiFunction: TvSeriesApiFunction
 ) : PagingSource<Int, TvSeries>() {
-    override fun getRefreshKey(state: PagingState<Int, TvSeries>): Int? {
-        return null
-    }
-
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, TvSeries> {
+
+        val timeOutTimeMilli = 15000L
 
         val nextPage = params.key ?: STARTING_PAGE
 
@@ -26,19 +25,22 @@ class TvPagingSource @Inject constructor(
 
             val response = when (apiFunction) {
                 TvSeriesApiFunction.POPULAR_TV -> {
-                    homeApi.getPopularTvs(
-                        page = nextPage,
-                        language = language
-                    )
+                    withTimeout(timeOutTimeMilli) {
+                        homeApi.getPopularTvs(
+                            page = nextPage,
+                            language = language
+                        )
+                    }
                 }
                 TvSeriesApiFunction.TOP_RATED_TV -> {
-                    homeApi.getTopRatedTvs(
-                        page = nextPage,
-                        language = language
-                    )
+                    withTimeout(timeOutTimeMilli) {
+                        homeApi.getTopRatedTvs(
+                            page = nextPage,
+                            language = language
+                        )
+                    }
                 }
             }
-
 
             LoadResult.Page(
                 data = response.results.toTvSeries(),
@@ -50,5 +52,9 @@ class TvPagingSource @Inject constructor(
         } catch (e: Exception) {
             LoadResult.Error(throwable = e)
         }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, TvSeries>): Int? {
+        return null
     }
 }

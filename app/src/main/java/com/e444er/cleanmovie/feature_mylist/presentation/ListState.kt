@@ -5,7 +5,7 @@ import com.e444er.cleanmovie.core.domain.models.TvSeries
 
 data class ListState(
     val selectedTab: ListTab = ListTab.FAVORITELIST,
-    val whichTypeOfList: ListType = ListType.MOVIE,
+    val chipType: ChipType = ChipType.MOVIE,
     val isLoading: Boolean = false,
     val movieList: List<Movie> = emptyList(),
     val tvSeriesList: List<TvSeries> = emptyList()
@@ -20,7 +20,7 @@ enum class ListTab() {
 fun ListTab.isWatchList(): Boolean = this == ListTab.WATCHLIST
 fun ListTab.isFavoriteList(): Boolean = this == ListTab.FAVORITELIST
 
-enum class ListType {
+enum class ChipType {
     MOVIE,
     TVSERIES
 }
