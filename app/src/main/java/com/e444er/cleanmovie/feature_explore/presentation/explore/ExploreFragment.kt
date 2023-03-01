@@ -24,6 +24,7 @@ import com.e444er.cleanmovie.feature_explore.presentation.adapter.SearchRecycler
 import com.e444er.cleanmovie.feature_explore.presentation.event.ExploreFragmentEvent
 import com.e444er.cleanmovie.feature_explore.presentation.explore.event.ExploreAdapterLoadStateEvent
 import com.e444er.cleanmovie.feature_home.presentation.home.HandlePagingLoadStates
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
@@ -60,6 +61,9 @@ class ExploreFragment @Inject constructor(
         viewModel = ViewModelProvider(requireActivity())[ExploreViewModel::class.java]
         val binding = FragmentExploreBinding.bind(view)
         _binding = binding
+
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         observeConnectivityStatus()
         collectUiEvent()

@@ -14,6 +14,7 @@ import com.e444er.cleanmovie.core.presentation.util.BaseUiEvent
 import com.e444er.cleanmovie.databinding.FragmentListBinding
 import com.e444er.cleanmovie.feature_mylist.presentation.adapter.MovieAdapter
 import com.e444er.cleanmovie.feature_mylist.presentation.adapter.TvSeriesAdapter
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.tabs.TabLayout
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -35,6 +36,9 @@ class ListFragment : Fragment(R.layout.fragment_list) {
 
         val binding = FragmentListBinding.bind(view)
         _binding = binding
+
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         binding.listTypeChipGroup.setOnCheckedStateChangeListener { group, _ ->
             val listType =

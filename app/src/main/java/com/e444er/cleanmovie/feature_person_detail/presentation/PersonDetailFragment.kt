@@ -23,6 +23,7 @@ import com.e444er.cleanmovie.feature_explore.domain.util.MediaType
 import com.e444er.cleanmovie.feature_person_detail.domain.model.*
 import com.e444er.cleanmovie.feature_person_detail.presentation.adapter.PersonCastMovieAdapter
 import com.e444er.cleanmovie.feature_person_detail.presentation.adapter.PersonCrewMovieAdapter
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -43,6 +44,9 @@ class PersonDetailFragment : Fragment(R.layout.fragment_person_detail) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentPersonDetailBinding.bind(view)
+
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         binding.txtBio.movementMethod = ScrollingMovementMethod()
 

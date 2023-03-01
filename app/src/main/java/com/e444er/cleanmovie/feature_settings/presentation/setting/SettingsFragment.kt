@@ -19,6 +19,7 @@ import com.e444er.cleanmovie.core.presentation.util.AlertDialogUtil
 import com.e444er.cleanmovie.core.presentation.util.BaseUiEvent
 import com.e444er.cleanmovie.core.presentation.util.asString
 import com.e444er.cleanmovie.databinding.FragmentSettingsBinding
+import com.google.android.gms.ads.AdRequest
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collectLatest
@@ -34,6 +35,9 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         _binding = FragmentSettingsBinding.bind(view)
+
+        val adRequest = AdRequest.Builder().build()
+        binding.adView.loadAd(adRequest)
 
         collectDataLifecycleAware()
         setListenerSwitch()
