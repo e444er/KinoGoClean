@@ -1,6 +1,7 @@
 package com.e444er.cleanmovie.feature_movie_tv_detail.domain.models.detail
 
 import com.e444er.cleanmovie.core.data.dto.Genre
+import com.e444er.cleanmovie.core.domain.models.TvSeries
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.detail.tv.Season
 import com.e444er.cleanmovie.feature_movie_tv_detail.data.dto.watch_provider.WatchProviders
 import com.e444er.cleanmovie.feature_movie_tv_detail.domain.models.credit.Credit
@@ -25,3 +26,19 @@ data class TvDetail(
     val credit: Credit,
     val watchProviders: WatchProviders
 )
+
+
+fun TvDetail.toTvSeries(): TvSeries {
+    return TvSeries(
+        id = id,
+        overview = overview,
+        name = name,
+        originalName = originalName,
+        posterPath = posterPath,
+        firstAirDate = firstAirDate,
+        genreIds = genres.map { it.id },
+        voteCount = voteCount,
+        voteAverage = voteAverage,
+        genreByOne = genres.first().name
+    )
+}

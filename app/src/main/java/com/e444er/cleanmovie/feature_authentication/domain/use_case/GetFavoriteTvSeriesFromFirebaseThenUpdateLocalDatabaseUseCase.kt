@@ -10,16 +10,17 @@ import dagger.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class GetFavoriteTvSeriesFromFirebaseThenUpdateLocalDatabaseUseCase @AssistedInject constructor(
+class GetFavoriteTvSeriesFromFirebaseThenUpdateLocalDatabaseUseCase @Inject constructor(
     private val firebaseCoreRepository: FirebaseCoreRepository,
     private val firebaseTvSeriesRepository: FirebaseTvSeriesRepository,
-    private val localDatabaseRepository: LocalDatabaseRepository,
-    @Assisted private val coroutineScope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+    private val localDatabaseRepository: LocalDatabaseRepository
 ) {
 
     operator fun invoke(
-        onFailure: (uiText: UiText) -> Unit
+        onFailure: (uiText: UiText) -> Unit,
+        coroutineScope: CoroutineScope
     ) {
         val currentUser = firebaseCoreRepository.getCurrentUser()
         val userUid = currentUser?.uid

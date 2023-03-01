@@ -7,7 +7,7 @@ sealed class DetailUiEvent {
     data class ShowSnackbar(val uiText: UiText) : DetailUiEvent()
     object PopBackStack : DetailUiEvent()
     data class IntentToImdbWebSite(val url: String) : DetailUiEvent()
-    data class NavigateTo(val directions: NavDirections) :
-        DetailUiEvent()
+    object ShowAlertDialog : DetailUiEvent()
+    data class NavigateTo(val directions: NavDirections) : DetailUiEvent()
 
 }

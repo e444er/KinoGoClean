@@ -5,8 +5,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.e444er.cleanmovie.core.domain.models.Movie
 import com.e444er.cleanmovie.core.domain.models.TvSeries
-import com.e444er.cleanmovie.core.domain.use_case.firebase.FirebaseCoreUseCases
 import com.e444er.cleanmovie.core.domain.use_case.database.LocalDatabaseUseCases
+import com.e444er.cleanmovie.core.domain.use_case.firebase.FirebaseCoreUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -110,9 +110,6 @@ class DetailBottomSheetViewModel @Inject constructor(
                     emitUiEvent(DetailBottomUiEvent.ShowAlertDialog)
                 }
             }
-            is DetailBottomSheetEvent.NavigateToLoginFragment -> {
-                emitUiEvent(DetailBottomUiEvent.NavigateTo(DetailBottomSheetDirections.actionDetailBottomSheetToLoginFragment()))
-            }
         }
     }
 
@@ -148,7 +145,7 @@ class DetailBottomSheetViewModel @Inject constructor(
         viewModelScope.launch {
             localDatabaseUseCases.toggleTvSeriesForFavoriteListUseCase(
                 tvSeries = tvSeries,
-                doesAddFavorite = state.value.doesAddFavorite
+                doesAddFavoriteList = state.value.doesAddFavorite
             )
         }
     }
