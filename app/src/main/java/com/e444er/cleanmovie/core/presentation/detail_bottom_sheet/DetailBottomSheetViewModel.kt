@@ -22,7 +22,6 @@ class DetailBottomSheetViewModel @Inject constructor(
     private val _state = MutableStateFlow(DetailBottomSheetState())
     val state: StateFlow<DetailBottomSheetState> = _state.asStateFlow()
 
-
     private val _uiEvent = MutableSharedFlow<DetailBottomUiEvent>()
     val uiEvent: SharedFlow<DetailBottomUiEvent> = _uiEvent.asSharedFlow()
 
