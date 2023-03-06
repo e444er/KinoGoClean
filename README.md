@@ -15,16 +15,23 @@ You can view the cast, plot summary, release date, and more. "
 
 ## Screeshots
 
+
 ### Light Version
 
 ***
 <div>
 <img src="Screenshoots/home_light_turkish.png" width="180" height="360" float:left>
-<img src="Screenshoots/home_see_all_light_turkish.png" width="180" height="360" float:left>
 <img src="Screenshoots/home_detail_light_turkish.png" width="180" height="360" float:left>
+
 <img src="Screenshoots/detail_light_turkish.png" width="180" height="360" float:left>
 <img src="Screenshoots/detail_2_light_turkish.png" width="180" height="360" float:left>
-<img src="Screenshoots/settings_light_turkish.png" width="180" height="360" float:left>
+<img src="Screenshoots/detail_3_light_turkish.png" width="180" height="360" float:left>
+<img src="Screenshoots/detail_4_light_turkish.png" width="180" height="360" float:left>
+
+<img src="Screenshoots/explore_light_turkish.png" width="180" height="360" float:left>
+
+**[Other Screenshots](LIGHTSCREENS.md)**
+
 </div>
 
 ### Dark Version
@@ -32,13 +39,16 @@ You can view the cast, plot summary, release date, and more. "
 ***
 <div>
 <img src="Screenshoots/dark/home_dark_english.png" width="180" height="360" float:left>
-<img src="Screenshoots/dark/home_see_all_dark_english.png" width="180" height="360" float:left>
-<img src="Screenshoots/dark/home_see_all_2_dark_english.png" width="180" height="360" float:left>
-<img src="Screenshoots/dark/home_detail_dark_english.png" width="180" height="360" float:left>
+<img src="Screenshoots/dark/home_detail_dark_english.png" width="180" height="360" float:left>  
+
 <img src="Screenshoots/dark/detail_dark_english.png" width="180" height="360" float:left>
 <img src="Screenshoots/dark/detail_2_dark_english.png" width="180" height="360" float:left>
-<img src="Screenshoots/dark/setting_dark_english.png" width="180" height="360" float:left>
-</div>
+<img src="Screenshoots/dark/detail_3_dark.png" width="180" height="360" float:left>
+<img src="Screenshoots/dark/detail_4_dark.png" width="180" height="360" float:left>
+
+<img src="Screenshoots/dark/explore_dark.png" width="180" height="360" float:left>
+
+<img src="Screenshoots/dark/person_detail_dark.png" width="180" height="360" float:left>
 
 ## Tech stack & Open-source libraries
 
